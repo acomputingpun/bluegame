@@ -27,3 +27,8 @@ RI b|0011:Update title of HTML page to 'bluegame'.
 AI b|0017:Grid UI recognition of cursor input and translation of cursor pos to tilepos.
  K b|0018:Override toString() of various functions for ease of debug printing outputs
 RI b|0019:Grid UI recognition of mousedown clicks on tiles.
+ E b|0020:Update exception messages to be more descriptive and detailed.
+AI b|0021:State representation of frame weights and data associated with frame weights.
+ E b|0022:Seperate various blueprint, tile, etc data from ships.es into further files.
+ I b|0023:State representation of component attributes and data associated with components.
+ I b|0024:Overlay of selected component/frame in grid-editing UI on grid.

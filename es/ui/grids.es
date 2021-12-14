@@ -50,6 +50,10 @@ export class GridPanel extends panels.Panel {
     get children() {
         return this.tilePanels
     }
+
+    warpTileMouseDown(xyLocal) {
+        this.parent.warpTileMouseDown(this, xyLocal)
+    }
 }
 
 let TILE_EMPTY_BG = "#EEE"
@@ -69,11 +73,22 @@ class TilePanel extends panels.Panel {
     }
 
     get bgFillColour() {
-        return TILE_LIGHT_STRUCTURE_BG
+        if (this.tile == null) {
+            return "#F11"
+        } else {    
+            if (this.tile.frame == null) {
+                return TILE_EMPTY_BG
+            } else if (this.tile.frame.weight == 0) {
+                return TILE_LIGHT_STRUCTURE_BG
+            } else {
+                return TILE_MEDIUM_STRUCTURE_BG                
+            }
+        }
     }
 
     warpMouseDown(mousePos) {
         console.log(`Tile ${this} mouse down!`)
+        this.parent.warpTileMouseDown(this.xyLocal)
     }
 
     reflectTile(tile) {
@@ -86,15 +101,17 @@ class TilePanel extends panels.Panel {
 }
 
 export class MenuButton extends panels.Button {
-    constructor(parent, panelStart, text) {
+    constructor(parent, panelStart, text, data) {
         super(parent)
         this.panelStart = panelStart
         this.panelSize = vecs.Vec2(90, 45 )
         this._text = text
+        this._data = data
     }
     get text() { return this._text }    
+    get data() { return this._data }
     onSelect() {
-
+        this.parent.warpMenuSelect(data)
     }
 }
 
@@ -104,22 +121,39 @@ export class FrameMenuPanel extends panels.Panel {
         this.panelStart = vecs.Vec2(700, 0)
         this.panelSize = vecs.Vec2(100, 600)
 
-        this.noFrameButton = new MenuButton( this, vecs.Vec2(5, 5), "none" )
-        this.superlightFrameButton = new MenuButton( this, vecs.Vec2(5, 55), "superlight" )
-        this.lightFrameButton = new MenuButton( this, vecs.Vec2(5, 105), "light" )
-        this.mediumFrameButton = new MenuButton( this, vecs.Vec2(5, 155), "medium" )
-        this.heavyFrameButton = new MenuButton( this, vecs.Vec2(5, 205), "heavy" )
+        this.noFrameButton = new MenuButton( this, vecs.Vec2(5, 5), "none", 0 )
+        this.superlightFrameButton = new MenuButton( this, vecs.Vec2(5, 55), "superlight", 1 )
+        this.lightFrameButton = new MenuButton( this, vecs.Vec2(5, 105), "light", 2 )
+        this.mediumFrameButton = new MenuButton( this, vecs.Vec2(5, 155), "medium", 3 )
+        this.heavyFrameButton = new MenuButton( this, vecs.Vec2(5, 205), "heavy", 4 )
     }
 
     get children() {
         return [this.noFrameButton, this.superlightFrameButton, this.lightFrameButton, this.mediumFrameButton, this.heavyFrameButton]
     }
 
+    warpMenuSelect(data) {
+        this.parent.editingTool.debugFrame = data
+    }
 }
 
 export class EditingToolState {
     constructor(parent) {
         this.parent = parent
+
+        this.debugFrame = 0
+    }
+
+    warpTileMouseDown(xyLocal) {
+        if (this.debugFrame == 0) {
+        } else if (this.debugFrame == 1) {
+        } else if (this.debugFrame == 2) {
+        } else if (this.debugFrame == 3) {
+        } else if (this.debugFrame == 4) {
+        } else {
+            throw "PANIC"
+        }
+
     }
 }
 
@@ -131,8 +165,18 @@ export class EditGridPanel extends panels.Panel {
 
         this.gridPanel = new GridPanel(this, grid)
         this.frameMenuPanel = new FrameMenuPanel(this)
+        this.editingTool = new EditingToolState(this)
     }
     get children() {
         return [this.gridPanel, this.frameMenuPanel]
     }
+
+    warpTileMouseDown(gridPanel, xyLocal) {
+        if (gridPanel == this.gridPanel) {
+            this.editingTool.warpTileMouseDown(xyLocal)
+        } else {
+            throw "PANIC"
+        }
+    }
+
 }
