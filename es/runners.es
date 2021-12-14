@@ -4,8 +4,8 @@ import * as states from '/es/states.es'
 
 export class GameRunner {
     constructor() {
-        this.renderer = new ui.Renderer(this)
         this.state = new states.State()
+        this.renderer = new ui.Renderer(this)
     }
 
     main () {

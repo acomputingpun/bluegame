@@ -36,6 +36,10 @@ export class Vector2 {
     interp(frac, other){
         return this.add(other.sub(this).sMul(frac))
     }
+
+    toString() {
+        return `(${this.x},${this.y})`
+    }
 }
 
 export function Vec2(x,y) {

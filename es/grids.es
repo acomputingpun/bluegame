@@ -6,7 +6,8 @@ export class Grid {
         this._matrix = new Map()
     }
 
-    lookup(x,y) {
+    lookup(xy) {
+        let [x, y] = xy
         let row = this._lookupRow(y)
         if (! row.has(x)) {
             row.set(x, new this._tileClass( [x, y], this ) )

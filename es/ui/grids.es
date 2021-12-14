@@ -23,6 +23,7 @@ export class GridPanel extends panels.Panel {
         }
 
         this.xyViewportAnchor = vecs.Vec2(0, 0)
+        this.reflectTilePanels()
     }
 
     localLookupPanel(xy) {
@@ -36,6 +37,14 @@ export class GridPanel extends panels.Panel {
 
     localToGrid(xy) {
         return this.xyViewportAnchor.add(xy)
+    }
+
+    reflectTilePanels() {
+        console.log("this", this)
+        for (let tilePanel of this.tilePanels) {
+            let xyGrid = this.localToGrid(tilePanel.xyLocal)
+            tilePanel.reflectTile( this.grid.lookup(xyGrid.xy) )
+        }
     }
 
     get children() {
@@ -55,10 +64,24 @@ class TilePanel extends panels.Panel {
         this.xyLocal = xyLocal
         this.panelStart = this.xyLocal.sMul(55)
         this.panelSize = vecs.Vec2(50, 50)
+
+        this.tile = null
     }
 
     get bgFillColour() {
         return TILE_LIGHT_STRUCTURE_BG
+    }
+
+    warpMouseDown(mousePos) {
+        console.log(`Tile ${this} mouse down!`)
+    }
+
+    reflectTile(tile) {
+        this.tile = tile
+    }
+
+    toString() {
+        return `TPanel ${this.xyLocal} ${this.tile}`
     }
 }
 
@@ -94,13 +117,19 @@ export class FrameMenuPanel extends panels.Panel {
 
 }
 
+export class EditingToolState {
+    constructor(parent) {
+        this.parent = parent
+    }
+}
+
 export class EditGridPanel extends panels.Panel {
     constructor(parent, grid) {
         super(parent)
         this.panelStart = vecs.Vec2(0, 0)
         this.panelSize = vecs.Vec2(800, 600)
 
-        this.gridPanel = new GridPanel(this)
+        this.gridPanel = new GridPanel(this, grid)
         this.frameMenuPanel = new FrameMenuPanel(this)
     }
     get children() {

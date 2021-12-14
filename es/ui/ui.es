@@ -133,9 +133,11 @@ class TopLevelPanel extends panels.Panel {
         this.panelStart = vecs.Vec2(0, 0)
         this.panelSize = vecs.Vec2(800, 600)
 
-        this.mainPanel = new ui_grids.EditGridPanel(this)
-
         this._renderer = renderer
+
+        console.log("this", this)
+        console.log("tgrid,", renderer.runner.state.debugGrid)
+        this.mainPanel = new ui_grids.EditGridPanel(this, this._renderer.runner.state.debugGrid)
     }
 
     draw() {
