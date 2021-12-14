@@ -1,6 +1,6 @@
-import * as colours from '/es/ui/colours.es';
-import * as vecs from '/es/vectors.es';
-import * as panels from '/es/ui/panels.es';
+import * as colours from '/es/ui/colours.es'
+import * as vecs from '/es/vectors.es'
+import * as panels from '/es/ui/panels.es'
 
 export class DebugMenuPanel extends panels.Panel {
     constructor(parent) {
@@ -47,20 +47,20 @@ class KillTimeButton extends panels.Button {
 
 export class DebugGamePanel extends panels.Panel {
     constructor(parent) {
-        super(parent);
-        this.panelStart = vecs.Vec2(0, 0);
-        this.panelSize = vecs.Vec2(1280, 800);
+        super(parent)
+        this.panelStart = vecs.Vec2(0, 0)
+        this.panelSize = vecs.Vec2(1280, 800)
     }
 
     drawContents() {
-        this.ctx.font = "10px Courier";
-        this.ctx.textAlign = "left";
-        this.ctx.textBaseline = "top";
-        this.ctx.fillStyle=colours.BORDER;
-        this.drawDebug();
+        this.ctx.font = "10px Courier"
+        this.ctx.textAlign = "left"
+        this.ctx.textBaseline = "top"
+        this.ctx.fillStyle=colours.BORDER
+        this.drawDebug()
     }
 
     drawDebug() {
-        this.ctx.fillText("TrueMS " + (this.renderer.drawMS - this.renderer.firstDrawMS), 2, 2);
+        this.ctx.fillText("TrueMS " + (this.renderer.drawMS - this.renderer.firstDrawMS), 2, 2)
     }
 }

@@ -1,6 +1,6 @@
 export class DrawScion {
     constructor(parent) {
-        this.parent = parent;
+        this.parent = parent
     }
 
     get renderer() { return this.parent.renderer }
@@ -16,26 +16,26 @@ export class DrawScion {
     }
     warpMouseDown(clickLocal) {
         for (let child of this.children) {
-            let childLocal = clickLocal.sub(child.originShift);
+            let childLocal = clickLocal.sub(child.originShift)
 //            console.log("childL", childLocal, "chi", child)
             if (child.localWithin(childLocal)) {
                 if (child.warpMouseDown(childLocal)) {
-                    return true;
+                    return true
                 }
             }
         }
-        return false;
+        return false
     }
     warpMouseUp(clickLocal) {
         for (let child of this.children) {
-            let childLocal = clickLocal.sub(child.originShift);
+            let childLocal = clickLocal.sub(child.originShift)
             if (child.localWithin(childLocal)) {
                 if (child.warpMouseUp(childLocal)) {
-                    return true;
+                    return true
                 }
             }
         }
-        return false;
+        return false
     }
 
     get originShift() {
@@ -50,7 +50,7 @@ export class DrawScion {
         throw "ERR: Tried to call localWithin() of base DrawScion!"
     }
     absWithin(local) {
-        return this.localWithin(local.sub(this.absOrigin));
+        return this.localWithin(local.sub(this.absOrigin))
     }
 }
 

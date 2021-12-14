@@ -16,4 +16,5 @@ A  a|---- Issue currently being worked on
  I b|0007:Ability for grid-tiles to reference other tiles by relative position vector.
 RE b|0008:Elminiate old code leftover from bootstrap process.
 RK b|0009:Set up a git repository and configure git.
- E b|0010:Remove unneccessary semicolons.
+AE b|0010:Remove unneccessary semicolons.
+RI b|0011:Update title of HTML page to 'bluegame'.

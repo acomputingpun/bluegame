@@ -1,12 +1,12 @@
-import * as colours from '/es/ui/colours.es';
-import * as fonts from '/es/ui/fonts.es';
-import * as vecs from '/es/vectors.es';
-import * as panels from '/es/ui/panels.es';
+import * as colours from '/es/ui/colours.es'
+import * as fonts from '/es/ui/fonts.es'
+import * as vecs from '/es/vectors.es'
+import * as panels from '/es/ui/panels.es'
 
 
 export class TablePanel extends panels.Panel {
     constructor(parent) {
-        super(parent);
+        super(parent)
 
         this.rowPanels = []
         this.setupRowPanels()
@@ -31,14 +31,14 @@ export class Row extends panels.Panel {
     }
 
     drawInLine(text, xDraw) {
-        this.ctx.fillText(text, this.absStart.x+xDraw, this.absCenter.y);
+        this.ctx.fillText(text, this.absStart.x+xDraw, this.absCenter.y)
     }
 
     setTextSettings() {
-        this.ctx.textAlign = "left";
-        this.ctx.textBaseline = "middle";
-        this.ctx.fillStyle=colours.BORDER;
-        this.ctx.font=fonts.GENERAL_TEXT;
+        this.ctx.textAlign = "left"
+        this.ctx.textBaseline = "middle"
+        this.ctx.fillStyle=colours.BORDER
+        this.ctx.font=fonts.GENERAL_TEXT
     }
 }
 

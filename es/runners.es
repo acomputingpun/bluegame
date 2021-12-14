@@ -1,15 +1,15 @@
-import * as ui from '/es/ui/ui.es';
+import * as ui from '/es/ui/ui.es'
 
-import * as states from '/es/states.es';
+import * as states from '/es/states.es'
 
 export class GameRunner {
     constructor() {
-        this.renderer = new ui.Renderer(this);
-        this.state = new states.State();
+        this.renderer = new ui.Renderer(this)
+        this.state = new states.State()
     }
 
     main () {
-        this.renderer.startDrawLoop();
+        this.renderer.startDrawLoop()
         console.log("amain", this)
     }
 }
