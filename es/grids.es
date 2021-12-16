@@ -1,3 +1,5 @@
+import * as vecs from '/es/vectors.es'
+
 export class Grid {
     constructor (tileClass) {
         this._dirtyID = 0
@@ -10,7 +12,7 @@ export class Grid {
         let [x, y] = xy
         let row = this._lookupRow(y)
         if (! row.has(x)) {
-            row.set(x, new this._tileClass( [x, y], this ) )
+            row.set(x, new this._tileClass( x, y, this ) )
         }
         return row.get(x)
      }
@@ -28,15 +30,19 @@ export class Grid {
 }
 
 export class GridTile {
-    constructor (xyPos, parent) {
+    constructor (x, y, parent) {
         this._dirtyID = 0
 
-        this.xyPos = xyPos
+        this.xyPos = vecs.Vec2(x, y)
         this.parent = parent
     }
 
     markDirty() {
         this.dirtyID += 1
         this.parent.markDirty()
+    }
+
+    relTile(xyRel) {
+        return this.parent.lookup( this.xyPos.add(xyRel).xy )
     }
 }

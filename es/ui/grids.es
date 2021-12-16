@@ -27,9 +27,9 @@ export class GridPanel extends panels.Panel {
     }
 
     localLookupPanel(xy) {
-        [x, y] = xy
+        let [x, y] = xy
         if (0 <= x && x < this.xySize.x && 0 <= y && y < this.xySize.x) {
-            return this.tilePanels[y][x]
+            return this.tilePanelMatrix[y][x]
         } else {
             return null
         }
@@ -111,7 +111,7 @@ export class MenuButton extends panels.Button {
     get text() { return this._text }    
     get data() { return this._data }
     onSelect() {
-        this.parent.warpMenuSelect(data)
+        this.parent.warpMenuSelect(this.data)
     }
 }
 
@@ -137,6 +137,8 @@ export class FrameMenuPanel extends panels.Panel {
     }
 }
 
+import * as debug_ships from '/es/ships.es'
+
 export class EditingToolState {
     constructor(parent) {
         this.parent = parent
@@ -144,12 +146,30 @@ export class EditingToolState {
         this.debugFrame = 0
     }
 
+    get gridPanel() { return this.parent.gridPanel }
+
     warpTileMouseDown(xyLocal) {
-        if (this.debugFrame == 0) {
-        } else if (this.debugFrame == 1) {
-        } else if (this.debugFrame == 2) {
-        } else if (this.debugFrame == 3) {
-        } else if (this.debugFrame == 4) {
+        let tilePanel = this.gridPanel.localLookupPanel( xyLocal.xy )
+        if (tilePanel != null) {
+            let tile = tilePanel.tile
+            if (this.debugFrame == 0) {
+                let frame = new debug_ships.Frame( new debug_ships.SuperlightWeight() )
+                frame.placeAt(tile)
+            } else if (this.debugFrame == 1) {
+                let frame = new debug_ships.Frame( new debug_ships.LightWeight() )
+                frame.placeAt(tile)
+            } else if (this.debugFrame == 2) {
+                let frame = new debug_ships.Frame( new debug_ships.MediumWeight() )
+                frame.placeAt(tile)
+            } else if (this.debugFrame == 3) {
+                let frame = new debug_ships.Frame( new debug_ships.HeavyWeight() )
+                frame.placeAt(tile)
+            } else if (this.debugFrame == 4) {
+                let frame = new debug_ships.Frame( new debug_ships.SuperheavyWeight() )
+                frame.placeAt(tile)
+            } else {
+                throw "PANIC"
+            }
         } else {
             throw "PANIC"
         }

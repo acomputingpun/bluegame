@@ -1,4 +1,6 @@
 import * as grids from '/es/grids.es'
+import * as utils from '/es/utils.es'
+import * as vecs from '/es/vectors.es'
 
 export class ShipDesign {
     constructor(blueprintGrid) {
@@ -21,13 +23,37 @@ export class Ship {
 }
 
 export class FrameWeight {
-    get placeVecs() {
-        return [ [0, 0] ]
+    constructor() {
+        this.placeVecs = vecs.arrToVecs(utils.span2( [0, 0], this.xySize.xy ))
+        console.log("pv", this.placeVecs)
     }
+
+    get xySize() { throw "PANIC: to be overridden!" }
 }
 
+
+export class SuperlightWeight extends FrameWeight {
+    get xySize() { return vecs.Vec2(1, 1) }
+}
+export class LightWeight extends FrameWeight {
+    get xySize() { return vecs.Vec2(1, 1) }
+}
+export class MediumWeight extends FrameWeight {
+    get xySize() { return vecs.Vec2(2, 2) }
+}
+export class HeavyWeight extends FrameWeight {
+    get xySize() { return vecs.Vec2(2, 2) }
+}
+export class SuperheavyWeight extends FrameWeight {
+    get xySize() { return vecs.Vec2(3, 3) }
+}
+
+
+
 export class Frame {    
-    constructor () {
+    constructor (weight) {
+        this._weight = weight
+
         this._anchorTile = null
         this._tiles = []
     }
@@ -39,7 +65,8 @@ export class Frame {
 
         this._tiles = []
         for (let placeVec of this.placeVecs) {
-            placeTile = tile.relTile(placeVec)
+            let placeTile = tile.relTile(placeVec)
+            console.log("placing at", placeVec, "total", `${placeTile.xyPos}`)
             if (placeTile.frame !== null) {
                 console.log("Can't place tile there!")
                 throw `Panic - can't place frame section ${this}->${placeVec} at ${placeTile}`
@@ -65,6 +92,8 @@ export class Frame {
         }
     }
 
+    get weight() { return this._weight }
+
     get placeVecs() {
         return this.weight.placeVecs
     }
@@ -87,7 +116,7 @@ export class Component {
 
         this._tiles = []
         for (let placeVec of this.placeVecs) {
-            placeTile = tile.relTile(placeVec)
+            let placeTile = tile.relTile(placeVec)
             this._tiles.push(placeTile)
         }
         this._anchorTile = tile
@@ -99,7 +128,7 @@ export class Component {
 
 class BlueprintTile extends grids.GridTile {
     constructor (...args) {
-        super(args)
+        super(...args)
 
         this.frame = null
         this.component = null

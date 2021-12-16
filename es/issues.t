@@ -9,7 +9,7 @@ A  a|---- Issue currently being worked on
 @@@
  M b|0000:Working game.
  M b|0001:Servicable blueprint grid editing UI panel.
-AI b|0002:Ability to set and remove frame sections from a blueprint grid.
+RI b|0002:Ability to set and remove frame sections from a blueprint grid.
  I b|0003:Menu and menu-item classes.
  I b|0004:Panels that automatically generate lists of buttons etc, based on menus.
  M b|0005:Ability to reify blueprints.
@@ -24,7 +24,7 @@ RI b|0011:Update title of HTML page to 'bluegame'.
  I b|0014:Ability to place and remove components on a blueprint grid.
  I b|0015:Blueprint legality checking for components and component capacity.
  M b|0016:State-logic for conduits to link various components.
-AI b|0017:Grid UI recognition of cursor input and translation of cursor pos to tilepos.
+RI b|0017:Grid UI recognition of cursor input and translation of cursor pos to tilepos.
  K b|0018:Override toString() of various functions for ease of debug printing outputs
 RI b|0019:Grid UI recognition of mousedown clicks on tiles.
  E b|0020:Update exception messages to be more descriptive and detailed.

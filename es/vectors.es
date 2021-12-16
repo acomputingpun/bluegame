@@ -45,3 +45,11 @@ export class Vector2 {
 export function Vec2(x,y) {
     return new Vector2(x, y)
 }
+
+export function arrToVecs(xys) {
+    let ret = []
+    for (let xy of xys) {
+        ret.push(Vec2(xy[0], xy[1]))
+    }
+    return ret
+}
