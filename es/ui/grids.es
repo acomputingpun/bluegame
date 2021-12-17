@@ -3,11 +3,10 @@ import * as panels from '/es/ui/panels.es'
 
 import * as frameweights from '/es/frameweights.es'
 
-
 export class GridPanel extends panels.Panel {
     constructor(parent, grid) {
         super(parent)
-        this.panelStart = vecs.Vec2(0, 0)
+        this.panelStart = vecs.Vec2(20, 20)
         this.panelSize = vecs.Vec2(600, 500)
 
         this.grid = grid
@@ -60,10 +59,6 @@ export class GridPanel extends panels.Panel {
 }
 
 let TILE_EMPTY_BG = "#EEE"
-let TILE_LIGHT_STRUCTURE_BG = "#AAA"
-let TILE_MEDIUM_STRUCTURE_BG = "#A8A"
-let TILE_HEAVY_STRUCTURE_BG = "#959"
-let TILE_SUPERHEAVY_STRUCTURE_BG = "#828"
 
 class TilePanel extends panels.Panel {
     constructor(parent, xyLocal) {
@@ -81,10 +76,8 @@ class TilePanel extends panels.Panel {
         } else {    
             if (this.tile.frame == null) {
                 return TILE_EMPTY_BG
-            } else if (this.tile.frame.weight == 0) {
-                return TILE_LIGHT_STRUCTURE_BG
             } else {
-                return TILE_MEDIUM_STRUCTURE_BG                
+                return this.tile.frame.weight.debugColour
             }
         }
     }
@@ -124,15 +117,17 @@ export class FrameMenuPanel extends panels.Panel {
         this.panelStart = vecs.Vec2(700, 0)
         this.panelSize = vecs.Vec2(100, 600)
 
-        this.noFrameButton = new MenuButton( this, vecs.Vec2(5, 5), "none", 0 )
-        this.superlightFrameButton = new MenuButton( this, vecs.Vec2(5, 55), "superlight", 1 )
-        this.lightFrameButton = new MenuButton( this, vecs.Vec2(5, 105), "light", 2 )
-        this.mediumFrameButton = new MenuButton( this, vecs.Vec2(5, 155), "medium", 3 )
-        this.heavyFrameButton = new MenuButton( this, vecs.Vec2(5, 205), "heavy", 4 )
+        this.noFrameButton = new MenuButton( this, vecs.Vec2(5, 5), "none", null )
+
+        this.superlightFrameButton = new MenuButton( this, vecs.Vec2(5, 55), "superlight", frameweights.Superlight )
+        this.lightFrameButton = new MenuButton( this, vecs.Vec2(5, 105), "light", frameweights.Light )
+        this.mediumFrameButton = new MenuButton( this, vecs.Vec2(5, 155), "medium", frameweights.Medium )
+        this.heavyFrameButton = new MenuButton( this, vecs.Vec2(5, 205), "heavy", frameweights.Heavy )
+        this.superheavyFrameButton = new MenuButton( this, vecs.Vec2(5, 255), "superheavy", frameweights.Superheavy )
     }
 
     get children() {
-        return [this.noFrameButton, this.superlightFrameButton, this.lightFrameButton, this.mediumFrameButton, this.heavyFrameButton]
+        return [this.noFrameButton, this.superlightFrameButton, this.lightFrameButton, this.mediumFrameButton, this.heavyFrameButton, this.superheavyFrameButton]
     }
 
     warpMenuSelect(data) {
@@ -155,23 +150,13 @@ export class EditingToolState {
         let tilePanel = this.gridPanel.localLookupPanel( xyLocal.xy )
         if (tilePanel != null) {
             let tile = tilePanel.tile
-            if (this.debugFrame == 0) {
-                let frame = new debug_ships.Frame(frameweights.Superlight)
-                frame.placeAt(tile)
-            } else if (this.debugFrame == 1) {
-                let frame = new debug_ships.Frame(frameweights.Light)
-                frame.placeAt(tile)
-            } else if (this.debugFrame == 2) {
-                let frame = new debug_ships.Frame(frameweights.Medium)
-                frame.placeAt(tile)
-            } else if (this.debugFrame == 3) {
-                let frame = new debug_ships.Frame(frameweights.Heavy)
-                frame.placeAt(tile)
-            } else if (this.debugFrame == 4) {
-                let frame = new debug_ships.Frame(frameweights.Superheavy)
-                frame.placeAt(tile)
+            if (this.debugFrame == null) {
+                if (tile.frame != null) {
+                    tile.frame.remove()
+                }
             } else {
-                throw "PANIC"
+                let frame = new debug_ships.Frame(this.debugFrame)
+                frame.placeAt(tile)
             }
         } else {
             throw "PANIC"
@@ -189,14 +174,27 @@ export class EditGridPanel extends panels.Panel {
         this.gridPanel = new GridPanel(this, grid)
         this.frameMenuPanel = new FrameMenuPanel(this)
         this.editingTool = new EditingToolState(this)
+
+        this.debugHillValid = true
     }
     get children() {
         return [this.gridPanel, this.frameMenuPanel]
     }
 
+    drawContents() {
+        this.ctx.font = "11px Courier"
+        this.ctx.textAlign = "left"
+        this.ctx.textBaseline = "top"
+        this.ctx.fillStyle=this.borderColour
+
+        this.ctx.fillText( `hill validity: ${this.debugHillValid}`, ...this.absStart.xy )
+    }
+
     warpTileMouseDown(gridPanel, xyLocal) {
         if (gridPanel == this.gridPanel) {
             this.editingTool.warpTileMouseDown(xyLocal)
+
+            this.debugHillValid = this.gridPanel.grid.checkFrameweightDecreasing()
         } else {
             throw "PANIC"
         }

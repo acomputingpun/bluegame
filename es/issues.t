@@ -13,7 +13,7 @@ RI b|0002:Ability to set and remove frame sections from a blueprint grid.
  I b|0003:Menu and menu-item classes.
  I b|0004:Panels that automatically generate lists of buttons etc, based on menus.
  M b|0005:Ability to reify blueprints.
- I b|0006:Frame weight hill-connectivity error checking in blueprints.
+RI b|0006:Frame weight hill-connectivity error checking in blueprints.
  I b|0007:Ability for grid-tiles to reference other tiles by relative position vector.
 RE b|0008:Elminiate old code leftover from bootstrap process.
 RK b|0009:Set up a git repository and configure git.

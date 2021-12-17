@@ -1,4 +1,5 @@
 import * as vecs from '/es/vectors.es'
+import * as dirconst from '/es/dirconst.es'
 
 export class Grid {
     constructor (tileClass) {
@@ -6,13 +7,16 @@ export class Grid {
 
         this._tileClass = tileClass
         this._matrix = new Map()
+        this._tiles = []
     }
 
     lookup(xy) {
         let [x, y] = xy
         let row = this._lookupRow(y)
         if (! row.has(x)) {
-            row.set(x, new this._tileClass( x, y, this ) )
+            let tile = new this._tileClass( x, y, this )
+            row.set(x, tile )
+            this._tiles.push(tile)
         }
         return row.get(x)
      }
@@ -27,6 +31,8 @@ export class Grid {
     markDirty() {
         this.dirtyID += 1
     }
+
+    get tiles() { return this._tiles }
 }
 
 export class GridTile {
@@ -44,5 +50,25 @@ export class GridTile {
 
     relTile(xyRel) {
         return this.parent.lookup( this.xyPos.add(xyRel).xy )
+    }
+    adjTiles() {
+//        console.log("callign adjTiles of this", this, "dc is", dirconst.CARDINALS)
+        return dirconst.CARDINALS.map( vec => this.relTile(vec) )
+    }
+
+    _recursiveExpand(fn, soFarSet) {
+        if (!soFarSet.has(this)) {
+            if (fn(this)) {
+                soFarSet.add(this)
+                for (let adjTile of this.adjTiles()) {
+                    adjTile._recursiveExpand(fn, soFarSet)
+                }
+            }
+        }
+        return soFarSet
+    }
+
+    recursiveExpand(fn) {
+        return this._recursiveExpand(fn, new Set())
     }
 }
