@@ -1,6 +1,9 @@
 import * as vecs from '/es/vectors.es'
 import * as panels from '/es/ui/panels.es'
 
+import * as frameweights from '/es/frameweights.es'
+
+
 export class GridPanel extends panels.Panel {
     constructor(parent, grid) {
         super(parent)
@@ -153,19 +156,19 @@ export class EditingToolState {
         if (tilePanel != null) {
             let tile = tilePanel.tile
             if (this.debugFrame == 0) {
-                let frame = new debug_ships.Frame( new debug_ships.SuperlightWeight() )
+                let frame = new debug_ships.Frame(frameweights.Superlight)
                 frame.placeAt(tile)
             } else if (this.debugFrame == 1) {
-                let frame = new debug_ships.Frame( new debug_ships.LightWeight() )
+                let frame = new debug_ships.Frame(frameweights.Light)
                 frame.placeAt(tile)
             } else if (this.debugFrame == 2) {
-                let frame = new debug_ships.Frame( new debug_ships.MediumWeight() )
+                let frame = new debug_ships.Frame(frameweights.Medium)
                 frame.placeAt(tile)
             } else if (this.debugFrame == 3) {
-                let frame = new debug_ships.Frame( new debug_ships.HeavyWeight() )
+                let frame = new debug_ships.Frame(frameweights.Heavy)
                 frame.placeAt(tile)
             } else if (this.debugFrame == 4) {
-                let frame = new debug_ships.Frame( new debug_ships.SuperheavyWeight() )
+                let frame = new debug_ships.Frame(frameweights.Superheavy)
                 frame.placeAt(tile)
             } else {
                 throw "PANIC"

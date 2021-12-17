@@ -22,34 +22,6 @@ export class Ship {
     }
 }
 
-export class FrameWeight {
-    constructor() {
-        this.placeVecs = vecs.arrToVecs(utils.span2( [0, 0], this.xySize.xy ))
-        console.log("pv", this.placeVecs)
-    }
-
-    get xySize() { throw "PANIC: to be overridden!" }
-}
-
-
-export class SuperlightWeight extends FrameWeight {
-    get xySize() { return vecs.Vec2(1, 1) }
-}
-export class LightWeight extends FrameWeight {
-    get xySize() { return vecs.Vec2(1, 1) }
-}
-export class MediumWeight extends FrameWeight {
-    get xySize() { return vecs.Vec2(2, 2) }
-}
-export class HeavyWeight extends FrameWeight {
-    get xySize() { return vecs.Vec2(2, 2) }
-}
-export class SuperheavyWeight extends FrameWeight {
-    get xySize() { return vecs.Vec2(3, 3) }
-}
-
-
-
 export class Frame {    
     constructor (weight) {
         this._weight = weight
@@ -66,7 +38,7 @@ export class Frame {
         this._tiles = []
         for (let placeVec of this.placeVecs) {
             let placeTile = tile.relTile(placeVec)
-            console.log("placing at", placeVec, "total", `${placeTile.xyPos}`)
+            console.log("placing frame", this, "at", placeVec, "total", `${placeTile.xyPos}`)
             if (placeTile.frame !== null) {
                 console.log("Can't place tile there!")
                 throw `Panic - can't place frame section ${this}->${placeVec} at ${placeTile}`
