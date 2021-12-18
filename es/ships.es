@@ -68,7 +68,6 @@ export class Frame {
                 tile.frame = null
             } 
             this._anchorTile = null
-
         }
     }
 
@@ -79,39 +78,12 @@ export class Frame {
     }
 }
 
-export class ComponentDesign {
-}
-
-export class Component {
-    constructor() {
-        this._anchorTile = null
-        this._facing = null
-        this._tiles = []
-    }
-
-    placeAt(tile) {
-        if (this._anchorTile !== null) {
-            throw `Panic - can't place component ${this} from ${tile} - already placed at ${this._anchorTile}`
-        }
-
-        this._tiles = []
-        for (let placeVec of this.placeVecs) {
-            let placeTile = tile.relTile(placeVec)
-            this._tiles.push(placeTile)
-        }
-        this._anchorTile = tile
-        for (let tile of this._tiles) {
-            tile.addComponent(this)
-        }
-    }
-}
-
 class BlueprintTile extends grids.GridTile {
     constructor (...args) {
         super(...args)
 
         this.frame = null
-        this.component = null
+        this.components = []
     }
 
     get frameWeight () {
@@ -120,6 +92,10 @@ class BlueprintTile extends grids.GridTile {
         } else {
             return this.frame.weight
         }
+    }
+
+    removeComponent(comp) {
+        utils.aRemove(this.components, comp)
     }
 }
 

@@ -34,3 +34,10 @@ RI b|0021:State representation of frame weights and data associated with frame w
  I b|0024:Overlay of selected component/frame in grid-editing UI on grid.
  E b|0025:Remove magic numbers and hardcoded values from ui_grids.es
 RE b|0026:Create a frameweights.es that properly initialises (singleton-like?) frameweight objects.
+AM b|0027:State-logic for components.
+ I b|0028:Associating expected inputs/outputs with components for the purpose of conduits.
+ I b|0029:Conduit-only components.
+ I b|0030:Partially conduit components - generators, etc.
+RE b|0031:Move component logic into components.es
+AI b|0032:Basic display of components in blueprint grid UI
+AI b|0033:Initialisation of an existing grid with default components at game begin for dev purposes
