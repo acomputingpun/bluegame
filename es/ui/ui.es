@@ -102,7 +102,6 @@ export class Renderer {
         this.offPanels = this.offPanels.slice(1)
     }
 
-
 // Drawing convenience functions
     wrapText(text, xDraw, yDraw, xWidth, yLineHeight) {
         let words = text.split(' ')

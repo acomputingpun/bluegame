@@ -2,6 +2,7 @@ import * as vecs from '/es/vectors.es'
 import * as panels from '/es/ui/panels.es'
 
 import * as frameweights from '/es/frameweights.es'
+import * as frames from '/es/frames.es'
 
 export class GridPanel extends panels.Panel {
     constructor(parent, grid) {
@@ -45,7 +46,7 @@ export class GridPanel extends panels.Panel {
         console.log("this", this)
         for (let tilePanel of this.tilePanels) {
             let xyGrid = this.localToGrid(tilePanel.xyLocal)
-            tilePanel.reflectTile( this.grid.lookup(xyGrid.xy) )
+            tilePanel.reflectTile( this.grid.lookup(...xyGrid.xy) )
         }
     }
 
@@ -78,6 +79,22 @@ class TilePanel extends panels.Panel {
                 return TILE_EMPTY_BG
             } else {
                 return this.tile.frame.weight.debugColour
+            }
+        }
+    }
+
+    drawContents() {
+        for (let comp of this.tile.components) {
+
+            let drawPoints = comp.specs.debugDrawPoints
+            if (drawPoints.length > 0) {
+                this.ctx.beginPath()
+                this.ctx.moveTo( ...this.absStart.add( drawPoints[0].sMul(0.1).lMul(this.panelSize) ).xy )
+                for (let xyInterior of comp.specs.debugDrawPoints) {
+                    this.ctx.lineTo( ...this.absStart.add( xyInterior.sMul(0.1).lMul(this.panelSize) ).xy )
+                }
+                this.ctx.lineTo( ...this.absStart.add( drawPoints[0].sMul(0.1).lMul(this.panelSize) ).xy )
+                this.ctx.stroke()
             }
         }
     }
@@ -155,7 +172,7 @@ export class EditingToolState {
                     tile.frame.remove()
                 }
             } else {
-                let frame = new debug_ships.Frame(this.debugFrame)
+                let frame = new frames.Frame(this.debugFrame)
                 frame.placeAt(tile)
             }
         } else {

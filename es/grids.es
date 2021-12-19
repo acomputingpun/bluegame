@@ -10,8 +10,7 @@ export class Grid {
         this._tiles = []
     }
 
-    lookup(xy) {
-        let [x, y] = xy
+    lookup(x, y) {
         let row = this._lookupRow(y)
         if (! row.has(x)) {
             let tile = new this._tileClass( x, y, this )
@@ -49,7 +48,7 @@ export class GridTile {
     }
 
     relTile(xyRel) {
-        return this.parent.lookup( this.xyPos.add(xyRel).xy )
+        return this.parent.lookup( ...this.xyPos.add(xyRel).xy )
     }
     adjTiles() {
 //        console.log("callign adjTiles of this", this, "dc is", dirconst.CARDINALS)

@@ -39,5 +39,7 @@ AM b|0027:State-logic for components.
  I b|0029:Conduit-only components.
  I b|0030:Partially conduit components - generators, etc.
 RE b|0031:Move component logic into components.es
-AI b|0032:Basic display of components in blueprint grid UI
-AI b|0033:Initialisation of an existing grid with default components at game begin for dev purposes
+RI b|0032:Basic display of components in blueprint grid UI
+RI b|0033:Initialisation of an existing grid with default components at game begin for dev purposes
+RE b|0034:Rework grid.lookup() to take seperate arguments for x and y, and all references to use ... or similar.
+AI b|0035:Facing information for components and rotation operations for them
