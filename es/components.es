@@ -5,46 +5,94 @@ export class Component {
     constructor(specs) {
         this.specs = specs 
 
+        this._facing = new specs.facingClass()
+
         this._anchorTile = null
-        this._facing = null
         this._tiles = []
+
+        this.__locked = false
     }
 
     get placeVecs() {
         return this.specs.placeVecs
     }
 
-    setFacing(facing) {
-        throw "PANIC: to be overridden!"
+    get locked() { return this.__locked }
+
+    get facing() { return this._facing.data }
+    set facing(data) {
+        if (this.__locked) { throw `Panic - can't adjust facing of locked component ${this}` }
+        this._facing.set(data)
     }
 
-    placeAt(tile, facing) {
-        this.setFacing(facing)
+    get tile() { return this._anchorTile }
+    set tile(data) {
+        if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
+        if (data == null) {
+            this._clearTile()
+        } else {
+            this._setTile(data)
+        }
+    }
+    get tiles() {
+        return this._tiles            
+    }
 
-        if (this._anchorTile !== null) {
-            throw `Panic - can't place component ${this} from ${tile} - already placed at ${this._anchorTile}`
+    lockToGrid(tile = undefined, facing = undefined) {
+        if (this.__locked) { throw `Panic - frame ${this} already locked to grid!` } 
+
+        if (tile !== undefined) {
+            this.tile = tile
+        }
+        if (facing !== undefined) {
+            this.facing = facing
         }
 
-        this._tiles = []
-        for (let placeVec of this.placeVecs) {
-            let placeTile = tile.relTile(placeVec)
-            this._tiles.push(placeTile)
-        }
-        this._anchorTile = tile
+        if (this.tile == null) { throw `Panic - can't lock frame without linked tile!` }
+
+        this.__locked = true
+
+        this.grid.addComponent(this)
         for (let tile of this._tiles) {
             tile.addComponent(this)
         }
     }
+    unlock() {
+        if (!this.__locked) {
+            throw `Panic - frame ${this} not locked to grid!`
+        }
 
-    remove(tile) {
-        if (this._anchorTile === null) {
-            throw `Panic - can't remove frame ${this} - not currently placed at all!`
+        this.grid.removeComponent(this)
+        for (let tile of this._tiles) {
+            tile.removeComponent(this)
+        }
+        this.__locked = false
+    }
+
+    canLock() {
+        if (this.locked) { return false } 
+        if (this.tile == null) { return false }
+        return true
+    }
+
+
+    _setTile(tile) {
+        if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
+
+        this._anchorTile = tile
+        this._tiles = this.placeVecs.map ( (placeVec) => tile.relTile(placeVec) )
+    }
+    _clearTile(tile) {
+        if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
+        this._anchorTile = null
+        this._tiles = []
+    }
+
+    get grid() {
+        if (this._anchorTile != null) {
+            return this._anchorTile.parent
         } else {
-
-            for (let tile of this._tiles) {
-                tile.removeComponent(this)
-            } 
-            this._anchorTile = null
+            return null
         }
     }
 }

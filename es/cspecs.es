@@ -1,11 +1,86 @@
 import * as utils from '/es/utils.es'
 import * as vecs from '/es/vectors.es'
+import * as dirconst from '/es/dirconst.es'
+
+export class NoFacing {
+    set(vec) {
+        if (vec == null) {
+        } else {
+            throw ("PANIC: Tried to set facing of directionless component!")
+        }
+    }
+}
+
+export class HVFacing {
+    constructor() {
+        this.data = null
+    }
+
+    set(vec) {
+        if (vec.eq(dirconst.N) || vec.eq(dirconst.S)) {
+            this.data = dirconst.S
+        } else if (vec.eq(dirconst.E) || vec.eq(dirconst.W)) {
+            this.data = dirconst.E
+        } else if (vec == null) {
+            this.data = null
+        } else {
+            throw ("PANIC: Tried to set facing of CardinalFacing component to non-cardinal value!")
+        }
+    }
+}
+
+export class CardinalFacing {
+    constructor() {
+        this.data = null
+    }
+
+    set(vec) {
+        if (dirconst.CARDINALS.includes(vec)) {
+            this.data = vec
+        } else if (vec == null) {
+            this.data = null
+        } else {
+            throw ("PANIC: Tried to set facing of CardinalFacing component to non-cardinal value!")
+        }
+    }
+}
+
+export class DoubleCardinalFacing {
+    constructor() {
+        this.data = null
+    }
+
+    set( vecs ) {
+        if (vecs == null) {
+            this.data = null
+        } else if (vecs.length != 2) {
+            throw ("PANIC: Tried to set facing of DoubleCardinalFacing component to non-cardinal value pair!")
+        } else {
+            let [vec0, vec1] = vecs
+            if (!dirconst.CARDINALS.includes(vec0)) {
+                throw ("PANIC: Tried to set facing element of CardinalFacing component to non-cardinal value!")
+            } else if (!dirconst.CARDINALS.includes(vec1)) {
+                throw ("PANIC: Tried to set facing element of CardinalFacing component to non-cardinal value!")
+            } else if (vecs0 == vec1) {
+                throw ("PANIC: Tried to set facing element of CardinalFacing component to duplicate values!")
+            } else {
+                this.data = [vec0, vec1]
+            }
+        }
+    }
+}
+
 
 export class ComponentSpecs {
     constructor() {
         this._placeVecs = vecs.arrToVecs(utils.span2( [0, 0], this.xySize.xy ))
     }
 
+    tConnectors(tile) {
+        return []
+    }
+
+    get facingClass() { return NoFacing }
     get xySize() { throw "Not implemented!" }
     get placeVecs() { return this._placeVecs }
 }
@@ -51,6 +126,7 @@ class _FuelSource extends ComponentSpecs {
 }
 
 class _LaserGun extends ComponentSpecs {
+    get facingClass() { return CardinalFacing }
     get xySize() { return vecs.Vec2(1,1) }
 
     get debugDrawPoints () {
@@ -58,7 +134,35 @@ class _LaserGun extends ComponentSpecs {
     }
 }
 
-class _ElectricCable extends ComponentSpecs {
+class Connector {
+    constructor(tile, facing) {
+        this.tile = tile
+        this.facing = facing
+    }
+    get destTile() { return this.tile.rel(this.facing) }
+}
+class ElectricConnector extends Connector {    
+}
+class EmptyTileConnector extends Connector {
+}
+
+class _GenericCable extends ComponentSpecs {
+    get facingClass() { return DoubleCardinalFacing }
+    get xySize() { return vecs.Vec2(1,1) }
+
+    get connectorClass() { return ElectricConnector }
+
+    tConnectors(comp) {
+        if (comp.facing == null) {
+            return []
+        } else {
+            return comp.facing.map( (vec) => new this.connectorClass(comp.tile, vec) )
+        }
+    }
+}
+
+class _ElectricCable extends _GenericCable {
+    get facingClass() { return DoubleCardinalFacing }
     get xySize() { return vecs.Vec2(1,1) }
 }
 

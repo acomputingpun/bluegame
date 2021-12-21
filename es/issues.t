@@ -43,3 +43,9 @@ RI b|0032:Basic display of components in blueprint grid UI
 RI b|0033:Initialisation of an existing grid with default components at game begin for dev purposes
 RE b|0034:Rework grid.lookup() to take seperate arguments for x and y, and all references to use ... or similar.
 AI b|0035:Facing information for components and rotation operations for them
+ M b|0036:Framework for handling of blueprint-creation errors and warning.
+RE b|0037:Remove placeAt() and remove() functions of components/frames/etc, replace with sets and gets for tile and facing.
+RE b|0038:Make frames/components/etc capable of holding tiles, positions, facings, etc, without being locked to grid (reified).
+RE b|0039:Seperate blueprint code out into blueprints.es
+ I b|0040:Graceful exception handling for UI frame/component placement errors
+AI b|0041:State-holding frame/component placement tools in ui_grids.es

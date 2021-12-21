@@ -4,45 +4,89 @@ export class Frame {
 
         this._anchorTile = null
         this._tiles = []
+
+        this.__locked = false
     }
 
-    placeAt(tile) {
-        if (this._anchorTile !== null) {
-            throw `Panic - can't place frame ${this} from ${tile} - already placed at ${this.anchorTile}`
+    get locked() { return this.__locked }
+
+    get tile() { return this._anchorTile }
+    set tile(data) {
+        if (this.__locked) { throw `Panic - can't adjust tile of locked frame ${this}` }
+
+        if (this.tile != null) {
+            this._clearTile()
+        }
+        if (data != null) {
+            this._setTile(data)
+        }
+    }
+    get tiles() {
+        return this._tiles            
+    }
+
+    _setTile(tile) {
+        if (this.__locked) { throw `Panic - can't adjust tile of locked frame ${this}` }
+
+        this._anchorTile = tile
+        this._tiles = this.placeVecs.map ( (placeVec) => tile.relTile(placeVec) )
+    }
+    _clearTile() {
+        if (this.__locked) { throw `Panic - can't adjust tile of locked frame ${this}` }
+
+        this._anchorTile = null
+        this._tiles = []
+    }
+
+    lockToGrid(tile = undefined) {
+        if (this.__locked) { throw `Panic - frame ${this} already locked to grid!` } 
+
+        if (tile !== undefined) {
+            this.tile = tile
         }
 
-        this._tiles = []
-        for (let placeVec of this.placeVecs) {
-            let placeTile = tile.relTile(placeVec)
-            console.log("placing frame", this, "at", placeVec, "total", `${placeTile.xyPos}`)
+        if (this.tile == null) { throw `Panic - can't lock frame without linked tile!` }
+
+        this.__locked = true
+        for (let placeTile of this.tiles) {
             if (placeTile.frame !== null) {
                 console.log("Can't place tile there!")
-                throw `Panic - can't place frame section ${this}->${placeVec} at ${placeTile}`
-            } else {
-                this._tiles.push(placeTile)
+                throw `Panic - can't reify frame section ${this} at ${placeTile}`
             }
         }
-        this._anchorTile = tile
+
         for (let tile of this._tiles) {
             tile.frame = this
         }
     }
-    get tiles() {
-        if (this._anchorTile === null) {
-            return []
-        } else {
-
+    unlock() {
+        if (!this.__locked) {
+            throw `Panic - frame ${this} not locked to grid!`
         }
-    }
-    remove() {
-        if (this._anchorTile === null) {
-            throw `Panic - can't remove frame ${this} - not currently placed at all!`
-        } else {
 
-            for (let tile of this._tiles) {
-                tile.frame = null
-            } 
-            this._anchorTile = null
+        this.grid.removeFrame(this)
+        for (let tile of this._tiles) {
+            tile.frame = null
+        }
+        this.__locked = false
+    }
+
+    canLock() {
+        if (this.locked) { return false } 
+        if (this.tile == null) { return false }
+        for (let placeTile of this.tiles) {
+            if (placeTile.frame !== null) {
+                return false
+            }
+        }
+        return true
+    }
+
+    get grid() {
+        if (this._anchorTile != null) {
+            return this._anchorTile.parent
+        } else {
+            return null
         }
     }
 

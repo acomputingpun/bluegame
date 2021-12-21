@@ -3,6 +3,9 @@ import * as panels from '/es/ui/panels.es'
 
 import * as frameweights from '/es/frameweights.es'
 import * as frames from '/es/frames.es'
+import * as cspecs from '/es/cspecs.es'
+import * as components from '/es/components.es'
+
 
 export class GridPanel extends panels.Panel {
     constructor(parent, grid) {
@@ -57,6 +60,9 @@ export class GridPanel extends panels.Panel {
     warpTileMouseDown(xyLocal) {
         this.parent.warpTileMouseDown(this, xyLocal)
     }
+    warpTileMouseMove(xyLocal) {
+        this.parent.warpTileMouseMove(this, xyLocal)
+    }
 }
 
 let TILE_EMPTY_BG = "#EEE"
@@ -103,6 +109,9 @@ class TilePanel extends panels.Panel {
         console.log(`Tile ${this} mouse down!`)
         this.parent.warpTileMouseDown(this.xyLocal)
     }
+    warpMouseMove(mousePos) {
+        this.parent.warpTileMouseMove(this.xyLocal)
+    }
 
     reflectTile(tile) {
         this.tile = tile
@@ -148,37 +157,128 @@ export class FrameMenuPanel extends panels.Panel {
     }
 
     warpMenuSelect(data) {
-        this.parent.editingTool.debugFrame = data
+        if (data == null) {
+            this.parent.editingTool = this.parent.removeFrameTool
+        } else {
+            this.parent.editingTool = this.parent.placeFrameTool
+            this.parent.editingTool.createHoveringFrame(data)
+        }
+
     }
 }
 
 import * as debug_ships from '/es/ships.es'
 
-export class EditingToolState {
+export class Tool {
     constructor(parent) {
         this.parent = parent
-
-        this.debugFrame = 0
-    }
-
+    }    
     get gridPanel() { return this.parent.gridPanel }
+}
 
+
+export class RemoveComponentTool extends Tool {
+    warpTileMouseMove(xyLocal) {
+    }
     warpTileMouseDown(xyLocal) {
         let tilePanel = this.gridPanel.localLookupPanel( xyLocal.xy )
         if (tilePanel != null) {
-            let tile = tilePanel.tile
-            if (this.debugFrame == null) {
-                if (tile.frame != null) {
-                    tile.frame.remove()
-                }
-            } else {
-                let frame = new frames.Frame(this.debugFrame)
-                frame.placeAt(tile)
+            console.log("Can't remove comp yet!  TODO: implement")
+        } else {
+            throw "PANIC"
+        }
+    }
+}
+
+export class PlaceComponentTool extends Tool {
+    constructor(parent) {
+        super(parent)
+        this.hoveringComp = null
+    }
+
+    rotateHoveringComponent(cw = true) {
+        
+    }
+
+    createHoveringComponent(specs) {
+        this.hoveringComp = new components.Component(specs)
+    }
+    setHoverTilePanel(tilePanel) {
+        if (this.hoveringFrame != null) {
+            this.hoverTilePanel = tilePanel
+            if (this.hoverTilePanel.tile != this.hoveringComp.tile) {
+                this.hoveringComp.tile = this.hoverTilePanel.tile
+            }
+        }
+    }
+}
+
+export class RemoveFrameTool extends Tool {
+    warpTileMouseMove(xyLocal) {
+    }
+    warpTileMouseDown(xyLocal) {
+        let tilePanel = this.gridPanel.localLookupPanel( xyLocal.xy )
+        if (tilePanel != null) {
+            if (tilePanel.tile.frame != null) {
+                tilePanel.tile.frame.unlock()   
             }
         } else {
             throw "PANIC"
         }
+    }
+}
 
+export class PlaceFrameTool extends Tool {
+    constructor(parent) {
+        super(parent)
+
+        this.hoverTilePanel = null
+        this.hoveringFrame = null
+    }
+
+    warpTileMouseDown(xyLocal) {
+        let tilePanel = this.gridPanel.localLookupPanel( xyLocal.xy )
+        if (tilePanel != null) {
+            if (this.hoveringFrame != null) {
+                if (this.hoveringFrame.canLock()) {
+                    this.hoveringFrame.lockToGrid(tilePanel.tile)
+                    this.createHoveringFrame(this.hoveringFrame.weight)
+                } else {
+                    console.log("Can't place!")
+                }
+            }
+        } else {
+            throw "PANIC"
+        }
+    }
+
+    createHoveringFrame(frameweight) {
+        this.hoveringFrame = new frames.Frame(frameweight)
+    }
+    setHoverTilePanel(tilePanel) {
+        if (this.hoveringFrame != null) {
+            this.hoverTilePanel = tilePanel
+            if (this.hoverTilePanel.tile != this.hoveringFrame.tile) {
+                this.hoveringFrame.tile = this.hoverTilePanel.tile
+            }
+        }
+    }
+
+    warpTileMouseMove(xyLocal) {
+        let tilePanel = this.gridPanel.localLookupPanel( xyLocal.xy )
+        if (tilePanel != null) {
+            if (this.hoveringFrame != null) {
+                this.setHoverTilePanel(tilePanel)
+            }
+        } else {
+            throw "PANIC"
+        }
+    }
+
+    drawContents() {
+        if (this.hoveringFrame != null && this.hoveringFrame.tile != null) {
+            let tilePanel = hoveringFrame.tilePanel
+        }
     }
 }
 
@@ -190,7 +290,11 @@ export class EditGridPanel extends panels.Panel {
 
         this.gridPanel = new GridPanel(this, grid)
         this.frameMenuPanel = new FrameMenuPanel(this)
-        this.editingTool = new EditingToolState(this)
+
+        this.removeFrameTool = new RemoveFrameTool(this)
+        this.placeFrameTool = new PlaceFrameTool(this)
+
+        this.editingTool = this.removeFrameTool
 
         this.debugHillValid = true
     }
@@ -205,6 +309,14 @@ export class EditGridPanel extends panels.Panel {
         this.ctx.fillStyle=this.borderColour
 
         this.ctx.fillText( `hill validity: ${this.debugHillValid}`, ...this.absStart.xy )
+    }
+
+    warpTileMouseMove(gridPanel, xyLocal) {
+        if (gridPanel == this.gridPanel) {
+            this.editingTool.warpTileMouseMove(xyLocal)
+        } else {
+            throw "PANIC"
+        }
     }
 
     warpTileMouseDown(gridPanel, xyLocal) {

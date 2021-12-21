@@ -40,6 +40,10 @@ export class Vector2 {
     toString() {
         return `(${this.x},${this.y})`
     }
+
+    eq(other) {
+        return this.x == other.x && this.y == other.y
+    }
 }
 
 export function Vec2(x,y) {

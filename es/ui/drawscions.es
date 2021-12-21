@@ -14,6 +14,17 @@ export class DrawScion {
     get children() {
         return []
     }
+    warpMouseMove(clickLocal) {
+        for (let child of this.children) { 
+            let childLocal = clickLocal.sub(child.originShift)
+            if (child.localWithin(childLocal)) {
+                if (child.warpMouseMove(childLocal)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
     warpMouseDown(clickLocal) {
         for (let child of this.children) {
             let childLocal = clickLocal.sub(child.originShift)

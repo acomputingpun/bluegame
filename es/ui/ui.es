@@ -76,6 +76,7 @@ export class Renderer {
     warpMouseMove(event) {
         let canvasOffset = this.canvas.getBoundingClientRect()
         let mousePos = vecs.Vec2(event.clientX - canvasOffset.left, event.clientY - canvasOffset.top)
+        this.panel.warpMouseMove(mousePos)
         this.cursor.setPos(mousePos)
     }
     warpMouseDown(event) {
