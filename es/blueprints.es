@@ -3,6 +3,9 @@ import * as utils from '/es/utils.es'
 import * as vecs from '/es/vectors.es'
 import * as frameweights from '/es/frameweights.es'
 
+import * as warnings from '/es/warnings.es'
+
+
 class BlueprintTile extends grids.GridTile {
     constructor (...args) {
         super(...args)
@@ -21,9 +24,11 @@ class BlueprintTile extends grids.GridTile {
 
     addComponent(comp) {
         this.components.push(comp)
+        this.markDirty()
     }
     removeComponent(comp) {
         utils.aRemove(this.components, comp)
+        this.markDirty()
     }
 }
 
@@ -33,28 +38,31 @@ export class BlueprintGrid extends grids.Grid {
 
         this.frames = []
         this.components = []
+        this.connectors = []
     }
 
     addFrame(frame) {
         if (!frame.locked) { throw `PANIC: Tried to add unlocked frame ${frame} to BlueprintGrid ${this}` }
         this.frames.push(frame)
+        this.markDirty()
     }
     removeFrame(frame) {
         if (!frame.locked) { throw `PANIC: Tried to remove unlocked frame ${frame} from BlueprintGrid ${this}` }
         utils.aRemove(this.frames, frame)
+        this.markDirty()
     }
     addComponent(comp) {
         if (!comp.locked) { throw `PANIC: Tried to add unlocked component ${comp} to BlueprintGrid ${this}` }
         this.components.push(comp)
+        this.markDirty()
     }
     removeComponent(comp) {
         if (!comp.locked) { throw `PANIC: Tried to remove unlocked component ${comp} from BlueprintGrid ${this}` }
         utils.aRemove(this.components, comp)
+        this.markDirty()
     }
 
-
-
-    checkFrameweightDecreasing() {
+    checkHillProperty() {
         console.log("Checking hill validity of grid", this)
 
         let fwMap = new Map() 
@@ -100,19 +108,25 @@ export class BlueprintGrid extends grids.Grid {
     }
 
     isLegal() {
-        errors = this.getErrors()
+        warns = this.getWarnings()
+        errs = warns.filter( (warn) => (warn.isFatal) )
         return errors.length == 0
     }
-    getErrors() {
-        let errs = []
-        if (!this.checkFrameweightDecreasing()) {
-            errs.push("err")
+    getWarnings() {
+        if (this.getWarnings.__dirtyID !== this._dirtyID) {
+            this.getWarnings.__dirtyID = this._dirtyID
+
+            let errs = []
+            if (!this.checkHillProperty()) {
+                errs.push( new warnings.HillPropertyError(this) )
+            }
+
+            for (let comp of this.components) {
+
+            }
+
+            this.getWarnings.__cachedValue = errs
         }
-
-        for (let comp of this.components) {
-
-        }
-
-        return errs
+        return this.getWarnings.__cachedValue
     }
 }

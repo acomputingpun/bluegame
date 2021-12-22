@@ -9,6 +9,7 @@ export class Component {
 
         this._anchorTile = null
         this._tiles = []
+        this._connectors = []
 
         this.__locked = false
     }
@@ -20,41 +21,30 @@ export class Component {
     get locked() { return this.__locked }
 
     get facing() { return this._facing.data }
-    set facing(data) {
-        if (this.__locked) { throw `Panic - can't adjust facing of locked component ${this}` }
-        this._facing.set(data)
-    }
 
     get tile() { return this._anchorTile }
-    set tile(data) {
-        if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
-        if (data == null) {
-            this._clearTile()
-        } else {
-            this._setTile(data)
-        }
-    }
     get tiles() {
         return this._tiles            
     }
 
     lockToGrid(tile = undefined, facing = undefined) {
-        if (this.__locked) { throw `Panic - frame ${this} already locked to grid!` } 
-
         if (tile !== undefined) {
-            this.tile = tile
+            this.setTile(tile)
         }
         if (facing !== undefined) {
-            this.facing = facing
+            this.setFacing(facing)
         }
 
-        if (this.tile == null) { throw `Panic - can't lock frame without linked tile!` }
+        if (!this.canLock()) { throw `Panic - can't lock frame ${this}!` }
 
         this.__locked = true
-
         this.grid.addComponent(this)
         for (let tile of this._tiles) {
             tile.addComponent(this)
+        }
+        for (let connector of this._connectors) {
+            this.grid.addConnector(connector)
+            connector.tile.addConnector(connector)
         }
     }
     unlock() {
@@ -66,6 +56,10 @@ export class Component {
         for (let tile of this._tiles) {
             tile.removeComponent(this)
         }
+        for (let connector of this._connectors) {
+            this.grid.removeConnector(connector)
+            connector.tile.removeConnector(connector)
+        }
         this.__locked = false
     }
 
@@ -75,18 +69,28 @@ export class Component {
         return true
     }
 
-
-    _setTile(tile) {
+    setTile(tile) {
         if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
-
-        this._anchorTile = tile
-        this._tiles = this.placeVecs.map ( (placeVec) => tile.relTile(placeVec) )
+        if (tile == null) {
+            this.clearTile(tile)
+        } else {
+            this._anchorTile = tile
+            this._tiles = this.placeVecs.map ( (placeVec) => tile.relTile(placeVec) )
+        }
+        this._connectors = this.specs.createConnectors(this)
     }
-    _clearTile(tile) {
+    clearTile(tile) {
         if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
         this._anchorTile = null
         this._tiles = []
+        this._connectors = this.specs.createConnectors(this)
     }
+    setFacing(data) {
+        if (this.__locked) { throw `Panic - can't adjust facing of locked component ${this}` }
+        this._facing.set(data)
+        this._connectors = this.specs.createConnectors(this)
+    }
+
 
     get grid() {
         if (this._anchorTile != null) {

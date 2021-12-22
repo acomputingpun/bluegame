@@ -143,22 +143,25 @@ export class FrameMenuPanel extends panels.Panel {
         this.panelStart = vecs.Vec2(700, 0)
         this.panelSize = vecs.Vec2(100, 600)
 
-        this.noFrameButton = new MenuButton( this, vecs.Vec2(5, 5), "none", null )
+        this.swapButton = new MenuButton( this, vecs.Vec2(5, 5), "swap", "swap" )
+        this.noFrameButton = new MenuButton( this, vecs.Vec2(5, 55), "none", null )
 
-        this.superlightFrameButton = new MenuButton( this, vecs.Vec2(5, 55), "superlight", frameweights.Superlight )
-        this.lightFrameButton = new MenuButton( this, vecs.Vec2(5, 105), "light", frameweights.Light )
-        this.mediumFrameButton = new MenuButton( this, vecs.Vec2(5, 155), "medium", frameweights.Medium )
-        this.heavyFrameButton = new MenuButton( this, vecs.Vec2(5, 205), "heavy", frameweights.Heavy )
-        this.superheavyFrameButton = new MenuButton( this, vecs.Vec2(5, 255), "superheavy", frameweights.Superheavy )
+        this.superlightFrameButton = new MenuButton( this, vecs.Vec2(5, 105), "superlight", frameweights.Superlight )
+        this.lightFrameButton = new MenuButton( this, vecs.Vec2(5, 155), "light", frameweights.Light )
+        this.mediumFrameButton = new MenuButton( this, vecs.Vec2(5, 205), "medium", frameweights.Medium )
+        this.heavyFrameButton = new MenuButton( this, vecs.Vec2(5, 255), "heavy", frameweights.Heavy )
+        this.superheavyFrameButton = new MenuButton( this, vecs.Vec2(5, 305), "superheavy", frameweights.Superheavy )
     }
 
     get children() {
-        return [this.noFrameButton, this.superlightFrameButton, this.lightFrameButton, this.mediumFrameButton, this.heavyFrameButton, this.superheavyFrameButton]
+        return [this.swapButton, this.noFrameButton, this.superlightFrameButton, this.lightFrameButton, this.mediumFrameButton, this.heavyFrameButton, this.superheavyFrameButton]
     }
 
     warpMenuSelect(data) {
         if (data == null) {
             this.parent.editingTool = this.parent.removeFrameTool
+        } else if (data == "swap") {
+            this.parent.swapToComponentTools()
         } else {
             this.parent.editingTool = this.parent.placeFrameTool
             this.parent.editingTool.createHoveringFrame(data)
@@ -167,7 +170,46 @@ export class FrameMenuPanel extends panels.Panel {
     }
 }
 
-import * as debug_ships from '/es/ships.es'
+export class ComponentMenuPanel extends panels.Panel {
+    constructor(parent, grid) {
+        super(parent)
+        this.panelStart = vecs.Vec2(700, 0)
+        this.panelSize = vecs.Vec2(100, 600)
+
+        this.swapButton = new MenuButton( this, vecs.Vec2(5, 5), "swap", "swap" )
+        this.noComponentButton = new MenuButton( this, vecs.Vec2(5, 55), "none", null )
+
+        this.laserGunButton = new MenuButton( this, vecs.Vec2(5, 105), "lgun", cspecs.LaserGun )
+        this.electricSourceButton = new MenuButton( this, vecs.Vec2(5, 155), "esource", cspecs.ElectricSource )
+
+        this.cwRotButton = new MenuButton( this, vecs.Vec2(5, 205), "rotCW", "rotCW" )
+        this.ccwRotButton = new MenuButton( this, vecs.Vec2(5, 255), "rotCW", "rotCCW" )
+    }
+
+    get children() {
+        return [this.swapButton, this.noComponentButton, this.laserGunButton, this.electricSourceButton, this.cwRotButton, this.ccwRotButton]
+    }
+
+    warpMenuSelect(data) {
+        if (data == null) {
+            this.parent.editingTool = this.parent.removeComponentTool
+        } else if (data == "swap") {
+            this.parent.swapToFrameTools()
+        } else if (data == "rotCW") {
+            if (this.parent.editingTool == this.parent.placeComponentTool) {
+                this.parent.editingTool.rotateHoveringComponent(true)
+            }
+        } else if (data == "rotCCW") {
+            if (this.parent.editingTool == this.parent.placeComponentTool) {
+                this.parent.editingTool.rotateHoveringComponent(false)
+            }
+        } else {
+            this.parent.editingTool = this.parent.placeComponentTool
+            this.parent.editingTool.createHoveringComponent(data)
+        }
+
+    }
+}
 
 export class Tool {
     constructor(parent) {
@@ -183,7 +225,9 @@ export class RemoveComponentTool extends Tool {
     warpTileMouseDown(xyLocal) {
         let tilePanel = this.gridPanel.localLookupPanel( xyLocal.xy )
         if (tilePanel != null) {
-            console.log("Can't remove comp yet!  TODO: implement")
+            if (tilePanel.tile.components.length > 0) {
+                tilePanel.tile.components[0].unlock()
+            }
         } else {
             throw "PANIC"
         }
@@ -204,13 +248,41 @@ export class PlaceComponentTool extends Tool {
         this.hoveringComp = new components.Component(specs)
     }
     setHoverTilePanel(tilePanel) {
-        if (this.hoveringFrame != null) {
+        if (this.hoveringComp != null) {
             this.hoverTilePanel = tilePanel
             if (this.hoverTilePanel.tile != this.hoveringComp.tile) {
-                this.hoveringComp.tile = this.hoverTilePanel.tile
+                this.hoveringComp.setTile(this.hoverTilePanel.tile)
             }
         }
     }
+
+    warpTileMouseMove(xyLocal) {
+        let tilePanel = this.gridPanel.localLookupPanel( xyLocal.xy )
+        if (tilePanel != null) {
+            if (this.hoveringComp != null) {
+                this.setHoverTilePanel(tilePanel)
+            }
+        } else {
+            throw "PANIC"
+        }
+    }
+    warpTileMouseDown(xyLocal) {
+        let tilePanel = this.gridPanel.localLookupPanel( xyLocal.xy )
+        if (tilePanel != null) {
+            if (this.hoveringComp != null) {
+                if (this.hoveringComp.canLock()) {
+                    this.hoveringComp.lockToGrid(tilePanel.tile)
+                    this.createHoveringComponent(this.hoveringComp.specs)
+                } else {
+                    console.log("Can't place!")
+                }
+            }
+        } else {
+            throw "PANIC"
+        }
+    }
+
+
 }
 
 export class RemoveFrameTool extends Tool {
@@ -259,7 +331,7 @@ export class PlaceFrameTool extends Tool {
         if (this.hoveringFrame != null) {
             this.hoverTilePanel = tilePanel
             if (this.hoverTilePanel.tile != this.hoveringFrame.tile) {
-                this.hoveringFrame.tile = this.hoverTilePanel.tile
+                this.hoveringFrame.setTile(this.hoverTilePanel.tile)
             }
         }
     }
@@ -289,26 +361,49 @@ export class EditGridPanel extends panels.Panel {
         this.panelSize = vecs.Vec2(800, 600)
 
         this.gridPanel = new GridPanel(this, grid)
-        this.frameMenuPanel = new FrameMenuPanel(this)
 
+        this.frameMenuPanel = new FrameMenuPanel(this)
         this.removeFrameTool = new RemoveFrameTool(this)
         this.placeFrameTool = new PlaceFrameTool(this)
 
+        this.componentMenuPanel = new ComponentMenuPanel(this)
+        this.removeComponentTool = new RemoveComponentTool(this)
+        this.placeComponentTool = new PlaceComponentTool(this)
+
+        this.editingSideMenu = this.frameMenuPanel
         this.editingTool = this.removeFrameTool
 
         this.debugHillValid = true
     }
     get children() {
-        return [this.gridPanel, this.frameMenuPanel]
+        return [this.gridPanel, this.editingSideMenu]
     }
 
-    drawContents() {
+    swapToComponentTools() {
+        this.editingTool = this.removeComponentTool
+        this.editingSideMenu = this.componentMenuPanel
+    }
+    swapToFrameTools() {
+        this.editingTool = this.removeFrameTool
+        this.editingSideMenu = this.frameMenuPanel
+    }
+
+    drawWarnings() {
         this.ctx.font = "11px Courier"
         this.ctx.textAlign = "left"
         this.ctx.textBaseline = "top"
         this.ctx.fillStyle=this.borderColour
 
-        this.ctx.fillText( `hill validity: ${this.debugHillValid}`, ...this.absStart.xy )
+        let [xDraw, yDraw] = this.absStart.xy
+
+        for (let warning of this.gridPanel.grid.getWarnings()) {
+            this.ctx.fillText( warning.text, xDraw, yDraw )
+            yDraw += 12
+        }
+    }
+
+    drawContents() {
+        this.drawWarnings()
     }
 
     warpTileMouseMove(gridPanel, xyLocal) {
@@ -323,7 +418,7 @@ export class EditGridPanel extends panels.Panel {
         if (gridPanel == this.gridPanel) {
             this.editingTool.warpTileMouseDown(xyLocal)
 
-            this.debugHillValid = this.gridPanel.grid.checkFrameweightDecreasing()
+//            this.debugHillValid = this.gridPanel.grid.checkFrameweightDecreasing()
         } else {
             throw "PANIC"
         }

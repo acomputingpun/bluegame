@@ -28,7 +28,7 @@ export class Grid {
     }
 
     markDirty() {
-        this.dirtyID += 1
+        this._dirtyID += 1
     }
 
     get tiles() { return this._tiles }
@@ -43,7 +43,7 @@ export class GridTile {
     }
 
     markDirty() {
-        this.dirtyID += 1
+        this._dirtyID += 1
         this.parent.markDirty()
     }
 

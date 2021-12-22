@@ -1,6 +1,7 @@
 import * as utils from '/es/utils.es'
 import * as vecs from '/es/vectors.es'
 import * as dirconst from '/es/dirconst.es'
+import * as connectors from '/es/connectors.es'
 
 export class NoFacing {
     set(vec) {
@@ -76,7 +77,7 @@ export class ComponentSpecs {
         this._placeVecs = vecs.arrToVecs(utils.span2( [0, 0], this.xySize.xy ))
     }
 
-    tConnectors(tile) {
+    createConnectors(comp) {
         return []
     }
 
@@ -134,26 +135,17 @@ class _LaserGun extends ComponentSpecs {
     }
 }
 
-class Connector {
-    constructor(tile, facing) {
-        this.tile = tile
-        this.facing = facing
-    }
-    get destTile() { return this.tile.rel(this.facing) }
-}
-class ElectricConnector extends Connector {    
-}
-class EmptyTileConnector extends Connector {
-}
 
 class _GenericCable extends ComponentSpecs {
     get facingClass() { return DoubleCardinalFacing }
     get xySize() { return vecs.Vec2(1,1) }
 
-    get connectorClass() { return ElectricConnector }
+    get connectorClass() { return connectors.ElectricConnector }
 
-    tConnectors(comp) {
+    createConnectors(comp) {
         if (comp.facing == null) {
+            return []
+        } else if (comp.tile == null) {
             return []
         } else {
             return comp.facing.map( (vec) => new this.connectorClass(comp.tile, vec) )

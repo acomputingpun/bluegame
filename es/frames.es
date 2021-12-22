@@ -11,27 +11,21 @@ export class Frame {
     get locked() { return this.__locked }
 
     get tile() { return this._anchorTile }
-    set tile(data) {
-        if (this.__locked) { throw `Panic - can't adjust tile of locked frame ${this}` }
-
-        if (this.tile != null) {
-            this._clearTile()
-        }
-        if (data != null) {
-            this._setTile(data)
-        }
-    }
     get tiles() {
         return this._tiles            
     }
 
-    _setTile(tile) {
+    setTile(tile) {
         if (this.__locked) { throw `Panic - can't adjust tile of locked frame ${this}` }
 
-        this._anchorTile = tile
-        this._tiles = this.placeVecs.map ( (placeVec) => tile.relTile(placeVec) )
+        if (tile == null) {
+            this.clearTile()
+        } else {
+            this._anchorTile = tile
+            this._tiles = this.placeVecs.map ( (placeVec) => tile.relTile(placeVec) )
+        }
     }
-    _clearTile() {
+    clearTile() {
         if (this.__locked) { throw `Panic - can't adjust tile of locked frame ${this}` }
 
         this._anchorTile = null
@@ -39,22 +33,14 @@ export class Frame {
     }
 
     lockToGrid(tile = undefined) {
-        if (this.__locked) { throw `Panic - frame ${this} already locked to grid!` } 
-
         if (tile !== undefined) {
-            this.tile = tile
+            this.setTile(tile)
         }
 
-        if (this.tile == null) { throw `Panic - can't lock frame without linked tile!` }
+        if (!this.canLock()) { throw `Panic - can't lock frame ${this}!` }
 
         this.__locked = true
-        for (let placeTile of this.tiles) {
-            if (placeTile.frame !== null) {
-                console.log("Can't place tile there!")
-                throw `Panic - can't reify frame section ${this} at ${placeTile}`
-            }
-        }
-
+        this.grid.addFrame(this)
         for (let tile of this._tiles) {
             tile.frame = this
         }

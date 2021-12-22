@@ -21,7 +21,7 @@ RE b|0010:Remove unneccessary semicolons.
 RI b|0011:Update title of HTML page to 'bluegame'.
  M b|0012:Ship combat UI panel.
  M b|0013:Ship combat state logic.
- I b|0014:Ability to place and remove components on a blueprint grid.
+RI b|0014:Ability to place and remove components on a blueprint grid.
  I b|0015:Blueprint legality checking for components and component capacity.
  M b|0016:State-logic for conduits to link various components.
 RI b|0017:Grid UI recognition of cursor input and translation of cursor pos to tilepos.
@@ -48,4 +48,20 @@ RE b|0037:Remove placeAt() and remove() functions of components/frames/etc, repl
 RE b|0038:Make frames/components/etc capable of holding tiles, positions, facings, etc, without being locked to grid (reified).
 RE b|0039:Seperate blueprint code out into blueprints.es
  I b|0040:Graceful exception handling for UI frame/component placement errors
-AI b|0041:State-holding frame/component placement tools in ui_grids.es
+RI b|0041:State-holding frame/component placement tools in ui_grids.es
+AI b|0042:Blueprints keep track of connectors.
+ E b|0043:Make the tile-occupancy logic of frames and components inherit from a common class?
+RE b|0044:Replace the inbuild ES6 setter of this.tile with explict function setTile() for frames and components
+RI b|0045:Functions for connectors to access the tiles they link to and those tiles' other connectors via position.
+ I b|0046:Blueprint-level error checking of connectors being immediately linked correctly.
+ M b|0047:General state-level logic for resource movement, allocation, sources and sinks, etc.
+ I b|0048:Components with internal resource state.
+ I b|0049:Active logic for sources / sinks to output or draw resources.
+ I b|0050:Active logic for conduits and connectors to facilitate flow of resources.
+ I b|0051:Blueprint-level error checking of connectors being indefinitely linked correctly (ie, an eventual valid connection).
+ I b|0052:More complex activity-logic for resource components: generators that burn a resource, weapons, etc.
+ I b|0053:State-logic for weapon components.
+RI b|0054:Grid ui that displays blueprint errors and warnings
+ I b|0055:Blueprint-level error checking of connector loops
+AI b|0056:UI display of components that respects rotation/facing status
+ I b|0057:UI view with the ability to rotate vision of blueprint.
