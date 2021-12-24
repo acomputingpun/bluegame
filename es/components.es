@@ -90,6 +90,11 @@ export class Component {
         this._facing.set(data)
         this._connectors = this.specs.createConnectors(this)
     }
+    rotFacing(cw = true) {
+        if (this.__locked) { throw `Panic - can't adjust facing of locked component ${this}` }
+        this._facing.rot(cw)
+        this._connectors = this.specs.createConnectors(this)
+    }
 
 
     get grid() {

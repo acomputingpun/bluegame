@@ -10,6 +10,9 @@ export class NoFacing {
             throw ("PANIC: Tried to set facing of directionless component!")
         }
     }
+    rot(cw = true) {
+        // do nothing, we can't rotate a directionless comp
+    }
 }
 
 export class HVFacing {
@@ -18,21 +21,33 @@ export class HVFacing {
     }
 
     set(vec) {
-        if (vec.eq(dirconst.N) || vec.eq(dirconst.S)) {
+        if (vec == null) {
+            this.data = null
+        } else if (vec.eq(dirconst.N) || vec.eq(dirconst.S)) {
             this.data = dirconst.S
         } else if (vec.eq(dirconst.E) || vec.eq(dirconst.W)) {
             this.data = dirconst.E
-        } else if (vec == null) {
-            this.data = null
         } else {
-            throw ("PANIC: Tried to set facing of CardinalFacing component to non-cardinal value!")
+            throw ("PANIC: Tried to set facing of HVFacing component to non-cardinal value!")
+        }
+    }
+
+    rot(cw = true) {
+        if (this.data == null) {
+            this.data = null
+        } else if (this.data.eq(dirconst.S)) {
+            this.data = dirconst.E
+        } else if (this.data.eq(Sirconst.E)) {
+            this.data = dirconst.E
+        } else {
+            throw (`PANIC: facing of HVFacing component somehow became set to invalid value ${this.data}`)
         }
     }
 }
 
 export class CardinalFacing {
     constructor() {
-        this.data = null
+        this.data = dirconst.N
     }
 
     set(vec) {
@@ -42,6 +57,19 @@ export class CardinalFacing {
             this.data = null
         } else {
             throw ("PANIC: Tried to set facing of CardinalFacing component to non-cardinal value!")
+        }
+    }
+    rot(cw = true) {
+        if (this.data == null) {
+            this.data = null
+        } else if (dirconst.CARDINALS.includes(this.data)) {
+            if (cw) {
+                this.data = dirconst.ROT_CW.get(this.data)
+            } else {
+                this.data = dirconst.ROT_CCW.get(this.data)
+            }
+        } else {
+            throw (`PANIC: facing of CardinalFacing component somehow became set to invalid value ${this.data}`)
         }
     }
 }
@@ -69,6 +97,18 @@ export class DoubleCardinalFacing {
             }
         }
     }
+
+    rot(cw = true) {
+        if (this.data == null) {
+            this.data = null
+        } else {
+            if (cw) {
+                this.set( this.data.map( (vec) => dirconst.ROT_CW.get(vec) ) )
+            } else {
+                this.set( this.data.map( (vec) => dirconst.ROT_CCW.get(vec) ) )
+            }
+        }
+    }
 }
 
 
@@ -89,33 +129,33 @@ export class ComponentSpecs {
 class _SmallDoodad extends ComponentSpecs {
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
-        return [ [1,1], [9,1], [1,9], [9,9] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-.8,-.8], [.8,-.8], [-.8,.8], [-.8,-.8] ].map( ( xy ) => vecs.Vec2(...xy) )
     }
 }
 class _LargeDoodad extends ComponentSpecs {
     get xySize() { return vecs.Vec2(3,2) }
     get debugDrawPoints () {
-        return [ [1,1], [9,1], [1,9], [9,9] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-.8,-.8], [.8,-.8], [-.8,.8], [.8,.8] ].map( ( xy ) => vecs.Vec2(...xy) )
     }
 }
 class _HeavyDoodad extends ComponentSpecs {
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
-        return [ [1,1], [4,1], [4,4], [9,4], [9,8], [6,8], [6,9], [1,9] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-.8,-.8], [-.2,-.8], [-.2,-.2], [.8,-.2], [.8,.6], [.2,.6], [.2,.8], [-.8,.8] ].map( ( xy ) => vecs.Vec2(...xy) )
     }
 }
 
 class _ElectricSink extends ComponentSpecs {
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
-        return [ [4,1], [6,1], [6,4], [9,4], [9,6], [6,6], [6,9], [4,9], [4,6], [1,6], [1,4], [4,4] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-.2,-.8], [.2,-.8], [.2,-.2], [.8,-.2], [.8,.2], [.2,.2], [.2,.8], [-.2,.8], [-.2,.2], [-.8,.2], [-.8,-.2], [-.2,-.2] ].map( ( xy ) => vecs.Vec2(...xy) )
     }
 
 }
 class _ElectricSource extends ComponentSpecs {
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
-        return [ [4,3], [6,1], [6,4], [7,4], [9,6], [6,6], [6,7], [4,9], [4,6], [3,6], [1,4], [4,4] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-.2,-.6], [.2,-.8], [.2,-.2], [.6,-.2], [.8,.2], [.2,.2], [.2,.6], [-.2,.8], [-.2,.2], [-.6,.2], [-.8,-.2], [-.2,-.2] ].map( ( xy ) => vecs.Vec2(...xy) )
     }
 }
 
@@ -131,7 +171,7 @@ class _LaserGun extends ComponentSpecs {
     get xySize() { return vecs.Vec2(1,1) }
 
     get debugDrawPoints () {
-        return [ [4,1], [6,1], [6,4], [7,5], [6,6], [4,6], [3,5], [4,4] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-.2,-.8], [.2,-.8], [.2,-.2], [.4,0], [.2,.2], [-.2,.2], [-.4,0], [-.2,-.2] ].map( ( xy ) => vecs.Vec2(...xy) )
     }
 }
 

@@ -1,5 +1,6 @@
 import * as vecs from '/es/vectors.es'
 import * as panels from '/es/ui/panels.es'
+import * as dirconst from '/es/dirconst.es'
 
 import * as frameweights from '/es/frameweights.es'
 import * as frames from '/es/frames.es'
@@ -28,7 +29,17 @@ export class GridPanel extends panels.Panel {
             }            
         }
 
+        this.viewportOrient = dirconst.N
         this.xyViewportAnchor = vecs.Vec2(0, 0)
+        this.reflectTilePanels()
+    }
+
+    shiftViewport(vec) {
+        this.xyViewportAnchor = this.xyViewportAnchor.add(vec)
+    }
+
+    rotateViewport() {
+        this.viewportOrient = dirconst.ROT_CW.get(this.viewportOrient)
         this.reflectTilePanels()
     }
 
@@ -41,8 +52,20 @@ export class GridPanel extends panels.Panel {
         }
     }
 
+    viewportToGrid(xy) {
+        if (this.viewportOrient == dirconst.N) {
+            return this.xyViewportAnchor.add(xy)
+        } else if (this.viewportOrient == dirconst.S) {
+            return this.xyViewportAnchor.add(xy.reverse())
+        } else if (this.viewportOrient == dirconst.E) {
+            return this.xyViewportAnchor.add(xy.rotCW())
+        } else if (this.viewportOrient == dirconst.W) {
+            return this.xyViewportAnchor.add(xy.rotCCW())
+        }
+    }
+
     localToGrid(xy) {
-        return this.xyViewportAnchor.add(xy)
+        return this.viewportToGrid(xy)
     }
 
     reflectTilePanels() {
@@ -91,18 +114,54 @@ class TilePanel extends panels.Panel {
 
     drawContents() {
         for (let comp of this.tile.components) {
+            let rotFunc = (vec) => (vec)
+            if (comp.facing != null && dirconst.CARDINALS.includes(comp.facing)) {
+                this.ctx.beginPath()
+                this.ctx.arc( ...this.absFacingMidpoint(comp.facing).xy, 5, 0, 2*Math.PI )
+                this.ctx.stroke()
+
+                if (comp.facing == dirconst.N) {
+                    rotFunc = (vec) => vec
+                } else if (comp.facing == dirconst.S) {
+                    rotFunc = (vec) => vec.reverse()
+                } else if (comp.facing == dirconst.E) {
+                    rotFunc = (vec) => vec.rotCCW()
+                } else if (comp.facing == dirconst.W) {
+                    rotFunc = (vec) => vec.rotCW()
+                }
+            }
 
             let drawPoints = comp.specs.debugDrawPoints
             if (drawPoints.length > 0) {
+                let adjustedDrawPoints = [...drawPoints, drawPoints[0]].map( (vec) => rotFunc(vec).sMul(0.5).lMul(this.panelSize) )
+
                 this.ctx.beginPath()
-                this.ctx.moveTo( ...this.absStart.add( drawPoints[0].sMul(0.1).lMul(this.panelSize) ).xy )
-                for (let xyInterior of comp.specs.debugDrawPoints) {
-                    this.ctx.lineTo( ...this.absStart.add( xyInterior.sMul(0.1).lMul(this.panelSize) ).xy )
+                this.ctx.moveTo( ...this.absCenter.add( adjustedDrawPoints[0] ).xy )
+                for (let xyInterior of adjustedDrawPoints) {
+                    this.ctx.lineTo( ...this.absCenter.add( xyInterior ).xy )
                 }
-                this.ctx.lineTo( ...this.absStart.add( drawPoints[0].sMul(0.1).lMul(this.panelSize) ).xy )
                 this.ctx.stroke()
             }
+        } 
+    }
+
+    localFacingMidpoint(vec) {
+        if (vec.eq(dirconst.N)) {
+            return vecs.Vec2(this.localCenter.x, 0)
+        } else if (vec.eq(dirconst.S)) {
+            return vecs.Vec2(this.localCenter.x, this.panelSize.y)
+        } else if (vec.eq(dirconst.W)) {
+            return vecs.Vec2(0, this.localCenter.y)
+        } else if (vec.eq(dirconst.E)) {
+            return vecs.Vec2(this.panelSize.x, this.localCenter.y)
+        } else if (vec.eq(dirconst.IN_PLACE)) {
+            return this.panelCenter
+        } else {
+            throw `PANIC - tried to get localFacingMidpoint of invalid vec ${vec}`
         }
+    }
+    absFacingMidpoint(vec) {
+        return this.absStart.add(this.localFacingMidpoint(vec))
     }
 
     warpMouseDown(mousePos) {
@@ -241,7 +300,7 @@ export class PlaceComponentTool extends Tool {
     }
 
     rotateHoveringComponent(cw = true) {
-        
+        this.hoveringComp.rotFacing(cw)
     }
 
     createHoveringComponent(specs) {
@@ -354,6 +413,18 @@ export class PlaceFrameTool extends Tool {
     }
 }
 
+export class RotateViewportButton extends panels.Button {
+    get text() { return "rotate" }
+    constructor(parent) {
+        super(parent)
+        this.panelStart = vecs.Vec2(10, 550)
+        this.panelSize = vecs.Vec2(50, 20)
+    }
+    onSelect() {
+        this.parent.gridPanel.rotateViewport()
+    }
+}
+
 export class EditGridPanel extends panels.Panel {
     constructor(parent, grid) {
         super(parent)
@@ -373,10 +444,12 @@ export class EditGridPanel extends panels.Panel {
         this.editingSideMenu = this.frameMenuPanel
         this.editingTool = this.removeFrameTool
 
+        this.rotateViewportButton = new RotateViewportButton(this)
+
         this.debugHillValid = true
     }
     get children() {
-        return [this.gridPanel, this.editingSideMenu]
+        return [this.gridPanel, this.editingSideMenu, this.rotateViewportButton]
     }
 
     swapToComponentTools() {

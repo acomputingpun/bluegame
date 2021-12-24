@@ -23,6 +23,16 @@ export class Vector2 {
         return new Vector2(this.x*other.x,this.y*other.y)
     }
 
+    rotCW() {
+        return new Vector2(this.y, -this.x)
+    }
+    rotCCW() {
+        return new Vector2(-this.y, this.x)
+    }
+    reverse() {
+        return new Vector2(-this.x, -this.y)
+    }
+
     get mag(){
         return ((this.x**2+this.y**2)**0.5)
     }

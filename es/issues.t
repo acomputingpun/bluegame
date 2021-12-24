@@ -63,5 +63,7 @@ RI b|0045:Functions for connectors to access the tiles they link to and those ti
  I b|0053:State-logic for weapon components.
 RI b|0054:Grid ui that displays blueprint errors and warnings
  I b|0055:Blueprint-level error checking of connector loops
-AI b|0056:UI display of components that respects rotation/facing status
+RI b|0056:UI display of components that respects rotation/facing status
  I b|0057:UI view with the ability to rotate vision of blueprint.
+RI b|0058:UI tilepanels can display various indicators oriented according to facing relative to the tilepanel.
+ M b|0059:UI display of components, connectors, and frames are all seperate UI-objects rather than just phantoms drawn by tilePanels.

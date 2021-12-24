@@ -22,7 +22,7 @@ export class State {
         new components.Component( cspecs.ElectricSink ).lockToGrid( this.debugGrid.lookup( 3,3 ) )
         new components.Component( cspecs.ElectricSource ).lockToGrid( this.debugGrid.lookup( 5,4 ) )
 
-        new components.Component( cspecs.LaserGun ).lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.N )
+        new components.Component( cspecs.LaserGun ).lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.E )
 
     }
 }
