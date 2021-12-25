@@ -1,11 +1,12 @@
 import * as utils from '/es/utils.es'
 import * as vecs from '/es/vectors.es'
+import * as dirconst from '/es/dirconst.es'
 
 export class Component {
     constructor(specs) {
         this.specs = specs 
 
-        this._facing = new specs.facingClass()
+        this._facing = dirconst.N
         this._interactor = new specs.interactorClass()
 
         this._anchorTile = null
@@ -21,7 +22,7 @@ export class Component {
 
     get locked() { return this.__locked }
 
-    get facing() { return this._facing.data }
+    get facing() { return this._facing }
 
     get tile() { return this._anchorTile }
     get tiles() {
@@ -89,13 +90,15 @@ export class Component {
     }
     setFacing(data) {
         if (this.__locked) { throw `Panic - can't adjust facing of locked component ${this}` }
-        this._facing.set(data)
+        this._facing = data
         this._connectors = this.specs.createConnectors(this)
     }
     rotFacing(cw = true) {
-        if (this.__locked) { throw `Panic - can't adjust facing of locked component ${this}` }
-        this._facing.rot(cw)
-        this._connectors = this.specs.createConnectors(this)
+        if (cw) {
+            this.setFacing(dirconst.ROT_CW.get(this.facing))
+        } else {
+            this.setFacing(dirconst.ROT_CCW.get(this.facing))
+        }
     }
 
 

@@ -242,7 +242,7 @@ export class ComponentMenuPanel extends panels.Panel {
         this.electricSourceButton = new MenuButton( this, vecs.Vec2(5, 155), "esource", cspecs.ElectricSource )
 
         this.cwRotButton = new MenuButton( this, vecs.Vec2(5, 205), "rotCW", "rotCW" )
-        this.ccwRotButton = new MenuButton( this, vecs.Vec2(5, 255), "rotCW", "rotCCW" )
+        this.ccwRotButton = new MenuButton( this, vecs.Vec2(5, 255), "rotCCW", "rotCCW" )
     }
 
     get children() {

@@ -76,4 +76,4 @@ RE b|0065:Split cspecs.es and components.es out into seperate files in a comps f
  E b|0066:Move functions for drawing from sources, sinks, etc out of individual interactors and into more general interactor classes.
  I b|0067:Replace the stub default Directive with actual situation-dependant directives that control the automated behaviour of components.
 RI b|0068:Decide on "complex" facings vs. simple facings splitting complex-faced components into multiple types of component.
-AE b|0069:Remvoe deprecated facing-related code.
+RE b|0069:Remove deprecated facing-related code.

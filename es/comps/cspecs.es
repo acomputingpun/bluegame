@@ -1,7 +1,6 @@
 import * as utils from '/es/utils.es'
 import * as vecs from '/es/vectors.es'
 import * as connectors from '/es/connectors.es'
-import * as facings from './facings.es'
 import * as interactors from './interactors.es'
 
 import * as resources from './resources.es'
@@ -16,7 +15,6 @@ export class ComponentSpecs {
     }
 
     get interactorClass() { return interactors.NoInteractor }
-    get facingClass() { return facings.NoFacing }
     get xySize() { throw "Not implemented!" }
     get placeVecs() { return this._placeVecs }
 }
@@ -93,7 +91,6 @@ class _LGInteractor extends interactors.Interactor {
 }
 
 class _LaserGun extends ComponentSpecs {
-    get facingClass() { return facings.CardinalFacing }
     get xySize() { return vecs.Vec2(1,1) }
 
     get debugDrawPoints () {
@@ -101,9 +98,7 @@ class _LaserGun extends ComponentSpecs {
     }
 }
 
-
 class _GenericCable extends ComponentSpecs {
-    get facingClass() { return facings.DoubleCardinalFacing }
     get xySize() { return vecs.Vec2(1,1) }
 
     get connectorClass() { return connectors.ElectricConnector }
