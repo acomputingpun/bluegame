@@ -4,8 +4,8 @@ import * as dirconst from '/es/dirconst.es'
 
 import * as frameweights from '/es/frameweights.es'
 import * as frames from '/es/frames.es'
-import * as cspecs from '/es/cspecs.es'
-import * as components from '/es/components.es'
+import * as cspecs from '/es/comps/cspecs.es'
+import * as components from '/es/comps/components.es'
 
 
 export class GridPanel extends panels.Panel {

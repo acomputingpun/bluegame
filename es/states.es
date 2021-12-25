@@ -4,8 +4,8 @@ import * as blueprints from '/es/blueprints.es'
 import * as frames from '/es/frames.es'
 import * as frameweights from '/es/frameweights.es'
 
-import * as components from '/es/components.es'
-import * as cspecs from '/es/cspecs.es'
+import * as components from '/es/comps/components.es'
+import * as cspecs from '/es/comps/cspecs.es'
 
 export class State {
     constructor() {
@@ -23,6 +23,5 @@ export class State {
         new components.Component( cspecs.ElectricSource ).lockToGrid( this.debugGrid.lookup( 5,4 ) )
 
         new components.Component( cspecs.LaserGun ).lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.E )
-
     }
 }

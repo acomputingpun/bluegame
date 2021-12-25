@@ -6,6 +6,7 @@ export class Component {
         this.specs = specs 
 
         this._facing = new specs.facingClass()
+        this._interactor = new specs.interactorClass()
 
         this._anchorTile = null
         this._tiles = []
@@ -26,6 +27,7 @@ export class Component {
     get tiles() {
         return this._tiles            
     }
+    get connectors() { return this._connectors }
 
     lockToGrid(tile = undefined, facing = undefined) {
         if (tile !== undefined) {
@@ -103,6 +105,26 @@ export class Component {
         } else {
             return null
         }
+    }
+}
+
+class ComponentInstance {
+    constructor(comp) {
+        this.comp = comp
+        this._interactor = new comp.specs.interactorClass(this)
+    }
+    get facing() { return this.comp.facing}
+    get specs() { return this.comp.specs }
+
+    preAdvanceTick(directive) {
+        this._interactor.preAdvanceTick(directive)
+    }
+
+    advanceTick(directive) {
+        this._interactor.advanceTick(directive)
+    }
+    postAdvanceTick (directive) {
+        this._interactor.postAdvanceTick(directive)
     }
 }
 

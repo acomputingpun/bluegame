@@ -42,7 +42,7 @@ RE b|0031:Move component logic into components.es
 RI b|0032:Basic display of components in blueprint grid UI
 RI b|0033:Initialisation of an existing grid with default components at game begin for dev purposes
 RE b|0034:Rework grid.lookup() to take seperate arguments for x and y, and all references to use ... or similar.
-AI b|0035:Facing information for components and rotation operations for them
+RI b|0035:Facing information for components and rotation operations for them
  M b|0036:Framework for handling of blueprint-creation errors and warning.
 RE b|0037:Remove placeAt() and remove() functions of components/frames/etc, replace with sets and gets for tile and facing.
 RE b|0038:Make frames/components/etc capable of holding tiles, positions, facings, etc, without being locked to grid (reified).
@@ -66,4 +66,14 @@ RI b|0054:Grid ui that displays blueprint errors and warnings
 RI b|0056:UI display of components that respects rotation/facing status
  I b|0057:UI view with the ability to rotate vision of blueprint.
 RI b|0058:UI tilepanels can display various indicators oriented according to facing relative to the tilepanel.
- M b|0059:UI display of components, connectors, and frames are all seperate UI-objects rather than just phantoms drawn by tilePanels.
+ E b|0059:UI display of components, connectors, and frames are all seperate UI-objects rather than just phantoms drawn by tilePanels.
+AI b|0060:The concept of ticks as part of a ship's state, its blueprint's state, and the states of its components etc.
+AI b|0061:The ability to have state logic that advances by tick.
+ I b|0062:Generating event reports as part of advancing time ticks.
+ I b|0063:A UI window/panel that displays event reports created due to advancing time.
+ I b|0064:UI controls with the ability to pause/continue/jumpahead the flow of ticks.
+RE b|0065:Split cspecs.es and components.es out into seperate files in a comps folder structure.
+ E b|0066:Move functions for drawing from sources, sinks, etc out of individual interactors and into more general interactor classes.
+ I b|0067:Replace the stub default Directive with actual situation-dependant directives that control the automated behaviour of components.
+RI b|0068:Decide on "complex" facings vs. simple facings splitting complex-faced components into multiple types of component.
+AE b|0069:Remvoe deprecated facing-related code.
