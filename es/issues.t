@@ -36,7 +36,7 @@ RI b|0021:State representation of frame weights and data associated with frame w
 RE b|0026:Create a frameweights.es that properly initialises (singleton-like?) frameweight objects.
 AM b|0027:State-logic for components.
  I b|0028:Associating expected inputs/outputs with components for the purpose of conduits.
- I b|0029:Conduit-only components.
+RI b|0029:Conduit-only components.
  I b|0030:Partially conduit components - generators, etc.
 RE b|0031:Move component logic into components.es
 RI b|0032:Basic display of components in blueprint grid UI
@@ -50,7 +50,7 @@ RE b|0039:Seperate blueprint code out into blueprints.es
  I b|0040:Graceful exception handling for UI frame/component placement errors
 RI b|0041:State-holding frame/component placement tools in ui_grids.es
 AI b|0042:Blueprints keep track of connectors.
- E b|0043:Make the tile-occupancy logic of frames and components inherit from a common class?
+AE b|0043:Make the tile-occupancy logic of frames and components inherit from a common class?
 RE b|0044:Replace the inbuild ES6 setter of this.tile with explict function setTile() for frames and components
 RI b|0045:Functions for connectors to access the tiles they link to and those tiles' other connectors via position.
  I b|0046:Blueprint-level error checking of connectors being immediately linked correctly.
@@ -70,10 +70,16 @@ RI b|0058:UI tilepanels can display various indicators oriented according to fac
 AI b|0060:The concept of ticks as part of a ship's state, its blueprint's state, and the states of its components etc.
 AI b|0061:The ability to have state logic that advances by tick.
  I b|0062:Generating event reports as part of advancing time ticks.
- I b|0063:A UI window/panel that displays event reports created due to advancing time.
+AI b|0063:A UI window/panel that displays event reports created due to advancing time.
  I b|0064:UI controls with the ability to pause/continue/jumpahead the flow of ticks.
 RE b|0065:Split cspecs.es and components.es out into seperate files in a comps folder structure.
  E b|0066:Move functions for drawing from sources, sinks, etc out of individual interactors and into more general interactor classes.
  I b|0067:Replace the stub default Directive with actual situation-dependant directives that control the automated behaviour of components.
 RI b|0068:Decide on "complex" facings vs. simple facings splitting complex-faced components into multiple types of component.
 RE b|0069:Remove deprecated facing-related code.
+RI b|0070:Implement ConnectorSpecs that behave in regards to Connectors as ComponentSpecs do in regards to Components.
+RK b|0071:Replace uses of 'specs' with 'spec' when referring to a singular ComponentSpec / ConnectorSpec / etc.
+ K b|0072:Make blueprint.checkHillProperty() and similar functions iterate through the blueprint's entity lists, not the backing matrix's keys.
+ K b|0073:Replace .es files with .js files for better portability to Windows systems (or at least, the one I sometimes do dev on)
+RE b|0074:Make all specs, all designs, and all instances inheirit certain functionalities from three common classes.
+ E b|0075:Clean up and rationalise the file structure for occupants.

@@ -131,7 +131,7 @@ class TilePanel extends panels.Panel {
                 }
             }
 
-            let drawPoints = comp.specs.debugDrawPoints
+            let drawPoints = comp.spec.debugDrawPoints
             if (drawPoints.length > 0) {
                 let adjustedDrawPoints = [...drawPoints, drawPoints[0]].map( (vec) => rotFunc(vec).sMul(0.5).lMul(this.panelSize) )
 
@@ -303,8 +303,8 @@ export class PlaceComponentTool extends Tool {
         this.hoveringComp.rotFacing(cw)
     }
 
-    createHoveringComponent(specs) {
-        this.hoveringComp = new components.Component(specs)
+    createHoveringComponent(spec) {
+        this.hoveringComp = spec.reify()
     }
     setHoverTilePanel(tilePanel) {
         if (this.hoveringComp != null) {
@@ -331,7 +331,7 @@ export class PlaceComponentTool extends Tool {
             if (this.hoveringComp != null) {
                 if (this.hoveringComp.canLock()) {
                     this.hoveringComp.lockToGrid(tilePanel.tile)
-                    this.createHoveringComponent(this.hoveringComp.specs)
+                    this.createHoveringComponent(this.hoveringComp.spec)
                 } else {
                     console.log("Can't place!")
                 }

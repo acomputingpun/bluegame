@@ -6,6 +6,7 @@ import * as colours from '/es/ui/colours.es'
 
 import * as ui_debug from '/es/ui/debug.es'
 import * as ui_grids from '/es/ui/grids.es'
+import * as ui_sbattles from '/es/ui/sbattles.es'
 
 class Cursor {
     constructor() {
@@ -138,6 +139,7 @@ class TopLevelPanel extends panels.Panel {
         console.log("this", this)
         console.log("tgrid,", renderer.runner.state.debugGrid)
         this.mainPanel = new ui_grids.EditGridPanel(this, this._renderer.runner.state.debugGrid)
+//        this.mainPanel = new ui_sbattles.ShipBattlePanel(this, this._renderer.runner.state.debugShip)
     }
 
     draw() {

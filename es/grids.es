@@ -70,4 +70,6 @@ export class GridTile {
     recursiveExpand(fn) {
         return this._recursiveExpand(fn, new Set())
     }
+
+    toString() { return `t(${this.xyPos.x},${this.xyPos.y})>` }
 }

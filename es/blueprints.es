@@ -12,6 +12,7 @@ class BlueprintTile extends grids.GridTile {
 
         this.frame = null
         this.components = []
+        this.connectors = []
     }
 
     get frameWeight () {
@@ -28,6 +29,15 @@ class BlueprintTile extends grids.GridTile {
     }
     removeComponent(comp) {
         utils.aRemove(this.components, comp)
+        this.markDirty()
+    }
+
+    addConnector(conn) {
+        this.connectors.push(conn)
+        this.markDirty()
+    }
+    removeConnector(conn) {
+        utils.aRemove(this.connectors, conn)
         this.markDirty()
     }
 }
@@ -59,6 +69,14 @@ export class BlueprintGrid extends grids.Grid {
     removeComponent(comp) {
         if (!comp.locked) { throw `PANIC: Tried to remove unlocked component ${comp} from BlueprintGrid ${this}` }
         utils.aRemove(this.components, comp)
+        this.markDirty()
+    }
+    addConnector(conn) {
+        this.connectors.push(conn)
+        this.markDirty()
+    }
+    removeConnector(conn) {
+        utils.aRemove(this.connectors, conn)
         this.markDirty()
     }
 

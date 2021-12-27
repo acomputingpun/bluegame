@@ -1,6 +1,7 @@
 import * as dirconst from '/es/dirconst.es'
 
 import * as blueprints from '/es/blueprints.es'
+import * as ships from '/es/ships.es'
 import * as frames from '/es/frames.es'
 import * as frameweights from '/es/frameweights.es'
 
@@ -12,6 +13,9 @@ export class State {
         this.debugGrid = new blueprints.BlueprintGrid()
 
         this.debugSetupGrid()
+
+        this.debugShipDesign = new ships.ShipDesign(this.debugGrid)
+        this.debugShip = this.debugShipDesign.reify()
     }
 
     debugSetupGrid() {
@@ -19,9 +23,8 @@ export class State {
         new frames.Frame( frameweights.Medium ).lockToGrid( this.debugGrid.lookup( 5,3 ) )
         new frames.Frame( frameweights.Heavy ).lockToGrid( this.debugGrid.lookup( 4,5 ) )
 
-        new components.Component( cspecs.ElectricSink ).lockToGrid( this.debugGrid.lookup( 3,3 ) )
-        new components.Component( cspecs.ElectricSource ).lockToGrid( this.debugGrid.lookup( 5,4 ) )
-
-        new components.Component( cspecs.LaserGun ).lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.E )
+        cspecs.ElectricSink.reify().lockToGrid( this.debugGrid.lookup( 3,3 ) )
+        cspecs.ElectricSource.reify().lockToGrid( this.debugGrid.lookup( 5,4 ) )
+        cspecs.LaserGun.reify().lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.E )
     }
 }

@@ -1,34 +1,47 @@
 import * as utils from '/es/utils.es'
 import * as vecs from '/es/vectors.es'
 import * as dirconst from '/es/dirconst.es'
+import * as occupants from './occupants.es'
 
-export class Component {
-    constructor(specs) {
-        this.specs = specs 
+export class ComponentDesign extends occupants.GeneralDesign {
+    constructor(spec) {
+        super(spec)
 
         this._facing = dirconst.N
-        this._interactor = new specs.interactorClass()
-
-        this._anchorTile = null
-        this._tiles = []
-        this._connectors = []
-
-        this.__locked = false
+        this._interactor = new this.spec.interactorClass()
+        this._connectors = this.spec.connectorSpecs.map( (connSpec) => connSpec.reify(this) )
     }
+
+    get instanceClass() { return ComponentInstance }
 
     get placeVecs() {
-        return this.specs.placeVecs
+        return this.spec.placeVecs
     }
-
-    get locked() { return this.__locked }
 
     get facing() { return this._facing }
-
-    get tile() { return this._anchorTile }
-    get tiles() {
-        return this._tiles            
-    }
     get connectors() { return this._connectors }
+
+    innerToTile(xyInner) {
+        if (this.tile == null) {
+            return null
+        } else {
+            let xyRel = this.innerVecToGridVec(xyInner)
+            return this.tile.relTile(xyRel)
+        }
+    }
+    innerVecToGridVec(xyInner){
+        if (this.facing.eq(dirconst.N)) {
+            return xyInner
+        } else if (this.facing.eq(dirconst.S)) {
+            return xyInner.reverse()
+        } else if (this.facing.eq(dirconst.E)) {
+            return xyInner.rotCW()
+        } else if (this.facing.eq(dirconst.W)) {
+            return xyInner.rotCCW()
+        } else {
+            throw `PANIC: invalid (non-cardinal) facing of comp ${this} is ${this.facing}`
+        }
+    }
 
     lockToGrid(tile = undefined, facing = undefined) {
         if (tile !== undefined) {
@@ -46,8 +59,9 @@ export class Component {
             tile.addComponent(this)
         }
         for (let connector of this._connectors) {
-            this.grid.addConnector(connector)
-            connector.tile.addConnector(connector)
+            connector.lockToGrid()
+//            this.grid.addConnector(connector)
+//            connector.tile.addConnector(connector)
         }
     }
     unlock() {
@@ -72,26 +86,9 @@ export class Component {
         return true
     }
 
-    setTile(tile) {
-        if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
-        if (tile == null) {
-            this.clearTile(tile)
-        } else {
-            this._anchorTile = tile
-            this._tiles = this.placeVecs.map ( (placeVec) => tile.relTile(placeVec) )
-        }
-        this._connectors = this.specs.createConnectors(this)
-    }
-    clearTile(tile) {
-        if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
-        this._anchorTile = null
-        this._tiles = []
-        this._connectors = this.specs.createConnectors(this)
-    }
     setFacing(data) {
         if (this.__locked) { throw `Panic - can't adjust facing of locked component ${this}` }
         this._facing = data
-        this._connectors = this.specs.createConnectors(this)
     }
     rotFacing(cw = true) {
         if (cw) {
@@ -101,28 +98,20 @@ export class Component {
         }
     }
 
-
-    get grid() {
-        if (this._anchorTile != null) {
-            return this._anchorTile.parent
-        } else {
-            return null
-        }
-    }
+    toString() { return `<CMP ${this.spec} at ${this._anchorTile})>` }
 }
 
 class ComponentInstance {
-    constructor(comp) {
-        this.comp = comp
-        this._interactor = new comp.specs.interactorClass(this)
+    constructor(design) {
+        this.design = design
+        this._interactor = new this.spec.interactorClass(this)
     }
-    get facing() { return this.comp.facing}
-    get specs() { return this.comp.specs }
+    get facing() { return this.design.facing}
+    get spec() { return this.design.spec }
 
     preAdvanceTick(directive) {
         this._interactor.preAdvanceTick(directive)
     }
-
     advanceTick(directive) {
         this._interactor.advanceTick(directive)
     }

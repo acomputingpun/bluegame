@@ -1,36 +1,16 @@
-export class Frame {    
+import * as occupants from './comps/occupants.es'
+
+export class FrameInstance extends occupants.GeneralInstance {
+}
+
+export class Frame extends occupants.GeneralDesign {
     constructor (weight) {
+        super()
+
         this._weight = weight
-
-        this._anchorTile = null
-        this._tiles = []
-
-        this.__locked = false
     }
 
-    get locked() { return this.__locked }
-
-    get tile() { return this._anchorTile }
-    get tiles() {
-        return this._tiles            
-    }
-
-    setTile(tile) {
-        if (this.__locked) { throw `Panic - can't adjust tile of locked frame ${this}` }
-
-        if (tile == null) {
-            this.clearTile()
-        } else {
-            this._anchorTile = tile
-            this._tiles = this.placeVecs.map ( (placeVec) => tile.relTile(placeVec) )
-        }
-    }
-    clearTile() {
-        if (this.__locked) { throw `Panic - can't adjust tile of locked frame ${this}` }
-
-        this._anchorTile = null
-        this._tiles = []
-    }
+    get instanceClass() { return FrameInstance }
 
     lockToGrid(tile = undefined) {
         if (tile !== undefined) {
@@ -47,7 +27,7 @@ export class Frame {
     }
     unlock() {
         if (!this.__locked) {
-            throw `Panic - frame ${this} not locked to grid!`
+            throw `Panic - frame ${this} not locked to grid, can't unlock!`
         }
 
         this.grid.removeFrame(this)
@@ -68,17 +48,10 @@ export class Frame {
         return true
     }
 
-    get grid() {
-        if (this._anchorTile != null) {
-            return this._anchorTile.parent
-        } else {
-            return null
-        }
-    }
-
     get weight() { return this._weight }
-
     get placeVecs() {
         return this.weight.placeVecs
     }
+
+    toString() { return `FR ${this.weight.type} at ${this._anchorTile}` }
 }
