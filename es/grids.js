@@ -1,5 +1,5 @@
-import * as vecs from '/es/vectors.es'
-import * as dirconst from '/es/dirconst.es'
+import * as vecs from '/es/vectors.js'
+import * as dirconst from '/es/dirconst.js'
 
 export class Grid {
     constructor (tileClass) {

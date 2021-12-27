@@ -1,5 +1,5 @@
-import * as colours from '/es/ui/colours.es'
-import * as drawscions from '/es/ui/drawscions.es'
+import * as colours from '/es/ui/colours.js'
+import * as drawscions from '/es/ui/drawscions.js'
 
 export class Panel extends drawscions.DrawScion {
     constructor(parent) {

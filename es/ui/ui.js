@@ -1,12 +1,12 @@
-import * as genconst from '/es/genconst.es'
+import * as genconst from '/es/genconst.js'
 
-import * as vecs from '/es/vectors.es'
-import * as panels from '/es/ui/panels.es'
-import * as colours from '/es/ui/colours.es'
+import * as vecs from '/es/vectors.js'
+import * as panels from '/es/ui/panels.js'
+import * as colours from '/es/ui/colours.js'
 
-import * as ui_debug from '/es/ui/debug.es'
-import * as ui_grids from '/es/ui/grids.es'
-import * as ui_sbattles from '/es/ui/sbattles.es'
+import * as ui_debug from '/es/ui/debug.js'
+import * as ui_grids from '/es/ui/grids.js'
+import * as ui_sbattles from '/es/ui/sbattles.js'
 
 class Cursor {
     constructor() {

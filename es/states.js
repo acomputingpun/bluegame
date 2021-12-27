@@ -1,12 +1,12 @@
-import * as dirconst from '/es/dirconst.es'
+import * as dirconst from '/es/dirconst.js'
 
-import * as blueprints from '/es/blueprints.es'
-import * as ships from '/es/ships.es'
-import * as frames from '/es/frames.es'
-import * as frameweights from '/es/frameweights.es'
+import * as blueprints from '/es/blueprints.js'
+import * as ships from '/es/ships.js'
+import * as frames from '/es/frames.js'
+import * as frameweights from '/es/frameweights.js'
 
-import * as components from '/es/comps/components.es'
-import * as cspecs from '/es/comps/cspecs.es'
+import * as components from '/es/comps/components.js'
+import * as cspecs from '/es/comps/cspecs.js'
 
 export class State {
     constructor() {

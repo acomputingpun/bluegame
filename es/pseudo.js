@@ -1,4 +1,4 @@
-import * as utils from '/es/utils.es'
+import * as utils from '/es/utils.js'
 
 export function rand(seed) {
     if (seed < 0) {

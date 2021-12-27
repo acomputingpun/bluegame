@@ -1,11 +1,11 @@
-import * as vecs from '/es/vectors.es'
-import * as panels from '/es/ui/panels.es'
-import * as dirconst from '/es/dirconst.es'
+import * as vecs from '/es/vectors.js'
+import * as panels from '/es/ui/panels.js'
+import * as dirconst from '/es/dirconst.js'
 
-import * as frameweights from '/es/frameweights.es'
-import * as frames from '/es/frames.es'
-import * as cspecs from '/es/comps/cspecs.es'
-import * as components from '/es/comps/components.es'
+import * as frameweights from '/es/frameweights.js'
+import * as frames from '/es/frames.js'
+import * as cspecs from '/es/comps/cspecs.js'
+import * as components from '/es/comps/components.js'
 
 
 export class GridPanel extends panels.Panel {

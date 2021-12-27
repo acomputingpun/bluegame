@@ -1,6 +1,6 @@
-import * as ui from '/es/ui/ui.es'
+import * as ui from '/es/ui/ui.js'
 
-import * as states from '/es/states.es'
+import * as states from '/es/states.js'
 
 export class GameRunner {
     constructor() {

@@ -1,7 +1,7 @@
-import * as dirconst from '/es/dirconst.es'
-import * as resources from '/es/comps/resources.es'
-import * as occupants from './occupants.es'
-import * as conndesigns from './connectors.es'
+import * as dirconst from '/es/dirconst.js'
+import * as resources from '/es/comps/resources.js'
+import * as occupants from './occupants.js'
+import * as conndesigns from './connectors.js'
 
 class ConnectorSpec extends occupants.GeneralSpec {
     get debugName() {return "unnamed connector"}

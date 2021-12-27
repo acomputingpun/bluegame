@@ -1,7 +1,7 @@
-import * as utils from '/es/utils.es'
-import * as vecs from '/es/vectors.es'
-import * as dirconst from '/es/dirconst.es'
-import * as occupants from './occupants.es'
+import * as utils from '/es/utils.js'
+import * as vecs from '/es/vectors.js'
+import * as dirconst from '/es/dirconst.js'
+import * as occupants from './occupants.js'
 
 export class ComponentDesign extends occupants.GeneralDesign {
     constructor(spec) {

@@ -1,4 +1,4 @@
-import * as pseudo from '/es/pseudo.es'
+import * as pseudo from '/es/pseudo.js'
 
 export class Namer {
     constructor(seed, nameList) {

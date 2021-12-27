@@ -1,13 +1,11 @@
-import * as occupants from './comps/occupants.es'
+import * as occupants from './comps/occupants.js'
 
 export class FrameInstance extends occupants.GeneralInstance {
 }
 
 export class Frame extends occupants.GeneralDesign {
     constructor (weight) {
-        super()
-
-        this._weight = weight
+        super(weight)
     }
 
     get instanceClass() { return FrameInstance }
@@ -48,7 +46,7 @@ export class Frame extends occupants.GeneralDesign {
         return true
     }
 
-    get weight() { return this._weight }
+    get weight() { return this.spec }
     get placeVecs() {
         return this.weight.placeVecs
     }

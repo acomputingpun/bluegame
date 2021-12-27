@@ -1,9 +1,9 @@
-import * as grids from '/es/grids.es'
-import * as utils from '/es/utils.es'
-import * as vecs from '/es/vectors.es'
-import * as frameweights from '/es/frameweights.es'
+import * as grids from '/es/grids.js'
+import * as utils from '/es/utils.js'
+import * as vecs from '/es/vectors.js'
+import * as frameweights from '/es/frameweights.js'
 
-import * as warnings from '/es/warnings.es'
+import * as warnings from '/es/warnings.js'
 
 
 class BlueprintTile extends grids.GridTile {

@@ -1,4 +1,4 @@
-import * as occupants from './occupants.es'
+import * as occupants from './occupants.js'
 
 export class ConnectorDesign extends occupants.GeneralDesign {
     constructor(comp, spec) {

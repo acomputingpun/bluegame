@@ -1,6 +1,6 @@
-import * as colours from '/es/ui/colours.es'
-import * as vecs from '/es/vectors.es'
-import * as panels from '/es/ui/panels.es'
+import * as colours from '/es/ui/colours.js'
+import * as vecs from '/es/vectors.js'
+import * as panels from '/es/ui/panels.js'
 
 export class DebugMenuPanel extends panels.Panel {
     constructor(parent) {

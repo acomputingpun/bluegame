@@ -1,7 +1,7 @@
-import * as blueprints from '/es/blueprints.es'
-import * as grids from '/es/grids.es'
-import * as utils from '/es/utils.es'
-import * as vecs from '/es/vectors.es'
+import * as blueprints from '/es/blueprints.js'
+import * as grids from '/es/grids.js'
+import * as utils from '/es/utils.js'
+import * as vecs from '/es/vectors.js'
 
 export class ShipDesign {
     constructor(blueprintGrid) {

@@ -1,5 +1,5 @@
-import * as vecs from '/es/vectors.es'
-import * as panels from '/es/ui/panels.es'
+import * as vecs from '/es/vectors.js'
+import * as panels from '/es/ui/panels.js'
 
 export class AdvanceTickButton extends panels.Button {
     get text() { return "advance" }

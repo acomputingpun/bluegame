@@ -1,5 +1,5 @@
-import * as vecs from '/es/vectors.es'
-import * as utils from '/es/utils.es'
+import * as vecs from '/es/vectors.js'
+import * as utils from '/es/utils.js'
 
 
 class _FrameWeight {

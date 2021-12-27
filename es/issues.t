@@ -80,6 +80,6 @@ RE b|0069:Remove deprecated facing-related code.
 RI b|0070:Implement ConnectorSpecs that behave in regards to Connectors as ComponentSpecs do in regards to Components.
 RK b|0071:Replace uses of 'specs' with 'spec' when referring to a singular ComponentSpec / ConnectorSpec / etc.
  K b|0072:Make blueprint.checkHillProperty() and similar functions iterate through the blueprint's entity lists, not the backing matrix's keys.
- K b|0073:Replace .es files with .js files for better portability to Windows systems (or at least, the one I sometimes do dev on)
+RK b|0073:Replace .es files with .js files for better portability to Windows systems (or at least, the one I sometimes do dev on)
 RE b|0074:Make all specs, all designs, and all instances inheirit certain functionalities from three common classes.
  E b|0075:Clean up and rationalise the file structure for occupants.

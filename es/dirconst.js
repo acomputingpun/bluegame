@@ -1,4 +1,4 @@
-import * as vecs from '/es/vectors.es'
+import * as vecs from '/es/vectors.js'
 
 export const N = vecs.Vec2( 0, -1 )
 export const S = vecs.Vec2( 0, +1 )

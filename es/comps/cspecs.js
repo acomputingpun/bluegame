@@ -1,13 +1,13 @@
-import * as utils from '/es/utils.es'
-import * as vecs from '/es/vectors.es'
-import * as dirconst from '/es/dirconst.es'
-import * as connspecs from '/es/comps/connspecs.es'
-import * as interactors from './interactors.es'
+import * as utils from '/es/utils.js'
+import * as vecs from '/es/vectors.js'
+import * as dirconst from '/es/dirconst.js'
+import * as connspecs from '/es/comps/connspecs.js'
+import * as interactors from './interactors.js'
 
-import * as occupants from './occupants.es'
+import * as occupants from './occupants.js'
 
-import * as resources from './resources.es'
-import * as cdesigns from './components.es'
+import * as resources from './resources.js'
+import * as cdesigns from './components.js'
 
 export class ComponentSpec extends occupants.GeneralSpec {
     constructor() {

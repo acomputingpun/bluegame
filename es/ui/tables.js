@@ -1,7 +1,7 @@
-import * as colours from '/es/ui/colours.es'
-import * as fonts from '/es/ui/fonts.es'
-import * as vecs from '/es/vectors.es'
-import * as panels from '/es/ui/panels.es'
+import * as colours from '/es/ui/colours.js'
+import * as fonts from '/es/ui/fonts.js'
+import * as vecs from '/es/vectors.js'
+import * as panels from '/es/ui/panels.js'
 
 
 export class TablePanel extends panels.Panel {
