@@ -24,12 +24,28 @@ export class ShipBattlePanel extends panels.Panel {
 
         this.messageLog = []
 
+        this.advanceTickButton = new AdvanceTickButton(this)
         /*
         this.gridPanel = new GridPanel(this, grid)
         */
     }
     get children() {
-        return []
+        return [this.advanceTickButton]
+    }
+    
+    drawShipOccupants() {
+        this.ctx.font = "11px Courier"
+        this.ctx.textAlign = "left"
+        this.ctx.textBaseline = "top"
+        this.ctx.fillStyle=this.borderColour
+
+        let [xDraw, yDraw] = this.absStart.xy
+        xDraw += 150
+
+        for (let occ of this.ship.grid.occupants) {
+            this.ctx.fillText( `${occ}`, xDraw, yDraw )
+            yDraw += 12
+        }
     }
 
     drawMessageLog() {
@@ -48,5 +64,7 @@ export class ShipBattlePanel extends panels.Panel {
 
 
     drawContents() {
+        this.drawMessageLog()
+        this.drawShipOccupants()
     }
 }

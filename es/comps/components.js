@@ -21,6 +21,8 @@ export class ComponentDesign extends occupants.GeneralDesign {
     get facing() { return this._facing }
     get connectors() { return this._connectors }
 
+    get isActive() { return this.spec.isActive }
+
     innerToTile(xyInner) {
         if (this.tile == null) {
             return null
@@ -101,13 +103,12 @@ export class ComponentDesign extends occupants.GeneralDesign {
     toString() { return `<CMP ${this.spec} at ${this._anchorTile})>` }
 }
 
-class ComponentInstance {
-    constructor(design) {
-        this.design = design
+class ComponentInstance extends occupants.GeneralInstance {
+    constructor(design, iGrid) {
+        super(design, iGrid)
+
         this._interactor = new this.spec.interactorClass(this)
     }
-    get facing() { return this.design.facing}
-    get spec() { return this.design.spec }
 
     preAdvanceTick(directive) {
         this._interactor.preAdvanceTick(directive)

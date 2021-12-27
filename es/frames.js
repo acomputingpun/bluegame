@@ -51,5 +51,5 @@ export class Frame extends occupants.GeneralDesign {
         return this.weight.placeVecs
     }
 
-    toString() { return `FR ${this.weight.type} at ${this._anchorTile}` }
+    toString() { return `FR ${this.spec} at ${this._anchorTile}` }
 }

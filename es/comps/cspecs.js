@@ -22,6 +22,8 @@ export class ComponentSpec extends occupants.GeneralSpec {
         return []
     }
 
+    get isActive() { return false }
+
     get interactorClass() { return interactors.NoInteractor }
     get xySize() { throw "Not implemented!" }
     get placeVecs() { return this._placeVecs }
@@ -117,6 +119,8 @@ class _LaserGun extends ComponentSpec {
         return [new connspecs.ElectricConnector( dirconst.IN_PLACE, dirconst.S )]
     }
 
+    get isActive() { return false }
+
     get interactorClass() { return _LGInteractor }
     get debugName() { return "LaserGun" }
 }
@@ -136,6 +140,8 @@ class _MissileGun extends ComponentSpec {
     get debugDrawPoints () {
         return [ [-2,-8], [2,-8], [2,-2], [4,0], [2,2], [-2,2], [-4,0], [-2,-2] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
     }
+
+    get isActive() { return true }
 
     get interactorClass() { return _MGInteractor }
     get debugName() { return "MissileGun" }

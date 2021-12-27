@@ -14,7 +14,7 @@ RI b|0002:Ability to set and remove frame sections from a blueprint grid.
  I b|0004:Panels that automatically generate lists of buttons etc, based on menus.
  M b|0005:Ability to reify blueprints.
 RI b|0006:Frame weight hill-connectivity error checking in blueprints.
- I b|0007:Ability for grid-tiles to reference other tiles by relative position vector.
+RI b|0007:Ability for grid-tiles to reference other tiles by relative position vector.
 RE b|0008:Elminiate old code leftover from bootstrap process.
 RK b|0009:Set up a git repository and configure git.
 RE b|0010:Remove unneccessary semicolons.
@@ -49,8 +49,8 @@ RE b|0038:Make frames/components/etc capable of holding tiles, positions, facing
 RE b|0039:Seperate blueprint code out into blueprints.es
  I b|0040:Graceful exception handling for UI frame/component placement errors
 RI b|0041:State-holding frame/component placement tools in ui_grids.es
-AI b|0042:Blueprints keep track of connectors.
-AE b|0043:Make the tile-occupancy logic of frames and components inherit from a common class?
+RI b|0042:Blueprints keep track of connectors.
+RE b|0043:Make the tile-occupancy logic of frames and components inherit from a common class?
 RE b|0044:Replace the inbuild ES6 setter of this.tile with explict function setTile() for frames and components
 RI b|0045:Functions for connectors to access the tiles they link to and those tiles' other connectors via position.
  I b|0046:Blueprint-level error checking of connectors being immediately linked correctly.
@@ -83,3 +83,4 @@ RK b|0071:Replace uses of 'specs' with 'spec' when referring to a singular Compo
 RK b|0073:Replace .es files with .js files for better portability to Windows systems (or at least, the one I sometimes do dev on)
 RE b|0074:Make all specs, all designs, and all instances inheirit certain functionalities from three common classes.
  E b|0075:Clean up and rationalise the file structure for occupants.
+AI b|0076:Adding occupants to grids / grid-tiles sorts them into categories automatically.

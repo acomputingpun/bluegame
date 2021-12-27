@@ -16,6 +16,14 @@ export class ShipDesign {
 export class ShipTile extends grids.GridTile {
     constructor (...args) {
         super(...args)
+
+        this.occupants = []
+    }
+
+    addOccupant(occ) {
+        this.occupants.push(occ)
+        this.parent.addOccupant(occ)
+        this.markDirty()
     }
 }
 
@@ -23,9 +31,18 @@ export class ShipGrid extends grids.Grid {
     constructor(blueprintGrid) {
         super(ShipTile)
 
-        this.frames = blueprintGrid.frames.map( (frame) => frame.reify(this) )
-        this.components = blueprintGrid.components.map( (component) => component.reify(this) )
-        this.connectors = blueprintGrid.connectors.map( (connector) => connector.reify(this) )
+        this.occupants = []
+        this.activeComponents = []
+
+        for (let occupant of blueprintGrid.occupants) {
+            console.log("bgocc", `${occupant}`)
+            occupant.reify(this)
+        }
+    }
+
+    addOccupant(occ) {
+        this.occupants.push(occ)
+        this.markDirty()
     }
 }
 

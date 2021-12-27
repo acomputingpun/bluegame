@@ -16,6 +16,7 @@ export class State {
 
         this.debugShipDesign = new ships.ShipDesign(this.debugGrid)
         this.debugShip = this.debugShipDesign.reify()
+        console.log("dbship", this.debugShip)
     }
 
     debugSetupGrid() {

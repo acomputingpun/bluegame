@@ -20,11 +20,19 @@ export class GeneralDesign {
     get tiles() { return this._tiles }
     get instanceClass() { throw `PANIC: Call to to-be-overridden method get instanceClass() of base GeneralDesign item ${this}!` }
 
+    get anchorPos() {
+        if (this._anchorTile != null) {
+            return this._anchorTile.xyPos
+        } else {
+            return null
+        }
+    }
+
     get placeVecs() {return []}
  
     reify(...args) {
         if (!this.locked) {
-            throw `Panic - component ${this} not locked to grid, can't reify!`
+            throw `Panic - occupant ${this} not locked to grid, can't reify!`
         }
         return new this.instanceClass(this, ...args)
     }
@@ -59,8 +67,15 @@ export class GeneralDesign {
 }
 
 export class GeneralInstance {
-    constructor(design) {
+    constructor(design, iGrid) {
         this.design = design
+        this.iGrid = iGrid
+
+        this.anchorPos = this.design.anchorPos
+        this.anchorTile = this.iGrid.lookup(this.anchorPos)
+        this.anchorTile.addOccupant(this)
     }
+    toString() { return `i${this.design}` }
+    get spec() { return this.design.spec }
 }
 

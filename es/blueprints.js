@@ -23,6 +23,10 @@ class BlueprintTile extends grids.GridTile {
         }
     }
 
+    addOccupant(occ) {
+        this.markDirty()
+    }
+
     addComponent(comp) {
         this.components.push(comp)
         this.markDirty()
@@ -46,37 +50,51 @@ export class BlueprintGrid extends grids.Grid {
     constructor () {
         super(BlueprintTile)
 
+        this.occupants = []
         this.frames = []
         this.components = []
         this.connectors = []
+        this.activeComponents = []
     }
 
     addFrame(frame) {
         if (!frame.locked) { throw `PANIC: Tried to add unlocked frame ${frame} to BlueprintGrid ${this}` }
         this.frames.push(frame)
+        this.occupants.push(frame)
         this.markDirty()
     }
     removeFrame(frame) {
         if (!frame.locked) { throw `PANIC: Tried to remove unlocked frame ${frame} from BlueprintGrid ${this}` }
         utils.aRemove(this.frames, frame)
+        utils.aRemove(this.occupants, frame)
         this.markDirty()
     }
     addComponent(comp) {
         if (!comp.locked) { throw `PANIC: Tried to add unlocked component ${comp} to BlueprintGrid ${this}` }
+        if (comp.isActive) {
+            this.activeComponents.push(comp)
+        }
         this.components.push(comp)
+        this.occupants.push(comp)
         this.markDirty()
     }
     removeComponent(comp) {
         if (!comp.locked) { throw `PANIC: Tried to remove unlocked component ${comp} from BlueprintGrid ${this}` }
+        if (comp.isActive) {
+            utils.aRemove(this.activeComponents, comp)
+        }
         utils.aRemove(this.components, comp)
+        utils.aRemove(this.occupants, comp)
         this.markDirty()
     }
     addConnector(conn) {
         this.connectors.push(conn)
+        this.occupants.push(frame)
         this.markDirty()
     }
     removeConnector(conn) {
         utils.aRemove(this.connectors, conn)
+        utils.aRemove(this.occupants, conn)
         this.markDirty()
     }
 
