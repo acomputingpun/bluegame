@@ -12,7 +12,7 @@ A  a|---- Issue currently being worked on
 RI b|0002:Ability to set and remove frame sections from a blueprint grid.
  I b|0003:Menu and menu-item classes.
  I b|0004:Panels that automatically generate lists of buttons etc, based on menus.
- M b|0005:Ability to reify blueprints.
+RM b|0005:Ability to reify blueprints.
 RI b|0006:Frame weight hill-connectivity error checking in blueprints.
 RI b|0007:Ability for grid-tiles to reference other tiles by relative position vector.
 RE b|0008:Elminiate old code leftover from bootstrap process.
@@ -84,3 +84,6 @@ RK b|0073:Replace .es files with .js files for better portability to Windows sys
 RE b|0074:Make all specs, all designs, and all instances inheirit certain functionalities from three common classes.
  E b|0075:Clean up and rationalise the file structure for occupants.
 AI b|0076:Adding occupants to grids / grid-tiles sorts them into categories automatically.
+RI b|0077:Code for sorting of occupants in 0076 uses occupant-specific true/false methods rather than instanceof.
+RI b|0078:Locking/unlocking component designs onto grid automatically locks/unlocks associated connectors.
+RI b|0079:Connector instances should be added to grid.occupants for instance grids.

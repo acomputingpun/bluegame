@@ -12,6 +12,8 @@ class ConnectorSpec extends occupants.GeneralSpec {
         this.facing = facing
     }
 
+    get isConnector() { return true }
+
     get designClass() {return conndesigns.ConnectorDesign }
     get destPos() { return this.pos.add(this.facing) }
 

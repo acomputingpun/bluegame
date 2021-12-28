@@ -20,12 +20,12 @@ export class State {
     }
 
     debugSetupGrid() {
-        new frames.Frame( frameweights.Medium ).lockToGrid( this.debugGrid.lookup( 3,3 ) )
-        new frames.Frame( frameweights.Medium ).lockToGrid( this.debugGrid.lookup( 5,3 ) )
-        new frames.Frame( frameweights.Heavy ).lockToGrid( this.debugGrid.lookup( 4,5 ) )
+        new frames.FrameDesign( frameweights.Medium ).lockToGrid( this.debugGrid.lookup( 3,3 ) )
+        new frames.FrameDesign( frameweights.Medium ).lockToGrid( this.debugGrid.lookup( 5,3 ) )
+        new frames.FrameDesign( frameweights.Heavy ).lockToGrid( this.debugGrid.lookup( 4,5 ) )
 
         cspecs.ElectricSink.reify().lockToGrid( this.debugGrid.lookup( 3,3 ) )
         cspecs.ElectricSource.reify().lockToGrid( this.debugGrid.lookup( 5,4 ) )
-        cspecs.LaserGun.reify().lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.E )
+        cspecs.MissileGun.reify().lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.E )
     }
 }

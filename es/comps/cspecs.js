@@ -13,16 +13,18 @@ export class ComponentSpec extends occupants.GeneralSpec {
     constructor() {
         super()
         this._placeVecs = vecs.arrToVecs(utils.span2( [0, 0], this.xySize.xy ))
+        this._connectors = this._createConnectors()
     }
 
+    get connectors() { return this._connectors }
     get designClass() { return cdesigns.ComponentDesign }
     get debugName() { return "unnamed component spec" }
 
-    get connectorSpecs() {
+    _createConnectors() {
         return []
     }
 
-    get isActive() { return false }
+    get isActiveComponent() { return false }
 
     get interactorClass() { return interactors.NoInteractor }
     get xySize() { throw "Not implemented!" }
@@ -115,11 +117,11 @@ class _LaserGun extends ComponentSpec {
         return [ [-2,-8], [2,-8], [2,-2], [4,0], [2,2], [-2,2], [-4,0], [-2,-2] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
     }
 
-    get connectorSpecs() {
+    _createConnectors() {
         return [new connspecs.ElectricConnector( dirconst.IN_PLACE, dirconst.S )]
     }
 
-    get isActive() { return false }
+    get isActiveComponent() { return true }
 
     get interactorClass() { return _LGInteractor }
     get debugName() { return "LaserGun" }
@@ -141,7 +143,7 @@ class _MissileGun extends ComponentSpec {
         return [ [-2,-8], [2,-8], [2,-2], [4,0], [2,2], [-2,2], [-4,0], [-2,-2] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
     }
 
-    get isActive() { return true }
+    get isActiveComponent() { return true }
 
     get interactorClass() { return _MGInteractor }
     get debugName() { return "MissileGun" }
@@ -151,7 +153,7 @@ class _MissileGun extends ComponentSpec {
 class _GenericCable extends ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
 
-    get connectorSpecs() {
+    _createConnectors() {
         return [
             new this.connSpecClass( dirconst.IN_PLACE, dirconst.N ),
             new this.connSpecClass( dirconst.IN_PLACE, dirconst.E )
@@ -174,4 +176,5 @@ export var FuelSink = new _FuelSink()
 export var FuelSource = new _FuelSource()
 
 export var LaserGun = new _LaserGun()
+export var MissileGun = new _MissileGun()
 export var ElectricCable = new _ElectricCable()

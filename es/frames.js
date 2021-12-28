@@ -3,9 +3,9 @@ import * as occupants from './comps/occupants.js'
 export class FrameInstance extends occupants.GeneralInstance {
 }
 
-export class Frame extends occupants.GeneralDesign {
-    constructor (weight) {
-        super(weight)
+export class FrameDesign extends occupants.GeneralDesign {
+    constructor (spec) {
+        super(spec)
     }
 
     get instanceClass() { return FrameInstance }
@@ -18,7 +18,7 @@ export class Frame extends occupants.GeneralDesign {
         if (!this.canLock()) { throw `Panic - can't lock frame ${this}!` }
 
         this.__locked = true
-        this.grid.addFrame(this)
+        this.grid.addOccupant(this)
         for (let tile of this._tiles) {
             tile.frame = this
         }
@@ -28,7 +28,7 @@ export class Frame extends occupants.GeneralDesign {
             throw `Panic - frame ${this} not locked to grid, can't unlock!`
         }
 
-        this.grid.removeFrame(this)
+        this.grid.removeOccupant(this)
         for (let tile of this._tiles) {
             tile.frame = null
         }

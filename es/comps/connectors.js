@@ -1,8 +1,9 @@
 import * as occupants from './occupants.js'
 
 export class ConnectorDesign extends occupants.GeneralDesign {
-    constructor(comp, spec) {
+    constructor(spec, comp) {
         super(spec)
+        console.log("Just called new ConnectorDesign with args spec:", spec, "and comp", comp, "got this", this)
 
         this.spec = spec
         this.comp = comp
@@ -10,38 +11,38 @@ export class ConnectorDesign extends occupants.GeneralDesign {
         this.__locked = false
     }
 
-    reify() {
-        if (!this.__locked) {
-            throw `Panic - connector ${this} not locked to grid, can't reify!`
-        }
-        return new ComponentInstance(this)
-    }
+    get instanceClass() { return ConnectorInstance }
 
     lockToGrid() {
         if (this.__locked) {
             throw `Panic - ${this} already locked to grid, can't lock!`
         }
+        if (!this.comp.locked) {
+            throw `Panic - tried to lock connector ${this} but parental component ${this.comp} is unlocked!`
+        }
         this.__locked = true
+        this.grid.addOccupant(this)
     }
     unlock() {
         if (!this.__locked) {
             throw `Panic - connector ${this} not locked to grid, can't unlock!`
         }
+        this.grid.removeOccupant(this)
         this.__locked = false
     }
 
     get tile() {
         return this.comp.innerToTile(this.spec.pos)
     }
+    get facing() {
+        return this.comp.innerToFacing(this.spec.facing)
+    }
     get destTile() {
-        return this.comp.innerToTile(this.spec.pos)
+        return this.tile.rel(this.facing)
     }
 
-    toString() { return `<CONN ${this.spec}>` }
+    toString() { return `[CONN ${this.spec}]` }
 }
 
-class ConnectorInstance {
-    constructor(design) {
-        this.design = design
-    }
+class ConnectorInstance extends occupants.GeneralInstance {
 }

@@ -1,11 +1,15 @@
 import * as vecs from '/es/vectors.js'
 import * as utils from '/es/utils.js'
+import * as occupants from '/es/comps/occupants.js'
 
 
-class _FrameWeight {
+class _FrameWeight extends occupants.GeneralSpec {
     constructor() {
+        super()
         this._placeVecs = vecs.arrToVecs(utils.span2( [0, 0], this.xySize.xy ))
     }
+
+    get isFrame() { return true }
 
     get xySize() { throw "Not implemented!" }
     get placeVecs() { return this._placeVecs }

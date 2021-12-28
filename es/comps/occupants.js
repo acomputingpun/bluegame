@@ -3,6 +3,10 @@ export class GeneralSpec {
         return new this.designClass(this, ...args)
     }
     get designClass() { throw `PANIC: Call to to-be-overridden method get designClass() of base GeneralSpec item ${this}!` }
+
+    get isComponent() { return false }
+    get isFrame() { return false }
+    get isConnector() { return false }
 }
 
 export class GeneralDesign {
@@ -58,12 +62,16 @@ export class GeneralDesign {
     }
 
     get grid() {
-        if (this._anchorTile != null) {
-            return this._anchorTile.parent
+        if (this.tile != null) {
+            return this.tile.parent
         } else {
             return null
         }
     }
+
+    get isComponent() { return this.spec.isComponent }
+    get isFrame() { return this.spec.isFrame }
+    get isConnector() { return this.spec.isConnector }
 }
 
 export class GeneralInstance {
@@ -73,9 +81,14 @@ export class GeneralInstance {
 
         this.anchorPos = this.design.anchorPos
         this.anchorTile = this.iGrid.lookup(this.anchorPos)
-        this.anchorTile.addOccupant(this)
+
+        this.iGrid.addOccupant(this)
     }
     toString() { return `i${this.design}` }
     get spec() { return this.design.spec }
+
+    get isComponent() { return this.design.isComponent }
+    get isFrame() { return this.design.isFrame }
+    get isConnector() { return this.design.isConnector }
 }
 

@@ -9,7 +9,7 @@ export class ComponentDesign extends occupants.GeneralDesign {
 
         this._facing = dirconst.N
         this._interactor = new this.spec.interactorClass()
-        this._connectors = this.spec.connectorSpecs.map( (connSpec) => connSpec.reify(this) )
+        this._connectors = this.spec.connectors.map( (connSpec) => connSpec.reify(this) )
     }
 
     get instanceClass() { return ComponentInstance }
@@ -21,7 +21,8 @@ export class ComponentDesign extends occupants.GeneralDesign {
     get facing() { return this._facing }
     get connectors() { return this._connectors }
 
-    get isActive() { return this.spec.isActive }
+    get isComponent() { return true }
+    get isActiveComponent() { return this.spec.isActiveComponent }
 
     innerToTile(xyInner) {
         if (this.tile == null) {
@@ -56,14 +57,12 @@ export class ComponentDesign extends occupants.GeneralDesign {
         if (!this.canLock()) { throw `Panic - can't lock frame ${this}!` }
 
         this.__locked = true
-        this.grid.addComponent(this)
+        this.grid.addOccupant(this)
         for (let tile of this._tiles) {
-            tile.addComponent(this)
+            tile.addOccupant(this)
         }
         for (let connector of this._connectors) {
             connector.lockToGrid()
-//            this.grid.addConnector(connector)
-//            connector.tile.addConnector(connector)
         }
     }
     unlock() {
@@ -73,11 +72,10 @@ export class ComponentDesign extends occupants.GeneralDesign {
 
         this.grid.removeComponent(this)
         for (let tile of this._tiles) {
-            tile.removeComponent(this)
+            tile.removeOccupant(this)
         }
         for (let connector of this._connectors) {
-            this.grid.removeConnector(connector)
-            connector.tile.removeConnector(connector)
+            connector.unlock()
         }
         this.__locked = false
     }
@@ -119,5 +117,7 @@ class ComponentInstance extends occupants.GeneralInstance {
     postAdvanceTick (directive) {
         this._interactor.postAdvanceTick(directive)
     }
+
+    get isActiveComponent() { return this.spec.isActiveComponent }
 }
 

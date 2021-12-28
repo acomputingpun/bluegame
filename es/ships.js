@@ -1,5 +1,5 @@
 import * as blueprints from '/es/blueprints.js'
-import * as grids from '/es/grids.js'
+import * as ogrids from '/es/ogrids.js'
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
 
@@ -13,7 +13,7 @@ export class ShipDesign {
     }
 }
 
-export class ShipTile extends grids.GridTile {
+export class ShipTile extends ogrids.OccGridTile {
     constructor (...args) {
         super(...args)
 
@@ -22,27 +22,18 @@ export class ShipTile extends grids.GridTile {
 
     addOccupant(occ) {
         this.occupants.push(occ)
-        this.parent.addOccupant(occ)
         this.markDirty()
     }
 }
 
-export class ShipGrid extends grids.Grid {
+export class ShipGrid extends ogrids.OccGrid {
     constructor(blueprintGrid) {
         super(ShipTile)
-
-        this.occupants = []
-        this.activeComponents = []
 
         for (let occupant of blueprintGrid.occupants) {
             console.log("bgocc", `${occupant}`)
             occupant.reify(this)
         }
-    }
-
-    addOccupant(occ) {
-        this.occupants.push(occ)
-        this.markDirty()
     }
 }
 
@@ -56,7 +47,9 @@ export class Ship {
     }
 
     advanceTick(directive) {
+        console.log("Advacing tick of ship", this, "directive", directive)
         for (let activeComponent of this.grid.activeComponents) {
+            console.log(`acticomp ${activeComponent}`, activeComponent)
             activeComponent.preAdvanceTick(directive)
         }
 

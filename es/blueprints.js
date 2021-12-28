@@ -1,12 +1,11 @@
-import * as grids from '/es/grids.js'
+import * as ogrids from '/es/ogrids.js'
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
 import * as frameweights from '/es/frameweights.js'
 
 import * as warnings from '/es/warnings.js'
 
-
-class BlueprintTile extends grids.GridTile {
+class BlueprintTile extends ogrids.OccGridTile {
     constructor (...args) {
         super(...args)
 
@@ -46,56 +45,18 @@ class BlueprintTile extends grids.GridTile {
     }
 }
 
-export class BlueprintGrid extends grids.Grid {
+export class BlueprintGrid extends ogrids.OccGrid {
     constructor () {
         super(BlueprintTile)
-
-        this.occupants = []
-        this.frames = []
-        this.components = []
-        this.connectors = []
-        this.activeComponents = []
     }
 
-    addFrame(frame) {
-        if (!frame.locked) { throw `PANIC: Tried to add unlocked frame ${frame} to BlueprintGrid ${this}` }
-        this.frames.push(frame)
-        this.occupants.push(frame)
-        this.markDirty()
+    addOccupant(occ) {
+        if(!occ.locked) { throw `PANIC: Tried to add unlocked occupant ${occ} to Grid ${this}` }
+        super.addOccupant(occ)
     }
-    removeFrame(frame) {
-        if (!frame.locked) { throw `PANIC: Tried to remove unlocked frame ${frame} from BlueprintGrid ${this}` }
-        utils.aRemove(this.frames, frame)
-        utils.aRemove(this.occupants, frame)
-        this.markDirty()
-    }
-    addComponent(comp) {
-        if (!comp.locked) { throw `PANIC: Tried to add unlocked component ${comp} to BlueprintGrid ${this}` }
-        if (comp.isActive) {
-            this.activeComponents.push(comp)
-        }
-        this.components.push(comp)
-        this.occupants.push(comp)
-        this.markDirty()
-    }
-    removeComponent(comp) {
-        if (!comp.locked) { throw `PANIC: Tried to remove unlocked component ${comp} from BlueprintGrid ${this}` }
-        if (comp.isActive) {
-            utils.aRemove(this.activeComponents, comp)
-        }
-        utils.aRemove(this.components, comp)
-        utils.aRemove(this.occupants, comp)
-        this.markDirty()
-    }
-    addConnector(conn) {
-        this.connectors.push(conn)
-        this.occupants.push(frame)
-        this.markDirty()
-    }
-    removeConnector(conn) {
-        utils.aRemove(this.connectors, conn)
-        utils.aRemove(this.occupants, conn)
-        this.markDirty()
+    removeOccupant(occ) {
+        if (!occ.locked) { throw `PANIC: Tried to remove unlocked occupant ${occ} from Grid ${this}` }
+        super.removeOccupant(occ)
     }
 
     checkHillProperty() {
