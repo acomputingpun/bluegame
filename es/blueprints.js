@@ -1,7 +1,7 @@
-import * as ogrids from '/es/ogrids.js'
+import * as ogrids from '/es/occupants/ogrids.js'
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
-import * as frameweights from '/es/frameweights.js'
+import * as framespecs from '/es/occupants/frames/specs.js'
 
 import * as warnings from '/es/warnings.js'
 
@@ -64,7 +64,7 @@ export class BlueprintGrid extends ogrids.OccGrid {
 
         let fwMap = new Map() 
 
-        for (let frameWeight of frameweights.DESCENDING_ORDER) {
+        for (let frameWeight of framespecs.DESCENDING_ORDER) {
             fwMap.set(frameWeight, [])
         }
 
@@ -78,7 +78,7 @@ export class BlueprintGrid extends ogrids.OccGrid {
         console.log("tiles in weight categories are:", fwMap)
 
         let allowedTiles = []
-        for (let minFrameWeight of frameweights.DESCENDING_ORDER) {
+        for (let minFrameWeight of framespecs.DESCENDING_ORDER) {
             let exactFWTiles = fwMap.get(minFrameWeight)
             if (exactFWTiles.length > 0) {
                 allowedTiles = allowedTiles.concat(exactFWTiles)

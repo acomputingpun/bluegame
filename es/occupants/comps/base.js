@@ -1,7 +1,31 @@
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
 import * as dirconst from '/es/dirconst.js'
-import * as occupants from './occupants.js'
+import * as occupants from '../occupants.js'
+
+export class ComponentSpec extends occupants.GeneralSpec {
+    constructor() {
+        super()
+        this._placeVecs = vecs.arrToVecs(utils.span2( [0, 0], this.xySize.xy ))
+        this._connectors = this._createConnectors()
+    }
+
+    get connectors() { return this._connectors }
+    get designClass() { return ComponentDesign }
+    get debugName() { return "unnamed component spec" }
+
+    _createConnectors() {
+        return []
+    }
+
+    get isActiveComponent() { return false }
+
+    get interactorClass() { return interactors.NoInteractor }
+    get xySize() { throw "Not implemented!" }
+    get placeVecs() { return this._placeVecs }
+
+    toString() { return `<CSPEC ${this.debugName})>` }
+}
 
 export class ComponentDesign extends occupants.GeneralDesign {
     constructor(spec) {

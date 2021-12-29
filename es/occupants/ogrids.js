@@ -1,9 +1,5 @@
 import * as grids from '/es/grids.js'
 
-import * as components from '/es/comps/components.js'
-import * as frames from '/es/frames.js'
-import * as connectors from '/es/comps/connectors.js'
-
 export class OccGridTile extends grids.GridTile {
 }
 

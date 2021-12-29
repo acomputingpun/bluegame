@@ -1,6 +1,23 @@
-import * as occupants from './comps/occupants.js'
+import * as occupants from '../occupants.js'
+import * as utils from '/es/utils.js'
+import * as vecs from '/es/vectors.js'
 
-export class FrameInstance extends occupants.GeneralInstance {
+export class FrameSpec extends occupants.GeneralSpec {
+    constructor() {
+        super()
+        this._placeVecs = [...utils.span2( [0, 0], this.xySize.xy )].map( (xy) => vecs.Vec2(...xy) )
+    }
+
+    get designClass() { return FrameDesign }
+
+    get isFrame() { return true }
+
+    get xySize() { throw "Not implemented!" }
+    get placeVecs() { return this._placeVecs }
+    get debugName () { return "unnamedFrameSpec" }
+
+    valueOf() { return ASCENDING_ORDER.indexOf(this) }
+    toString() { return `w${this.debugName}` }
 }
 
 export class FrameDesign extends occupants.GeneralDesign {
@@ -52,4 +69,7 @@ export class FrameDesign extends occupants.GeneralDesign {
     }
 
     toString() { return `FR ${this.spec} at ${this._anchorTile}` }
+}
+
+export class FrameInstance extends occupants.GeneralInstance {
 }

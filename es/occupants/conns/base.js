@@ -1,4 +1,21 @@
-import * as occupants from './occupants.js'
+import * as occupants from '../occupants.js'
+
+export class ConnectorSpec extends occupants.GeneralSpec {
+    get debugName() {return "unnamed connector"}
+
+    constructor(pos, facing) {
+        super()
+        this.pos = pos
+        this.facing = facing
+    }
+
+    get isConnector() { return true }
+
+    get designClass() { return ConnectorDesign }
+    get destPos() { return this.pos.add(this.facing) }
+
+    toString() { return `[connspec ${this.debugName}]` }
+}
 
 export class ConnectorDesign extends occupants.GeneralDesign {
     constructor(spec, comp) {

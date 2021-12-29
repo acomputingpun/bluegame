@@ -1,5 +1,5 @@
 import * as blueprints from '/es/blueprints.js'
-import * as ogrids from '/es/ogrids.js'
+import * as ogrids from '/es/occupants/ogrids.js'
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
 

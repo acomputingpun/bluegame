@@ -2,11 +2,8 @@ import * as vecs from '/es/vectors.js'
 import * as panels from '/es/ui/panels.js'
 import * as dirconst from '/es/dirconst.js'
 
-import * as frameweights from '/es/frameweights.js'
-import * as frames from '/es/frames.js'
-import * as cspecs from '/es/comps/cspecs.js'
-import * as components from '/es/comps/components.js'
-
+import * as framespecs from '/es/occupants/frames/specs.js'
+import * as compspecs from '/es/occupants/comps/specs.js'
 
 export class GridPanel extends panels.Panel {
     constructor(parent, grid) {
@@ -205,11 +202,11 @@ export class FrameMenuPanel extends panels.Panel {
         this.swapButton = new MenuButton( this, vecs.Vec2(5, 5), "swap", "swap" )
         this.noFrameButton = new MenuButton( this, vecs.Vec2(5, 55), "none", null )
 
-        this.superlightFrameButton = new MenuButton( this, vecs.Vec2(5, 105), "superlight", frameweights.Superlight )
-        this.lightFrameButton = new MenuButton( this, vecs.Vec2(5, 155), "light", frameweights.Light )
-        this.mediumFrameButton = new MenuButton( this, vecs.Vec2(5, 205), "medium", frameweights.Medium )
-        this.heavyFrameButton = new MenuButton( this, vecs.Vec2(5, 255), "heavy", frameweights.Heavy )
-        this.superheavyFrameButton = new MenuButton( this, vecs.Vec2(5, 305), "superheavy", frameweights.Superheavy )
+        this.superlightFrameButton = new MenuButton( this, vecs.Vec2(5, 105), "superlight", framespecs.Superlight )
+        this.lightFrameButton = new MenuButton( this, vecs.Vec2(5, 155), "light", framespecs.Light )
+        this.mediumFrameButton = new MenuButton( this, vecs.Vec2(5, 205), "medium", framespecs.Medium )
+        this.heavyFrameButton = new MenuButton( this, vecs.Vec2(5, 255), "heavy", framespecs.Heavy )
+        this.superheavyFrameButton = new MenuButton( this, vecs.Vec2(5, 305), "superheavy", framespecs.Superheavy )
     }
 
     get children() {
@@ -238,8 +235,8 @@ export class ComponentMenuPanel extends panels.Panel {
         this.swapButton = new MenuButton( this, vecs.Vec2(5, 5), "swap", "swap" )
         this.noComponentButton = new MenuButton( this, vecs.Vec2(5, 55), "none", null )
 
-        this.laserGunButton = new MenuButton( this, vecs.Vec2(5, 105), "lgun", cspecs.LaserGun )
-        this.electricSourceButton = new MenuButton( this, vecs.Vec2(5, 155), "esource", cspecs.ElectricSource )
+        this.laserGunButton = new MenuButton( this, vecs.Vec2(5, 105), "lgun", compspecs.LaserGun )
+        this.electricSourceButton = new MenuButton( this, vecs.Vec2(5, 155), "esource", compspecs.ElectricSource )
 
         this.cwRotButton = new MenuButton( this, vecs.Vec2(5, 205), "rotCW", "rotCW" )
         this.ccwRotButton = new MenuButton( this, vecs.Vec2(5, 255), "rotCCW", "rotCCW" )
@@ -373,7 +370,7 @@ export class PlaceFrameTool extends Tool {
             if (this.hoveringFrame != null) {
                 if (this.hoveringFrame.canLock()) {
                     this.hoveringFrame.lockToGrid(tilePanel.tile)
-                    this.createHoveringFrame(this.hoveringFrame.weight)
+                    this.createHoveringFrame(this.hoveringFrame.spec)
                 } else {
                     console.log("Can't place!")
                 }
@@ -383,8 +380,8 @@ export class PlaceFrameTool extends Tool {
         }
     }
 
-    createHoveringFrame(frameweight) {
-        this.hoveringFrame = new frames.Frame(frameweight)
+    createHoveringFrame(framespec) {
+        this.hoveringFrame = framespec.reify()
     }
     setHoverTilePanel(tilePanel) {
         if (this.hoveringFrame != null) {

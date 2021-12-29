@@ -1,53 +1,28 @@
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
 import * as dirconst from '/es/dirconst.js'
-import * as connspecs from '/es/comps/connspecs.js'
-import * as interactors from './interactors.js'
+import * as connspecs from '../conns/specs.js'
 
-import * as occupants from './occupants.js'
+import * as interactors from '/es/comps/interactors.js'
+import * as resources from '/es/comps/resources.js'
 
-import * as resources from './resources.js'
-import * as cdesigns from './components.js'
+import * as base from './base.js'
 
-export class ComponentSpec extends occupants.GeneralSpec {
-    constructor() {
-        super()
-        this._placeVecs = vecs.arrToVecs(utils.span2( [0, 0], this.xySize.xy ))
-        this._connectors = this._createConnectors()
-    }
-
-    get connectors() { return this._connectors }
-    get designClass() { return cdesigns.ComponentDesign }
-    get debugName() { return "unnamed component spec" }
-
-    _createConnectors() {
-        return []
-    }
-
-    get isActiveComponent() { return false }
-
-    get interactorClass() { return interactors.NoInteractor }
-    get xySize() { throw "Not implemented!" }
-    get placeVecs() { return this._placeVecs }
-
-    toString() { return `<CSPEC ${this.debugName})>` }
-}
-
-class _SmallDoodad extends ComponentSpec {
+class _SmallDoodad extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
         return [ [-.8,-.8], [.8,-.8], [-.8,.8], [-.8,-.8] ].map( ( xy ) => vecs.Vec2(...xy) )
     }
     get debugName() { return "SmallDoodad" }
 }
-class _LargeDoodad extends ComponentSpec {
+class _LargeDoodad extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(3,2) }
     get debugDrawPoints () {
         return [ [-.8,-.8], [.8,-.8], [-.8,.8], [.8,.8] ].map( ( xy ) => vecs.Vec2(...xy) )
     }
     get debugName() { return "LargeDoodad" }
 }
-class _HeavyDoodad extends ComponentSpec {
+class _HeavyDoodad extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
         return [ [-.8,-.8], [-.2,-.8], [-.2,-.2], [.8,-.2], [.8,.6], [.2,.6], [.2,.8], [-.8,.8] ].map( ( xy ) => vecs.Vec2(...xy) )
@@ -65,7 +40,7 @@ class _ESinkInteractor extends interactors.Interactor {
     }
 }
 
-class _ElectricSink extends ComponentSpec {
+class _ElectricSink extends base.ComponentSpec {
     get interactorClass() { return _ESinkInteractor }
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
@@ -83,7 +58,7 @@ class _ESourceInteractor extends interactors.Interactor {
     }
 }
 
-class _ElectricSource extends ComponentSpec {
+class _ElectricSource extends base.ComponentSpec {
     get interactorClass() { return _ESourceInteractor }
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
@@ -92,11 +67,11 @@ class _ElectricSource extends ComponentSpec {
     get debugName() { return "ElectricSource" }
 }
 
-class _FuelSink extends ComponentSpec {
+class _FuelSink extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
     get debugName() { return "FuelSink" }
 }
-class _FuelSource extends ComponentSpec {  
+class _FuelSource extends base.ComponentSpec {  
     get xySize() { return vecs.Vec2(1,1) }
     get debugName() { return "FuelSource" }
 }
@@ -110,7 +85,7 @@ class _LGInteractor extends interactors.Interactor {
     }
 }
 
-class _LaserGun extends ComponentSpec {
+class _LaserGun extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
 
     get debugDrawPoints () {
@@ -136,7 +111,7 @@ class _MGInteractor extends interactors.Interactor {
     }
 }
 
-class _MissileGun extends ComponentSpec {
+class _MissileGun extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
 
     get debugDrawPoints () {
@@ -150,7 +125,7 @@ class _MissileGun extends ComponentSpec {
 }
 
 
-class _GenericCable extends ComponentSpec {
+class _GenericCable extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
 
     _createConnectors() {

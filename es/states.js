@@ -2,11 +2,9 @@ import * as dirconst from '/es/dirconst.js'
 
 import * as blueprints from '/es/blueprints.js'
 import * as ships from '/es/ships.js'
-import * as frames from '/es/frames.js'
-import * as frameweights from '/es/frameweights.js'
 
-import * as components from '/es/comps/components.js'
-import * as cspecs from '/es/comps/cspecs.js'
+import * as framespecs from '/es/occupants/frames/specs.js'
+import * as compspecs from '/es/occupants/comps/specs.js'
 
 export class State {
     constructor() {
@@ -20,12 +18,12 @@ export class State {
     }
 
     debugSetupGrid() {
-        new frames.FrameDesign( frameweights.Medium ).lockToGrid( this.debugGrid.lookup( 3,3 ) )
-        new frames.FrameDesign( frameweights.Medium ).lockToGrid( this.debugGrid.lookup( 5,3 ) )
-        new frames.FrameDesign( frameweights.Heavy ).lockToGrid( this.debugGrid.lookup( 4,5 ) )
+        framespecs.Medium.reify().lockToGrid( this.debugGrid.lookup( 3,3 ) )
+        framespecs.Medium.reify().lockToGrid( this.debugGrid.lookup( 5,3 ) )
+        framespecs.Heavy.reify().lockToGrid( this.debugGrid.lookup( 4,5 ) )
 
-        cspecs.ElectricSink.reify().lockToGrid( this.debugGrid.lookup( 3,3 ) )
-        cspecs.ElectricSource.reify().lockToGrid( this.debugGrid.lookup( 5,4 ) )
-        cspecs.MissileGun.reify().lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.E )
+        compspecs.ElectricSink.reify().lockToGrid( this.debugGrid.lookup( 3,3 ) )
+        compspecs.ElectricSource.reify().lockToGrid( this.debugGrid.lookup( 5,4 ) )
+        compspecs.MissileGun.reify().lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.E )
     }
 }
