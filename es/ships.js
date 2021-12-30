@@ -16,13 +16,6 @@ export class ShipDesign {
 export class ShipTile extends ogrids.OccGridTile {
     constructor (...args) {
         super(...args)
-
-        this.occupants = []
-    }
-
-    addOccupant(occ) {
-        this.occupants.push(occ)
-        this.markDirty()
     }
 }
 
@@ -31,7 +24,7 @@ export class ShipGrid extends ogrids.OccGrid {
         super(ShipTile)
 
         for (let occupant of blueprintGrid.occupants) {
-            console.log("bgocc", `${occupant}`)
+//            console.log("bgocc", `${occupant}`)
             occupant.reify(this)
         }
     }
@@ -49,7 +42,7 @@ export class Ship {
     advanceTick(directive) {
         console.log("Advacing tick of ship", this, "directive", directive)
         for (let activeComponent of this.grid.activeComponents) {
-            console.log(`acticomp ${activeComponent}`, activeComponent)
+//            console.log(`acticomp ${activeComponent}`, activeComponent)
             activeComponent.preAdvanceTick(directive)
         }
 

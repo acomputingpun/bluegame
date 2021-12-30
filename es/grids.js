@@ -1,3 +1,4 @@
+import * as hacks from '/es/hacks.js'
 import * as vecs from '/es/vectors.js'
 import * as dirconst from '/es/dirconst.js'
 
@@ -10,7 +11,7 @@ export class Grid {
         this._tiles = []
     }
 
-    lookup(x, y) {
+    lookup(x = hacks.argPanic(), y = hacks.argPanic()) {
         let row = this._lookupRow(y)
         if (! row.has(x)) {
             let tile = new this._tileClass( x, y, this )

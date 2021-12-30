@@ -13,14 +13,12 @@ export class GridPanel extends panels.Panel {
 
         this.grid = grid
 
-        this.xySize = vecs.Vec2(9, 9)
-
         this.tilePanels = []
         this.tilePanelMatrix = []
         for (let y = 0; y < this.xySize.y; y++) {
             this.tilePanelMatrix.push([])
             for (let x = 0; x < this.xySize.x; x++) {
-                let tilePanel = new TilePanel(this, vecs.Vec2(x, y))
+                let tilePanel = new this.tilePanelClass(this, vecs.Vec2(x, y))
                 this.tilePanels.push(tilePanel)
                 this.tilePanelMatrix[y].push(tilePanel)
             }            
@@ -30,6 +28,9 @@ export class GridPanel extends panels.Panel {
         this.xyViewportAnchor = vecs.Vec2(0, 0)
         this.reflectTilePanels()
     }
+
+    get tilePanelClass() { return TilePanel }
+    get xySize() { return vecs.Vec2(9, 9) }
 
     shiftViewport(vec) {
         this.xyViewportAnchor = this.xyViewportAnchor.add(vec)
@@ -87,7 +88,7 @@ export class GridPanel extends panels.Panel {
 
 let TILE_EMPTY_BG = "#EEE"
 
-class TilePanel extends panels.Panel {
+export class TilePanel extends panels.Panel {
     constructor(parent, xyLocal) {
         super(parent)
         this.xyLocal = xyLocal
@@ -104,7 +105,7 @@ class TilePanel extends panels.Panel {
             if (this.tile.frame == null) {
                 return TILE_EMPTY_BG
             } else {
-                return this.tile.frame.weight.debugColour
+                return this.tile.frame.spec.debugColour
             }
         }
     }
@@ -140,6 +141,11 @@ class TilePanel extends panels.Panel {
                 this.ctx.stroke()
             }
         } 
+        for (let conn of this.tile.connectors) {
+            this.ctx.beginPath()
+            this.ctx.arc( ...this.absFacingMidpoint(conn.facing).xy, 9, 0, 2*Math.PI )
+            this.ctx.stroke()
+        }
     }
 
     localFacingMidpoint(vec) {
@@ -301,13 +307,13 @@ export class PlaceComponentTool extends Tool {
     }
 
     createHoveringComponent(spec) {
-        this.hoveringComp = spec.reify()
+        this.hoveringComp = spec.designify()
     }
     setHoverTilePanel(tilePanel) {
         if (this.hoveringComp != null) {
             this.hoverTilePanel = tilePanel
-            if (this.hoverTilePanel.tile != this.hoveringComp.tile) {
-                this.hoveringComp.setTile(this.hoverTilePanel.tile)
+            if (this.hoverTilePanel.tile != this.hoveringComp.anchorTile) {
+                this.hoveringComp.setAnchorTile(this.hoverTilePanel.tile)
             }
         }
     }
@@ -381,13 +387,14 @@ export class PlaceFrameTool extends Tool {
     }
 
     createHoveringFrame(framespec) {
-        this.hoveringFrame = framespec.reify()
+        this.hoveringFrame = framespec.designify()
     }
+    
     setHoverTilePanel(tilePanel) {
         if (this.hoveringFrame != null) {
             this.hoverTilePanel = tilePanel
-            if (this.hoverTilePanel.tile != this.hoveringFrame.tile) {
-                this.hoveringFrame.setTile(this.hoverTilePanel.tile)
+            if (this.hoverTilePanel.tile != this.hoveringFrame.anchorTile) {
+                this.hoveringFrame.setAnchorTile(this.hoverTilePanel.tile)
             }
         }
     }

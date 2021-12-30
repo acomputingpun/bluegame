@@ -48,7 +48,7 @@ export class ConnectorDesign extends occupants.GeneralDesign {
         this.__locked = false
     }
 
-    get tile() {
+    get anchorTile() {
         return this.comp.innerToTile(this.spec.pos)
     }
     get facing() {

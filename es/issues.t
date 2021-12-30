@@ -55,7 +55,7 @@ RE b|0044:Replace the inbuild ES6 setter of this.tile with explict function setT
 RI b|0045:Functions for connectors to access the tiles they link to and those tiles' other connectors via position.
  I b|0046:Blueprint-level error checking of connectors being immediately linked correctly.
  M b|0047:General state-level logic for resource movement, allocation, sources and sinks, etc.
- I b|0048:Components with internal resource state.
+RI b|0048:Components with internal resource state.
  I b|0049:Active logic for sources / sinks to output or draw resources.
  I b|0050:Active logic for conduits and connectors to facilitate flow of resources.
  I b|0051:Blueprint-level error checking of connectors being indefinitely linked correctly (ie, an eventual valid connection).
@@ -82,8 +82,30 @@ RK b|0071:Replace uses of 'specs' with 'spec' when referring to a singular Compo
  K b|0072:Make blueprint.checkHillProperty() and similar functions iterate through the blueprint's entity lists, not the backing matrix's keys.
 RK b|0073:Replace .es files with .js files for better portability to Windows systems (or at least, the one I sometimes do dev on)
 RE b|0074:Make all specs, all designs, and all instances inheirit certain functionalities from three common classes.
- E b|0075:Clean up and rationalise the file structure for occupants.
-AI b|0076:Adding occupants to grids / grid-tiles sorts them into categories automatically.
+RE b|0075:Clean up and rationalise the file structure for occupants.
+RI b|0076:Adding occupants to grids / grid-tiles sorts them into categories automatically.
 RI b|0077:Code for sorting of occupants in 0076 uses occupant-specific true/false methods rather than instanceof.
 RI b|0078:Locking/unlocking component designs onto grid automatically locks/unlocks associated connectors.
 RI b|0079:Connector instances should be added to grid.occupants for instance grids.
+ I b|0080:Reserving and consuming resources as part of resource pools.
+RI b|0081:Attempting to reserve resources for components and handling failure/success.
+ E b|0082:Implement "argument checking" via hacks.argPanic() for most (all?) functions
+ I b|0083:Second-order and n-order recursive draws for consuming/reserving resources.
+RI b|0084:Comparison and value-editing semantics for resources.
+AI b|0085:UI for ship display has simple grid showing component layout.
+ I b|0086:Unified code for drawing / reserving / consuming resources.
+ I b|0087:Adding components to tiles sorts them into categories as per 0076, for any occupant-grid subclass.
+ E b|0088:Remove references to frameweight by 'weight' and replace with 'spec'.
+AI b|0089:Consolidate UI grid display panel functions into a general UI grid panel class that can be partially overridden.
+AU b|0090:Seperate the ui_grids GridPanel definitions and the ui_grids grid-editing code.
+ I b|0091:Basic message display ticker in ui_sbattles for output of advancing ship ticks.
+ M b|0092:Code for handling and resolving ship-to-ship battles of 2 ships.
+ M b|0093:Code for handling and resolving ship-to-ship battles of N ships.
+AE b|0094:Rename reify() for the spec->design transform so there's no nomenclature overlap with the design->instance transform.
+ E b|0095:Consider renaming Instances to Examples for less nomenclature overlap with the many other uses of the word Instance.
+RI b|0096:Deprecate the 'tile' lookup property of Occupants - replace with 'anchorTile' or 'tiles'; equivalently, 'anchorPos' or 'poses'
+ I b|0097:Remove the debug tripup code to catch calls to deprecated property Occupant.tile (as per 0096).
+AI b|0098:Basic UI display of Connectors as part of TilePanels.
+ M b|0099:Multi-tile components.
+RE b|0100:Deprecate the setTile() and clearTile() functions of Occupants - replace with setAnchorTile()
+AI b|0101:Fix connector instances incorrectly not being added as occupants to thier tiles when reified.

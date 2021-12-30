@@ -1,8 +1,11 @@
+import * as hacks from '/es/hacks.js'
+
 export class GeneralSpec {
-    reify(...args) {
+    designify(...args) {
         return new this.designClass(this, ...args)
     }
     get designClass() { throw `PANIC: Call to to-be-overridden method get designClass() of base GeneralSpec item ${this}!` }
+    get instanceClass() { throw `PANIC: Call to to-be-overridden method get instanceClass() of base GeneralDesign item ${this}!` }
 
     get isComponent() { return false }
     get isFrame() { return false }
@@ -19,26 +22,34 @@ export class GeneralDesign {
         this._tiles = []
     }
 
-    get locked() { return this.__locked }
-    get tile() { return this._anchorTile }
-    get tiles() { return this._tiles }
-    get instanceClass() { throw `PANIC: Call to to-be-overridden method get instanceClass() of base GeneralDesign item ${this}!` }
+    get instanceClass() { return this.spec.instanceClass }
 
+    get locked() { return this.__locked }
+    get tiles() { return this._tiles }
+    get poses() { return this._tiles.map( (tile) => tile.xyPos ) }
+
+    get anchorTile() { return this._anchorTile }
     get anchorPos() {
-        if (this._anchorTile != null) {
-            return this._anchorTile.xyPos
+        if (this.anchorTile != null) {
+            return this.anchorTile.xyPos
         } else {
             return null
         }
     }
 
+    get tile () {
+        console.log("Deprecated function get tile() called!")
+        console.trace()
+        throw ("PANIC: Deprecated function get tile() called!")
+    }
+
     get placeVecs() {return []}
  
-    reify(...args) {
+    reify(iGrid = hacks.argPanic(), ...args) {
         if (!this.locked) {
             throw `Panic - occupant ${this} not locked to grid, can't reify!`
         }
-        return new this.instanceClass(this, ...args)
+        return new this.instanceClass(this, iGrid, ...args)
     }
 
     lockToGrid() {
@@ -48,7 +59,7 @@ export class GeneralDesign {
         throw (`PANIC: Call to to-be-overridden method unlock() of base GeneralDesign item ${this}!`)
     }
 
-    setTile(tile) {
+    setAnchorTile(tile) {
         if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
         this._anchorTile = tile
         if (tile == null) {
@@ -57,13 +68,10 @@ export class GeneralDesign {
             this._tiles = this.placeVecs.map ( (placeVec) => tile.relTile(placeVec) )
         }
     }
-    clearTile() {
-        this.setTile(null)
-    }
 
     get grid() {
-        if (this.tile != null) {
-            return this.tile.parent
+        if (this.anchorTile != null) {
+            return this.anchorTile.parent
         } else {
             return null
         }
@@ -79,13 +87,20 @@ export class GeneralInstance {
         this.design = design
         this.iGrid = iGrid
 
+        console.log("design", design)
+        console.log("despec", design.spec)
         this.anchorPos = this.design.anchorPos
-        this.anchorTile = this.iGrid.lookup(this.anchorPos)
+        this.anchorTile = this.iGrid.lookup(...this.anchorPos.xy)
+        this.tiles = this.design.tiles.map(  (designTile) => this.iGrid.lookup(...designTile.xyPos.xy) )
 
+        for (let tile of this.tiles) {
+            tile.addOccupant(this)
+        }
         this.iGrid.addOccupant(this)
     }
     toString() { return `i${this.design}` }
     get spec() { return this.design.spec }
+    get facing() { return this.design.facing }
 
     get isComponent() { return this.design.isComponent }
     get isFrame() { return this.design.isFrame }

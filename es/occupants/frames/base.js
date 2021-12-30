@@ -16,7 +16,7 @@ export class FrameSpec extends occupants.GeneralSpec {
     get placeVecs() { return this._placeVecs }
     get debugName () { return "unnamedFrameSpec" }
 
-    valueOf() { return ASCENDING_ORDER.indexOf(this) }
+    valueOf() { throw "PANIC: to be overridden!" }
     toString() { return `w${this.debugName}` }
 }
 
@@ -29,7 +29,7 @@ export class FrameDesign extends occupants.GeneralDesign {
 
     lockToGrid(tile = undefined) {
         if (tile !== undefined) {
-            this.setTile(tile)
+            this.setAnchorTile(tile)
         }
 
         if (!this.canLock()) { throw `Panic - can't lock frame ${this}!` }
@@ -54,7 +54,7 @@ export class FrameDesign extends occupants.GeneralDesign {
 
     canLock() {
         if (this.locked) { return false } 
-        if (this.tile == null) { return false }
+        if (this.anchorTile == null) { return false }
         for (let placeTile of this.tiles) {
             if (placeTile.frame !== null) {
                 return false

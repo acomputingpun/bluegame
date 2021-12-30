@@ -1,6 +1,27 @@
 import * as vecs from '/es/vectors.js'
 import * as panels from '/es/ui/panels.js'
 
+import * as ui_grids from './grids.js'
+
+export class SBTilePanel extends ui_grids.TilePanel {
+    constructor(...args) {
+        super(...args)
+        this.panelStart = this.xyLocal.sMul(35)
+        this.panelSize = vecs.Vec2(30, 30)
+    }
+}
+
+export class SBGridPanel extends ui_grids.GridPanel {
+    get xySize () { return vecs.Vec2(9, 9) }
+    get tilePanelClass() { return SBTilePanel }
+
+    constructor(...args) {
+        super(...args)
+        this.panelStart = vecs.Vec2(400, 200)
+        this.panelSize = vecs.Vec2(320, 320)
+    }
+}
+
 export class AdvanceTickButton extends panels.Button {
     get text() { return "advance" }
     constructor(parent) {
@@ -25,12 +46,10 @@ export class ShipBattlePanel extends panels.Panel {
         this.messageLog = []
 
         this.advanceTickButton = new AdvanceTickButton(this)
-        /*
-        this.gridPanel = new GridPanel(this, grid)
-        */
+        this.gridPanel = new SBGridPanel(this, this.ship.grid)
     }
     get children() {
-        return [this.advanceTickButton]
+        return [this.gridPanel, this.advanceTickButton]
     }
     
     drawShipOccupants() {
@@ -66,5 +85,20 @@ export class ShipBattlePanel extends panels.Panel {
     drawContents() {
         this.drawMessageLog()
         this.drawShipOccupants()
+    }
+
+// TODO: Move these out and into the grid class!    
+    warpTileMouseMove(gridPanel, xyLocal) {
+        if (gridPanel == this.gridPanel) {
+        } else {
+            throw "PANIC"
+        }
+    }
+    warpTileMouseDown(gridPanel, xyLocal) {
+        if (gridPanel == this.gridPanel) {
+            console.log("xyl is", xyLocal, "tilePanel", this.gridPanel.localLookupPanel(xyLocal.xy) )
+        } else {
+            throw "PANIC"
+        }
     }
 }

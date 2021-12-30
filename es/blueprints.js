@@ -8,10 +8,6 @@ import * as warnings from '/es/warnings.js'
 class BlueprintTile extends ogrids.OccGridTile {
     constructor (...args) {
         super(...args)
-
-        this.frame = null
-        this.components = []
-        this.connectors = []
     }
 
     get frameWeight () {
@@ -23,25 +19,12 @@ class BlueprintTile extends ogrids.OccGridTile {
     }
 
     addOccupant(occ) {
-        this.markDirty()
+        if(!occ.locked) { throw `PANIC: Tried to add unlocked occupant ${occ} to Grid ${this}` }
+        super.addOccupant(occ)
     }
-
-    addComponent(comp) {
-        this.components.push(comp)
-        this.markDirty()
-    }
-    removeComponent(comp) {
-        utils.aRemove(this.components, comp)
-        this.markDirty()
-    }
-
-    addConnector(conn) {
-        this.connectors.push(conn)
-        this.markDirty()
-    }
-    removeConnector(conn) {
-        utils.aRemove(this.connectors, conn)
-        this.markDirty()
+    removeOccupant(occ) {
+        if (!occ.locked) { throw `PANIC: Tried to remove unlocked occupant ${occ} from Grid ${this}` }
+        super.removeOccupant(occ)
     }
 }
 
@@ -68,10 +51,10 @@ export class BlueprintGrid extends ogrids.OccGrid {
             fwMap.set(frameWeight, [])
         }
 
-        /// Start with the heaviest frames, then the next-heaviest, then the next-heaviest, and so on.
+        // Start with the heaviest frames, then the next-heaviest, then the next-heaviest, and so on.
         for (let tile of this.tiles) {
             if (tile.frame != null) {
-                fwMap.get(tile.frame.weight).push(tile)
+                fwMap.get(tile.frame.spec).push(tile)
             }
         }
 

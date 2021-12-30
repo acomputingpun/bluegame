@@ -11,21 +11,21 @@ import * as base from './base.js'
 class _SmallDoodad extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
-        return [ [-.8,-.8], [.8,-.8], [-.8,.8], [-.8,-.8] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-8,-8], [8,-8], [-8,8], [-8,-8] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
     }
     get debugName() { return "SmallDoodad" }
 }
 class _LargeDoodad extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(3,2) }
     get debugDrawPoints () {
-        return [ [-.8,-.8], [.8,-.8], [-.8,.8], [.8,.8] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-8,-8], [8,-8], [-8,8], [8,8] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
     }
     get debugName() { return "LargeDoodad" }
 }
 class _HeavyDoodad extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
-        return [ [-.8,-.8], [-.2,-.8], [-.2,-.2], [.8,-.2], [.8,.6], [.2,.6], [.2,.8], [-.8,.8] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-8,-8], [-2,-8], [-2,-2], [8,-2], [8,6], [2,6], [2,8], [-8,8] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
     }
     get debugName() { return "HeavyDoodad" }
 }
@@ -44,7 +44,7 @@ class _ElectricSink extends base.ComponentSpec {
     get interactorClass() { return _ESinkInteractor }
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
-        return [ [-.2,-.8], [.2,-.8], [.2,-.2], [.8,-.2], [.8,.2], [.2,.2], [.2,.8], [-.2,.8], [-.2,.2], [-.8,.2], [-.8,-.2], [-.2,-.2] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-2,-8], [2,-8], [2,-2], [8,-2], [8,2], [2,2], [2,8], [-2,8], [-2,2], [-8,2], [-8,-2], [-2,-2] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
     }
     get debugName() { return "ElectricSink" }
 }
@@ -62,7 +62,7 @@ class _ElectricSource extends base.ComponentSpec {
     get interactorClass() { return _ESourceInteractor }
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
-        return [ [-.2,-.6], [.2,-.8], [.2,-.2], [.6,-.2], [.8,.2], [.2,.2], [.2,.6], [-.2,.8], [-.2,.2], [-.6,.2], [-.8,-.2], [-.2,-.2] ].map( ( xy ) => vecs.Vec2(...xy) )
+        return [ [-2,-6], [2,-8], [2,-2], [6,-2], [8,2], [2,2], [2,6], [-2,8], [-2,2], [-6,2], [-8,-2], [-2,-2] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
     }
     get debugName() { return "ElectricSource" }
 }
@@ -98,20 +98,56 @@ class _LaserGun extends base.ComponentSpec {
 
     get isActiveComponent() { return true }
 
-    get interactorClass() { return _LGInteractor }
+//    get interactorClass() { return _LGInteractor }
     get debugName() { return "LaserGun" }
 }
 
-class _MGInteractor extends interactors.Interactor {
+class _MGInstance extends base.ComponentInstance {
+    constructor(...args) {
+        super(...args)
+
+        this.ammoPool = this.resourcePools[0]
+        this.fireReady = false
+
+        this._resourceBids = []
+    }
+
+    drawReserve(resSource, res) {
+        if (resSource.foreignReserve(this, res)) {
+            this._resourceBids.push ( [resSource, res] )
+            return true
+        } else {
+            return false
+        }
+    }
+    drawConsume() {
+        for (let bid of this._resourceBids) {
+            let [resSource, res] = bid
+            resSource.foreignConsume(this, res)
+        }
+    }
+
     preAdvanceTick() {
+        console.log("THIS", this)
+        if (this.drawReserve(this.ammoPool, new resources.Ammunition(3) )) {
+            this.fireReady = true
+            this.drawConsume()
+        }
     }
     advanceTick() {
+        if (this.fireReady) {
+            this.fireReady = false
+            console.log("firing, remaining ammo:", this.ammoPool.quantity )
+        }
     }
     postAdvanceTick() {
+        console.log("mgic")
     }
 }
 
 class _MissileGun extends base.ComponentSpec {
+    get instanceClass() { return _MGInstance }
+
     get xySize() { return vecs.Vec2(1,1) }
 
     get debugDrawPoints () {
@@ -120,8 +156,11 @@ class _MissileGun extends base.ComponentSpec {
 
     get isActiveComponent() { return true }
 
-    get interactorClass() { return _MGInteractor }
     get debugName() { return "MissileGun" }
+
+    _createResourcePools() {
+        return [ new resources.ResourcePool(resources.Ammunition, 30) ]
+    }
 }
 
 
