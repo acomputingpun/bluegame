@@ -10,14 +10,6 @@ class BlueprintTile extends ogrids.OccGridTile {
         super(...args)
     }
 
-    get frameWeight () {
-        if (this.frame == null) {
-            return null
-        } else {
-            return this.frame.weight
-        }
-    }
-
     addOccupant(occ) {
         if(!occ.locked) { throw `PANIC: Tried to add unlocked occupant ${occ} to Grid ${this}` }
         super.addOccupant(occ)
@@ -47,8 +39,8 @@ export class BlueprintGrid extends ogrids.OccGrid {
 
         let fwMap = new Map() 
 
-        for (let frameWeight of framespecs.DESCENDING_ORDER) {
-            fwMap.set(frameWeight, [])
+        for (let spec of framespecs.DESCENDING_ORDER) {
+            fwMap.set(spec, [])
         }
 
         // Start with the heaviest frames, then the next-heaviest, then the next-heaviest, and so on.
@@ -68,7 +60,7 @@ export class BlueprintGrid extends ogrids.OccGrid {
 
                 console.log("testing fweight:", minFrameWeight, "got allowedTiles", allowedTiles)
 
-                let linkedTiles = exactFWTiles[0].recursiveExpand( (tile) => (tile.frame != null && tile.frame.weight >= minFrameWeight) )
+                let linkedTiles = exactFWTiles[0].recursiveExpand( (tile) => (tile.frame != null && tile.frame.spec >= minFrameWeight) )
 
                 console.log("got linkedTiles", linkedTiles)
 

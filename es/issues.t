@@ -29,15 +29,15 @@ RI b|0017:Grid UI recognition of cursor input and translation of cursor pos to t
 RI b|0019:Grid UI recognition of mousedown clicks on tiles.
  E b|0020:Update exception messages to be more descriptive and detailed.
 RI b|0021:State representation of frame weights and data associated with frame weights.
- E b|0022:Seperate various blueprint, tile, etc data from ships.es into further files.
- I b|0023:State representation of component attributes and data associated with components.
+RE b|0022:Seperate various blueprint, tile, etc data from ships.es into further files.
+RI b|0023:State representation of component attributes and data associated with components.
  I b|0024:Overlay of selected component/frame in grid-editing UI on grid.
  E b|0025:Remove magic numbers and hardcoded values from ui_grids.es
 RE b|0026:Create a frameweights.es that properly initialises (singleton-like?) frameweight objects.
 AM b|0027:State-logic for components.
  I b|0028:Associating expected inputs/outputs with components for the purpose of conduits.
 RI b|0029:Conduit-only components.
- I b|0030:Partially conduit components - generators, etc.
+RI b|0030:Partially conduit components - generators, etc.
 RE b|0031:Move component logic into components.es
 RI b|0032:Basic display of components in blueprint grid UI
 RI b|0033:Initialisation of an existing grid with default components at game begin for dev purposes
@@ -56,7 +56,7 @@ RI b|0045:Functions for connectors to access the tiles they link to and those ti
  I b|0046:Blueprint-level error checking of connectors being immediately linked correctly.
  M b|0047:General state-level logic for resource movement, allocation, sources and sinks, etc.
 RI b|0048:Components with internal resource state.
- I b|0049:Active logic for sources / sinks to output or draw resources.
+RI b|0049:Active logic for sources / sinks to output or draw resources.
  I b|0050:Active logic for conduits and connectors to facilitate flow of resources.
  I b|0051:Blueprint-level error checking of connectors being indefinitely linked correctly (ie, an eventual valid connection).
  I b|0052:More complex activity-logic for resource components: generators that burn a resource, weapons, etc.
@@ -87,12 +87,12 @@ RI b|0076:Adding occupants to grids / grid-tiles sorts them into categories auto
 RI b|0077:Code for sorting of occupants in 0076 uses occupant-specific true/false methods rather than instanceof.
 RI b|0078:Locking/unlocking component designs onto grid automatically locks/unlocks associated connectors.
 RI b|0079:Connector instances should be added to grid.occupants for instance grids.
- I b|0080:Reserving and consuming resources as part of resource pools.
+RI b|0080:Reserving and consuming resources as part of resource pools.
 RI b|0081:Attempting to reserve resources for components and handling failure/success.
  E b|0082:Implement "argument checking" via hacks.argPanic() for most (all?) functions
  I b|0083:Second-order and n-order recursive draws for consuming/reserving resources.
 RI b|0084:Comparison and value-editing semantics for resources.
-AI b|0085:UI for ship display has simple grid showing component layout.
+RI b|0085:UI for ship display has simple grid showing component layout.
  I b|0086:Unified code for drawing / reserving / consuming resources.
  I b|0087:Adding components to tiles sorts them into categories as per 0076, for any occupant-grid subclass.
  E b|0088:Remove references to frameweight by 'weight' and replace with 'spec'.
@@ -101,11 +101,18 @@ AU b|0090:Seperate the ui_grids GridPanel definitions and the ui_grids grid-edit
  I b|0091:Basic message display ticker in ui_sbattles for output of advancing ship ticks.
  M b|0092:Code for handling and resolving ship-to-ship battles of 2 ships.
  M b|0093:Code for handling and resolving ship-to-ship battles of N ships.
-AE b|0094:Rename reify() for the spec->design transform so there's no nomenclature overlap with the design->instance transform.
+RE b|0094:Rename reify() for the spec->design transform so there's no nomenclature overlap with the design->instance transform.
  E b|0095:Consider renaming Instances to Examples for less nomenclature overlap with the many other uses of the word Instance.
 RI b|0096:Deprecate the 'tile' lookup property of Occupants - replace with 'anchorTile' or 'tiles'; equivalently, 'anchorPos' or 'poses'
  I b|0097:Remove the debug tripup code to catch calls to deprecated property Occupant.tile (as per 0096).
-AI b|0098:Basic UI display of Connectors as part of TilePanels.
+RI b|0098:Basic UI display of Connectors as part of TilePanels.
  M b|0099:Multi-tile components.
 RE b|0100:Deprecate the setTile() and clearTile() functions of Occupants - replace with setAnchorTile()
-AI b|0101:Fix connector instances incorrectly not being added as occupants to thier tiles when reified.
+RI b|0101:Fix connector instances incorrectly not being added as occupants to thier tiles when reified.
+RI b|0102:Dictionary-based reify() implementation that preserves relative connectivity property.
+ E b|0103:Rewrite reify() semantics to use iGrid.reify(occ) rather than occ.reify(iGrid)
+RI b|0104:Code to attach connector designs to other connector designs, setting the _destConn property.
+RI b|0105:Reserved resource bids not properly cleared from connectors
+RI b|0106:Ability to draw from components with resource states (as sources).
+ I b|0107:UI display of Connectors being linked or not linked to one another.
+ I b|0108:Ability to manually link or unlink Connectors via UI commands.

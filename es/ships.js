@@ -22,11 +22,23 @@ export class ShipTile extends ogrids.OccGridTile {
 export class ShipGrid extends ogrids.OccGrid {
     constructor(blueprintGrid) {
         super(ShipTile)
+        
+        this.reifyDict = new Map()
+        this.reifyDict.set(null, null)
 
         for (let occupant of blueprintGrid.occupants) {
 //            console.log("bgocc", `${occupant}`)
             occupant.reify(this)
         }
+    }
+    
+    lookupOrReify(design) {
+        if (!this.reifyDict.has(design)) {
+            let inst = new design.instanceClass(design, this)
+            this.reifyDict.set(design, inst)
+            inst.recursiveReify()
+        }
+        return this.reifyDict.get(design)
     }
 }
 

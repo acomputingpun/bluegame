@@ -3,10 +3,42 @@ import * as vecs from '/es/vectors.js'
 import * as dirconst from '/es/dirconst.js'
 import * as connspecs from '../conns/specs.js'
 
-import * as interactors from '/es/comps/interactors.js'
 import * as resources from '/es/comps/resources.js'
 
 import * as base from './base.js'
+
+class _ResourceCompInstance extends base.ComponentInstance {
+    constructor(...args) {
+        super(...args)
+        this._resourceBids = []
+    }
+
+    foreignReserve(bidder = hacks.argPanic(), res = hacks.argPanic() ) {
+        throw `PANIC: Call to to-be-overridden method foreignReserve() of ResourceCompInstance ${this}!`
+    }
+    foreignConsume(consumer = hacks.argPanic(), res = hacks.argPanic()) {
+        throw `PANIC: Call to to-be-overridden method foreignConsume() of ResourceCompInstance ${this}!`
+    }
+
+    drawReserve(resSource, res) {
+        console.log(`COMP ${this} calling drawReserve ${resSource} of ${res}`)
+
+        if (resSource.foreignReserve(this, res)) {
+            this._resourceBids.push ( [resSource, res] )
+            return true
+        } else {
+            return false
+        }
+    }
+    drawConsume() {
+//        console.log(`COMP ${this} calling drawConsume`)
+        for (let bid of this._resourceBids) {
+            let [resSource, res] = bid
+            resSource.foreignConsume(this, res)
+        }
+        this._resourceBids = []
+    }
+}
 
 class _SmallDoodad extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
@@ -30,41 +62,79 @@ class _HeavyDoodad extends base.ComponentSpec {
     get debugName() { return "HeavyDoodad" }
 }
 
-class _ESinkInteractor extends interactors.Interactor {
-    preAdvanceTick() {
-//        this.tryDrawResource(this.inst.connectors[0], res.Electric)
-    }
-    advanceTick() {
-    }
-    postAdvanceTick() {
-    }
+class _ElectricSinkInstance extends _ResourceCompInstance {
 }
-
-class _ElectricSink extends base.ComponentSpec {
-    get interactorClass() { return _ESinkInteractor }
+class _ElectricSink extends base.ComponentSpec{
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
         return [ [-2,-8], [2,-8], [2,-2], [8,-2], [8,2], [2,2], [2,8], [-2,8], [-2,2], [-8,2], [-8,-2], [-2,-2] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
     }
     get debugName() { return "ElectricSink" }
+
+    get instanceClass() { return _ElectricSinkInstance }
 }
 
-class _ESourceInteractor extends interactors.Interactor {
-    preAdvanceTick() {
+class _ElectricSourceInstance extends _ResourceCompInstance {
+    foreignReserve(bidder = hacks.argPanic(), res = hacks.argPanic()) {
+        return res.resClass == resources.Electric
     }
-    advanceTick() {
-    }
-    postAdvanceTick() {
+    foreignConsume(consumer = hacks.argPanic(), res = hacks.argPanic()) {
+        return res.resClass == resources.Electric
     }
 }
-
 class _ElectricSource extends base.ComponentSpec {
-    get interactorClass() { return _ESourceInteractor }
     get xySize() { return vecs.Vec2(1,1) }
     get debugDrawPoints () {
         return [ [-2,-6], [2,-8], [2,-2], [6,-2], [8,2], [2,2], [2,6], [-2,8], [-2,2], [-6,2], [-8,-2], [-2,-2] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
     }
     get debugName() { return "ElectricSource" }
+    
+    _createConnectors() {
+        return [new connspecs.ElectricConnector( dirconst.IN_PLACE, dirconst.N ), new connspecs.ElectricConnector( dirconst.IN_PLACE, dirconst.S ), new connspecs.ElectricConnector( dirconst.IN_PLACE, dirconst.E ), new connspecs.ElectricConnector( dirconst.IN_PLACE, dirconst.W )]
+    }
+
+    get instanceClass() { return _ElectricSourceInstance }
+}
+
+class _BatteryInstance extends _ResourceCompInstance {
+    constructor(...args) {
+        super(...args)
+        this.electricPool = this.resourcePools[0]
+    }
+
+    foreignReserve(bidder = hacks.argPanic(), res = hacks.argPanic()) {
+        if (this.connectors.includes(bidder)) {
+            return this.electricPool.foreignReserve(this, res)
+        } else {
+            throw ("PANIC: invalid call of foreignReserve()!")
+        }
+    }
+    foreignConsume(consumer = hacks.argPanic(), res = hacks.argPanic()) {
+        if (this.connectors.includes(consumer)) {
+            console.log(`Consuming from Battery - power left, ${this.electricPool.quantity}`)
+            return this.electricPool.foreignConsume(this, res)
+        } else {
+            throw ("PANIC: invalid call of foreignConsume()!")
+        }
+    }
+}
+
+class _Battery extends base.ComponentSpec {
+    get xySize() { return vecs.Vec2(1,1) }
+    get debugDrawPoints () {
+        return [ [0, 9], [0, 3], [3, 6], [3, -6], [0, -9], [0, -3], [-3, -6], [-3, 6] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
+    }
+    get debugName() { return "Battery" }
+    
+    _createConnectors() {
+        return [new connspecs.ElectricConnector( dirconst.IN_PLACE, dirconst.N ), new connspecs.ElectricConnector( dirconst.IN_PLACE, dirconst.S ), new connspecs.ElectricConnector( dirconst.IN_PLACE, dirconst.E ), new connspecs.ElectricConnector( dirconst.IN_PLACE, dirconst.W )]
+    }
+
+    get instanceClass() { return _BatteryInstance }
+
+    _createResourcePools() {
+        return [ new resources.ResourcePool(resources.Electric, 30) ]
+    }
 }
 
 class _FuelSink extends base.ComponentSpec {
@@ -76,10 +146,26 @@ class _FuelSource extends base.ComponentSpec {
     get debugName() { return "FuelSource" }
 }
 
-class _LGInteractor extends interactors.Interactor {
+class _LGInstance extends _ResourceCompInstance {
+    constructor(...args) {
+        super(...args)
+        this.fireReady = false
+    }
+
+    get powerInflow() { return this.connectors[0] }
+
     preAdvanceTick() {
+        console.log("THIS", this)
+        if (this.drawReserve(this.powerInflow, new resources.Electric(3) )) {
+            this.fireReady = true
+            this.drawConsume()
+        }
     }
     advanceTick() {
+        if (this.fireReady) {
+            this.fireReady = false
+            console.log("firing!" )
+        }
     }
     postAdvanceTick() {
     }
@@ -98,18 +184,16 @@ class _LaserGun extends base.ComponentSpec {
 
     get isActiveComponent() { return true }
 
-//    get interactorClass() { return _LGInteractor }
+    get instanceClass() { return _LGInstance }
     get debugName() { return "LaserGun" }
 }
 
-class _MGInstance extends base.ComponentInstance {
+class _MGInstance extends _ResourceCompInstance {
     constructor(...args) {
         super(...args)
 
         this.ammoPool = this.resourcePools[0]
         this.fireReady = false
-
-        this._resourceBids = []
     }
 
     drawReserve(resSource, res) {
@@ -192,3 +276,5 @@ export var FuelSource = new _FuelSource()
 export var LaserGun = new _LaserGun()
 export var MissileGun = new _MissileGun()
 export var ElectricCable = new _ElectricCable()
+
+export var Battery = new _Battery()

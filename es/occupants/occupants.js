@@ -1,4 +1,5 @@
 import * as hacks from '/es/hacks.js'
+import * as dirconst from '/es/dirconst.js'
 
 export class GeneralSpec {
     designify(...args) {
@@ -10,6 +11,8 @@ export class GeneralSpec {
     get isComponent() { return false }
     get isFrame() { return false }
     get isConnector() { return false }
+
+    get placeVecs() { return [dirconst.IN_PLACE] }
 }
 
 export class GeneralDesign {
@@ -42,14 +45,17 @@ export class GeneralDesign {
         console.trace()
         throw ("PANIC: Deprecated function get tile() called!")
     }
-
-    get placeVecs() {return []}
- 
+  
     reify(iGrid = hacks.argPanic(), ...args) {
         if (!this.locked) {
             throw `Panic - occupant ${this} not locked to grid, can't reify!`
         }
-        return new this.instanceClass(this, iGrid, ...args)
+        if (!iGrid.reifyDict.has(this)) {
+            let instance = new this.instanceClass(this, iGrid, ...args)
+            iGrid.reifyDict.set(this, instance)
+            instance.linkOtherInstances(iGrid)
+        }
+        return iGrid.reifyDict.get(this)
     }
 
     lockToGrid() {
@@ -63,7 +69,7 @@ export class GeneralDesign {
         if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
         this._anchorTile = tile
         if (tile == null) {
-            this.tiles = []
+            this._tiles = []
         } else {
             this._tiles = this.placeVecs.map ( (placeVec) => tile.relTile(placeVec) )
         }
@@ -77,6 +83,8 @@ export class GeneralDesign {
         }
     }
 
+    get placeVecs() { return this.spec.placeVecs }
+
     get isComponent() { return this.spec.isComponent }
     get isFrame() { return this.spec.isFrame }
     get isConnector() { return this.spec.isConnector }
@@ -89,6 +97,8 @@ export class GeneralInstance {
 
         console.log("design", design)
         console.log("despec", design.spec)
+//        console.log("igridR", iGrid)
+        
         this.anchorPos = this.design.anchorPos
         this.anchorTile = this.iGrid.lookup(...this.anchorPos.xy)
         this.tiles = this.design.tiles.map(  (designTile) => this.iGrid.lookup(...designTile.xyPos.xy) )
@@ -98,6 +108,13 @@ export class GeneralInstance {
         }
         this.iGrid.addOccupant(this)
     }
+    
+    linkOtherInstances(iGrid) {
+    }
+    recursiveReify() {
+        this.linkOtherInstances(this.iGrid)
+    }
+    
     toString() { return `i${this.design}` }
     get spec() { return this.design.spec }
     get facing() { return this.design.facing }

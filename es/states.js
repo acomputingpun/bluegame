@@ -23,7 +23,8 @@ export class State {
         framespecs.Heavy.designify().lockToGrid( this.debugGrid.lookup( 4,5 ) )
 
 //        compspecs.ElectricSink.designify().lockToGrid( this.debugGrid.lookup( 3,3 ) )
-//        compspecs.ElectricSource.designify().lockToGrid( this.debugGrid.lookup( 5,4 ) )
-        compspecs.LaserGun.designify().lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.E )
+        let lg = compspecs.LaserGun.designify().lockToGrid( this.debugGrid.lookup( 4,3 ), dirconst.N )
+        let es = compspecs.Battery.designify().lockToGrid( this.debugGrid.lookup( 4,4 ), dirconst.N )
+        lg.connectors[0].linkConnector(es.connectors[0])
     }
 }

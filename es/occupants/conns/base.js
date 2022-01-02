@@ -12,23 +12,21 @@ export class ConnectorSpec extends occupants.GeneralSpec {
     get isConnector() { return true }
 
     get designClass() { return ConnectorDesign }
+    get instanceClass() { return ConnectorInstance }
     get destPos() { return this.pos.add(this.facing) }
 
-    toString() { return `[connspec ${this.debugName}]` }
+    toString() { return `[CONN ${this.debugName}]` }
 }
 
-export class ConnectorDesign extends occupants.GeneralDesign {
+class ConnectorDesign extends occupants.GeneralDesign {
     constructor(spec, comp) {
         super(spec)
         console.log("Just called new ConnectorDesign with args spec:", spec, "and comp", comp, "got this", this)
 
         this.spec = spec
         this.comp = comp
-
-        this.__locked = false
+        this._destConn = null
     }
-
-    get instanceClass() { return ConnectorInstance }
 
     lockToGrid() {
         if (this.__locked) {
@@ -39,6 +37,7 @@ export class ConnectorDesign extends occupants.GeneralDesign {
         }
         this.__locked = true
         this.grid.addOccupant(this)
+        return this
     }
     unlock() {
         if (!this.__locked) {
@@ -48,18 +47,60 @@ export class ConnectorDesign extends occupants.GeneralDesign {
         this.__locked = false
     }
 
+    linkConnector(destConn) {
+        if (!this.__locked) {
+            throw `Panic - connector ${this} not locked to grid, can't link to another!`
+        }
+        if (this.destConn != null) {
+            this.unlinkConnector()
+        }
+        if (destConn != null) {
+            destConn.unlinkConnector()
+            this._destConn = destConn
+            destConn._destConn = this
+        }
+    }
+    unlinkConnector() {
+        if (!this.__locked) {
+            throw `Panic - connector ${this} not locked to grid, can't unlink!`
+        }
+        if (this.destConn != null) {
+            this.destConn._destConn = null
+            this._destConn = null
+        }
+    }
+
+    get tiles() {
+        return this.placeVecs.map( (placeVec) => this.anchorTile.relTile(placeVec) )
+    }
     get anchorTile() {
         return this.comp.innerToTile(this.spec.pos)
     }
     get facing() {
-        return this.comp.innerToFacing(this.spec.facing)
+        return this.comp.innerVecToGridVec(this.spec.facing)
     }
     get destTile() {
         return this.tile.rel(this.facing)
     }
+    get destConn() {
+        return this._destConn
+    }
 
-    toString() { return `[CONN ${this.spec}]` }
+    toString() { return `[d${this.spec} of ${this.anchorTile}]` }
 }
 
-class ConnectorInstance extends occupants.GeneralInstance {
+export class ConnectorInstance extends occupants.GeneralInstance {
+    constructor(design, iGrid) {
+        super(design, iGrid)
+    }
+    linkOtherInstances(iGrid) {
+        this.comp = this.design.comp.reify(iGrid)
+        this.destConn = iGrid.lookupOrReify(this.design.destConn)
+        if (this.design.destConn != null) {
+            this.destConn = this.design.destConn.reify(iGrid)
+        } else {
+            this.destConn = null
+        }
+        //TODO: Fix this to use new reify() semantics as per 0103
+    }
 }

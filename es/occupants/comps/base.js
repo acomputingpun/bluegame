@@ -11,7 +11,6 @@ export class ComponentSpec extends occupants.GeneralSpec {
         this._resourcePools = this._createResourcePools()
     }
 
-    get connectors() { return this._connectors }
     get designClass() { return ComponentDesign }
     get instanceClass() { return ComponentInstance }
     get debugName() { return "unnamed component spec" }
@@ -25,7 +24,8 @@ export class ComponentSpec extends occupants.GeneralSpec {
 
     get isActiveComponent() { return false }
 
-    get interactorClass() { return null }
+    get connectors() { return this._connectors }
+
     get xySize() { throw "Not implemented!" }
     get placeVecs() { return this._placeVecs }
     get resourcePools() { return [...this._resourcePools] }
@@ -38,12 +38,7 @@ class ComponentDesign extends occupants.GeneralDesign {
         super(spec)
 
         this._facing = dirconst.N
-//        this._interactor = new this.spec.interactorClass()
         this._connectors = this.spec.connectors.map( (connSpec) => connSpec.designify(this) )
-    }
-
-    get placeVecs() {
-        return this.spec.placeVecs
     }
 
     get facing() { return this._facing }
@@ -93,6 +88,7 @@ class ComponentDesign extends occupants.GeneralDesign {
         for (let connector of this._connectors) {
             connector.lockToGrid()
         }
+        return this
     }
     unlock() {
         if (!this.__locked) {
@@ -135,23 +131,24 @@ export class ComponentInstance extends occupants.GeneralInstance {
         super(design, iGrid)
 
         this._resourcePools = this.design.resourcePools.map( (resourcePool) => resourcePool.copy() ) 
-//        this._interactor = new this.spec.interactorClass(this)
+    }
+
+    linkOtherInstances(iGrid) {
+        this._connectors = this.design.connectors.map( (conn) => conn.reify(iGrid) )
     }
 
     preAdvanceTick(directive) {
         console.log("Called preAdvanceTick of", this)
-//        this._interactor.preAdvanceTick(directive)
     }
     advanceTick(directive) {
         console.log("Called advanceTick of", this)
-//        this._interactor.advanceTick(directive)
     }
     postAdvanceTick (directive) {
         console.log("Called postAdvanceTick of", this)
-//        this._interactor.postAdvanceTick(directive)
     }
 
     get isActiveComponent() { return this.spec.isActiveComponent }
     get resourcePools() { return this._resourcePools }
+    get connectors() { return this._connectors }
 }
 

@@ -494,8 +494,6 @@ export class EditGridPanel extends panels.Panel {
     warpTileMouseDown(gridPanel, xyLocal) {
         if (gridPanel == this.gridPanel) {
             this.editingTool.warpTileMouseDown(xyLocal)
-
-//            this.debugHillValid = this.gridPanel.grid.checkFrameweightDecreasing()
         } else {
             throw "PANIC"
         }
