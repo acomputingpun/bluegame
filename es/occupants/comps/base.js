@@ -25,6 +25,7 @@ export class ComponentSpec extends occupants.GeneralSpec {
     get isActiveComponent() { return false }
 
     get connectors() { return this._connectors }
+    facingConnectors(vec) { return this._connectors.filter( (conn) => (conn.facing.eq(vec)) ) }
 
     get xySize() { throw "Not implemented!" }
     get placeVecs() { return this._placeVecs }
@@ -43,6 +44,7 @@ class ComponentDesign extends occupants.GeneralDesign {
 
     get facing() { return this._facing }
     get connectors() { return this._connectors }
+    facingConnectors(vec) { return this._connectors.filter( (conn) => (conn.facing.eq(vec)) ) }
 
     get isComponent() { return true }
     get isActiveComponent() { return this.spec.isActiveComponent }
@@ -77,38 +79,18 @@ class ComponentDesign extends occupants.GeneralDesign {
         if (facing !== undefined) {
             this.setFacing(facing)
         }
-
-        if (!this.canLock()) { throw `Panic - can't lock frame ${this}!` }
-
-        this.__locked = true
-        this.grid.addOccupant(this)
-        for (let tile of this._tiles) {
-            tile.addOccupant(this)
-        }
-        for (let connector of this._connectors) {
+        super.lockToGrid()
+        for (let connector of this.connectors) {
             connector.lockToGrid()
         }
         return this
     }
     unlock() {
-        if (!this.__locked) {
-            throw `Panic - frame ${this} not locked to grid!`
-        }
-
-        this.grid.removeOccupant(this)
-        for (let tile of this._tiles) {
-            tile.removeOccupant(this)
-        }
-        for (let connector of this._connectors) {
+        super.unlock()
+        for (let connector of this.connectors) {
             connector.unlock()
         }
-        this.__locked = false
-    }
-
-    canLock() {
-        if (this.locked) { return false } 
-        if (this.anchorTile == null) { return false }
-        return true
+        return this
     }
 
     setFacing(data) {
@@ -150,5 +132,6 @@ export class ComponentInstance extends occupants.GeneralInstance {
     get isActiveComponent() { return this.spec.isActiveComponent }
     get resourcePools() { return this._resourcePools }
     get connectors() { return this._connectors }
+    facingConnectors(vec) { return this._connectors.filter( (conn) => (conn.facing.eq(vec)) ) }
 }
 

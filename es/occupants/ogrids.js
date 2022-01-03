@@ -41,6 +41,10 @@ export class OccGridTile extends grids.GridTile {
         }
         this.markDirty()
     }
+
+    facingConnectors(facing) {
+        return this.connectors.filter( conn => conn.facing.eq(facing))
+    }
 }
 
 export class OccGrid extends grids.Grid {

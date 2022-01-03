@@ -29,7 +29,7 @@ export class GeneralDesign {
 
     get locked() { return this.__locked }
     get tiles() { return this._tiles }
-    get poses() { return this._tiles.map( (tile) => tile.xyPos ) }
+    get poses() { return this.tiles.map( (tile) => tile.xyPos ) }
 
     get anchorTile() { return this._anchorTile }
     get anchorPos() {
@@ -59,14 +59,44 @@ export class GeneralDesign {
     }
 
     lockToGrid() {
-        throw (`PANIC: Call to to-be-overridden method lock() of base GeneralDesign item ${this}!`)
+        this.checkLock()
+        this.__locked = true
+        for (let tile of this.tiles) {
+            tile.addOccupant(this)
+        }
+        this.grid.addOccupant(this)
+        return this
     }
     unlock() {
-        throw (`PANIC: Call to to-be-overridden method unlock() of base GeneralDesign item ${this}!`)
+        if (!this.__locked) {
+            throw `PANIC: ${this} not locked to grid, can't unlock!`
+        }
+        this.grid.removeOccupant(this)
+        for (let tile of this.tiles) {
+            tile.removeOccupant(this)
+        }
+        this.__locked = false
+    }
+
+    canLock() {
+        try {
+            this.checkLock()
+        } catch (lockErr) {
+            return false
+        }
+        return true
+    }
+    checkLock() {
+        if (this.__locked) {
+            throw `PANIC: ${this} already locked to grid, can't lock!`
+        }
+        if (this.anchorTile == null) {
+            throw `PANIC: ${this} has no anchorTile, can't lock!`
+        }
     }
 
     setAnchorTile(tile) {
-        if (this.__locked) { throw `Panic - can't adjust tile of locked component ${this}` }
+        if (this.__locked) { throw `PANIC: can't adjust tile of locked component ${this}` }
         this._anchorTile = tile
         if (tile == null) {
             this._tiles = []

@@ -1,5 +1,6 @@
 import * as vecs from '/es/vectors.js'
 import * as panels from '/es/ui/panels.js'
+import * as discs from '/es/ui/discs.js'
 import * as dirconst from '/es/dirconst.js'
 
 import * as framespecs from '/es/occupants/frames/specs.js'
@@ -10,6 +11,8 @@ export class GridPanel extends panels.Panel {
         super(parent)
         this.panelStart = vecs.Vec2(20, 20)
         this.panelSize = vecs.Vec2(600, 500)
+
+        this._reflectionDict = new Map()
 
         this.grid = grid
 
@@ -61,13 +64,25 @@ export class GridPanel extends panels.Panel {
             return this.xyViewportAnchor.add(xy.rotCCW())
         }
     }
-
+    localToViewport(xy) {
+        return xy
+    }
     localToGrid(xy) {
-        return this.viewportToGrid(xy)
+        return this.viewportToGrid(this.localToViewport(xy))
+    }
+
+    gridToViewport(xy) {
+        return xy.sub(this.xyViewportAnchor)
+    }
+    viewportToLocal(xy) {
+        return xy
+    }
+    gridToLocal(xy) {
+        return this.viewportToLocal(this.gridToViewport(xy))
     }
 
     reflectTilePanels() {
-        console.log("this", this)
+//        console.log("this", this)
         for (let tilePanel of this.tilePanels) {
             let xyGrid = this.localToGrid(tilePanel.xyLocal)
             tilePanel.reflectTile( this.grid.lookup(...xyGrid.xy) )
@@ -84,6 +99,22 @@ export class GridPanel extends panels.Panel {
     warpTileMouseMove(xyLocal) {
         this.parent.warpTileMouseMove(this, xyLocal)
     }
+    
+    addReflection(reflection) {
+        if (this._reflectionDict.has(reflection.reflector)) {
+            throw ("PANIC: Tried to add duplicate reflection of item!")
+        } else {
+            this._reflectionDict.set(reflection.reflector, reflection)
+        }
+        return reflection
+    }
+    reflectionLookup(reflector) {
+        if (this._reflectionDict.has(reflector)) {
+            return this._reflectionDict.get(reflector)
+        } else {
+            return null
+        }
+    }
 }
 
 let TILE_EMPTY_BG = "#EEE"
@@ -96,6 +127,7 @@ export class TilePanel extends panels.Panel {
         this.panelSize = vecs.Vec2(50, 50)
 
         this.tile = null
+        this.connectorIcons = []
     }
 
     get bgFillColour() {
@@ -141,11 +173,12 @@ export class TilePanel extends panels.Panel {
                 this.ctx.stroke()
             }
         } 
+        /*
         for (let conn of this.tile.connectors) {
             this.ctx.beginPath()
             this.ctx.arc( ...this.absFacingMidpoint(conn.facing).xy, 9, 0, 2*Math.PI )
             this.ctx.stroke()
-        }
+        }*/
     }
 
     localFacingMidpoint(vec) {
@@ -168,8 +201,12 @@ export class TilePanel extends panels.Panel {
     }
 
     warpMouseDown(mousePos) {
-        console.log(`Tile ${this} mouse down!`)
-        this.parent.warpTileMouseDown(this.xyLocal)
+        console.log(`Tile ${this} mouse down!, tp`, this)
+        if (super.warpMouseDown(mousePos)) {
+            
+        } else {
+            this.parent.warpTileMouseDown(this.xyLocal)
+        }
     }
     warpMouseMove(mousePos) {
         this.parent.warpTileMouseMove(this.xyLocal)
@@ -177,10 +214,51 @@ export class TilePanel extends panels.Panel {
 
     reflectTile(tile) {
         this.tile = tile
+        this.connectorIcons = this.tile.connectors.map( (conn) => this.parent.addReflection(new ConnectorIcon(this, conn)) )
     }
+
+    get children() { return [...this.connectorIcons] }
 
     toString() {
         return `TPanel ${this.xyLocal} ${this.tile}`
+    }
+}
+
+export class ConnectorIcon extends discs.Disc {
+    constructor(parent, conn) {
+        super(parent)
+        
+        this.conn = conn
+        this.discCenter = this.parent.localFacingMidpoint(this.conn.facing).interp(0.2, this.parent.localCenter) 
+        this.discRadius = 4
+    }
+
+    get reflector() { return this.conn }
+    get bgFillColour() {
+        if (this.conn == null) {
+            return "#BBB"
+        } else {    
+            return "#0D0"
+        }
+    }
+
+    warpMouseDown(mousePos) {
+        console.log(`Conn ${this} mouse down!, conn`, this)
+    }
+
+    drawContents() {
+        if (this.conn.isFused) {
+//            console.log("DC", this)
+//            console.log("dcon", this.fusedConn)
+            let fusedConn = this.conn.fusedConn
+            let fusedConnIcon = this.parent.parent.reflectionLookup(fusedConn)
+            if (fusedConnIcon != null) {
+                this.ctx.beginPath()
+                this.ctx.moveTo(...this.absOrigin.xy)
+                this.ctx.lineTo(...fusedConnIcon.absOrigin.xy)
+                this.ctx.stroke()
+            }
+        }
     }
 }
 

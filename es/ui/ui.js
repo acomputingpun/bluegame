@@ -136,8 +136,8 @@ class TopLevelPanel extends panels.Panel {
 
         this._renderer = renderer
 
-        console.log("this", this)
-        console.log("tgrid,", renderer.runner.state.debugGrid)
+//        console.log("this", this)
+//        console.log("tgrid,", renderer.runner.state.debugGrid)
 //        this.mainPanel = new ui_grids.EditGridPanel(this, this._renderer.runner.state.debugGrid)
         this.mainPanel = new ui_sbattles.ShipBattlePanel(this, this._renderer.runner.state.debugShip)
     }

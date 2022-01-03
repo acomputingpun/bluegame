@@ -14,14 +14,14 @@ class _ResourceConnectorInstance extends base.ConnectorInstance {
 
         if (bidder === this.comp) {
 //            console.log(`-- Bidder is own parent (of ${this}!`)
-            if (this.destConn == null) {
+            if (this.fusedConn == null) {
 //                console.log(`-- No link - reserve definitionally fails!`)
                 return false
             } else {
-                return this.destConn.foreignReserve(this, res)
+                return this.fusedConn.foreignReserve(this, res)
             }
-        } else if (bidder === this.destConn) {
-//            console.log(`-- Bidder is linked connector (of ${this}!`)
+        } else if (bidder === this.fusedConn) {
+//            console.log(`-- Bidder is fused connector (of ${this}!`)
             return this.comp.foreignReserve(this, res)
         } else {
             throw `PANIC: Call to foreignReserve() of connector ${this} from non-adjanent foreign bidder ${this}!`
@@ -34,14 +34,14 @@ class _ResourceConnectorInstance extends base.ConnectorInstance {
 
         if (consumer === this.comp) {
 //            console.log(`-- Consumer is own parent (of ${this}!`)
-            if (this.destConn == null) {
+            if (this.fusedConn == null) {
                 console.log(`-- No link - consume definitionally fails (and... how did we even get here?`)
                 throw `PANIC: Call to foreignConsume() of connector ${this} with no valid link - should not have passed foreignReserve() stage!`
             } else {
-                return this.destConn.foreignConsume(this, res)
+                return this.fusedConn.foreignConsume(this, res)
             }
-        } else if (consumer === this.destConn) {
-//            console.log(`-- Consumer is linked connector (of ${this}!`)
+        } else if (consumer === this.fusedConn) {
+//            console.log(`-- Consumer is fused connector (of ${this}!`)
             return this.comp.foreignConsume(this, res)
         } else {
             throw `PANIC: Call to foreignReserve() of connector ${this} from non-adjanent foreign consumer ${this}!`

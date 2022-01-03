@@ -57,7 +57,7 @@ RI b|0045:Functions for connectors to access the tiles they link to and those ti
  M b|0047:General state-level logic for resource movement, allocation, sources and sinks, etc.
 RI b|0048:Components with internal resource state.
 RI b|0049:Active logic for sources / sinks to output or draw resources.
- I b|0050:Active logic for conduits and connectors to facilitate flow of resources.
+RI b|0050:Active logic for conduits and connectors to facilitate flow of resources.
  I b|0051:Blueprint-level error checking of connectors being indefinitely linked correctly (ie, an eventual valid connection).
  I b|0052:More complex activity-logic for resource components: generators that burn a resource, weapons, etc.
  I b|0053:State-logic for weapon components.
@@ -97,7 +97,7 @@ RI b|0085:UI for ship display has simple grid showing component layout.
  I b|0087:Adding components to tiles sorts them into categories as per 0076, for any occupant-grid subclass.
  E b|0088:Remove references to frameweight by 'weight' and replace with 'spec'.
 AI b|0089:Consolidate UI grid display panel functions into a general UI grid panel class that can be partially overridden.
-AU b|0090:Seperate the ui_grids GridPanel definitions and the ui_grids grid-editing code.
+AI b|0090:Seperate the ui_grids GridPanel definitions and the ui_grids grid-editing code.
  I b|0091:Basic message display ticker in ui_sbattles for output of advancing ship ticks.
  M b|0092:Code for handling and resolving ship-to-ship battles of 2 ships.
  M b|0093:Code for handling and resolving ship-to-ship battles of N ships.
@@ -111,8 +111,25 @@ RE b|0100:Deprecate the setTile() and clearTile() functions of Occupants - repla
 RI b|0101:Fix connector instances incorrectly not being added as occupants to thier tiles when reified.
 RI b|0102:Dictionary-based reify() implementation that preserves relative connectivity property.
  E b|0103:Rewrite reify() semantics to use iGrid.reify(occ) rather than occ.reify(iGrid)
-RI b|0104:Code to attach connector designs to other connector designs, setting the _destConn property.
+RI b|0104:Code to attach connector designs to other connector designs, setting the _fusedConn property.
 RI b|0105:Reserved resource bids not properly cleared from connectors
 RI b|0106:Ability to draw from components with resource states (as sources).
- I b|0107:UI display of Connectors being linked or not linked to one another.
+RI b|0107:UI display of Connectors being linked or not linked to one another.
  I b|0108:Ability to manually link or unlink Connectors via UI commands.
+ I b|0109:Split comps/specs.js into seperate files for different types of component (cable, weapon, etc)
+AI b|0110:Implement position/facing validity checking for connector linking and unlinking.
+RK b|0111:Implement flag-specific console debug printing for ease of testing.
+ E b|0112:Replace debug printing calls to console.log() with hacks.dlog() throughout code.
+RE b|0113:Rename use of 'link' in connectors with 'fuse' for greater nomenclature clarity.
+RI b|0114:Move duplicate code for lockToGrid() and unlock() functions to Occupant superclasses.
+ I b|0115:Replace sanity checks at the beginning of lockToGrid() with call to canLock() / checkLock() functions.
+ I b|0116:Improve error-checking in component.checkLock()
+ I b|0117:Occupant.canLock() should check for specific exception types thrown by checkLock()
+RI b|0118:UI display of connectors as seperate UI-objects rather than phantoms.
+RI b|0119:Grid UI display keeps track of reflection objects and links them to the reflectors.
+ I b|0120:Reflection objects should be correctly removed from existence when leaving scope (deleted, etc)
+ I b|0121:Reflection objects for connectors should be added to scope in UI when tiles are modified.
+ I b|0122:Graceful UI display of multiple connectors in single square/facing.
+ I b|0123:Limited throughput capacity for cable components
+RI b|0124:Sanity checks for connector.fuseTo() and component.unfuse()
+RI b|0125:seperate connector fusing and unfusing into fuse-to and (internal) fuse-from functions.

@@ -247,20 +247,67 @@ class _MissileGun extends base.ComponentSpec {
     }
 }
 
+class _CableInstance extends _ResourceCompInstance {
+    foreignReserve(bidder = hacks.argPanic(), res = hacks.argPanic() ) {
+        if (this.connectors.includes(bidder)) {
+            return this.otherConnector(bidder).foreignReserve(this, res)
+        } else {
+            throw ("PANIC: invalid call of foreignReserve()!")
+        }
+    }
+    foreignConsume(consumer = hacks.argPanic(), res = hacks.argPanic()) {
+        if (this.connectors.includes(consumer)) {
+            return this.otherConnector(consumer).foreignConsume(this, res)
+        } else {
+            throw ("PANIC: invalid call of foreignConsume()!")
+        }
+    }
+    
+    otherConnector(conn) {
+        if (conn == this.connectors[0]) {
+            return this.connectors[1]
+        } else if (conn == this.connectors[1]) {
+            return this.connectors[0]
+        } else {
+            return null
+        }
+    }
+}
 
 class _GenericCable extends base.ComponentSpec {
     get xySize() { return vecs.Vec2(1,1) }
+    get connSpecClass() { return connspecs.ElectricConnector }
+    get instanceClass() { return _CableInstance }
+}
 
+class _GenericCableTurn extends _GenericCable {
+    get debugDrawPoints () {
+        return [ [-1,-8], [1,-8], [1,-1], [8,-1], [8,1], [-1,1] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
+    }
     _createConnectors() {
         return [
             new this.connSpecClass( dirconst.IN_PLACE, dirconst.N ),
             new this.connSpecClass( dirconst.IN_PLACE, dirconst.E )
         ]
     }
-    get connSpecClass() { return connspecs.ElectricConnector }
 }
 
-class _ElectricCable extends _GenericCable {
+class _GenericCableStraight extends _GenericCable {
+    get debugDrawPoints () {
+        return [ [-1,-8], [1,-8], [1,8], [-1,8] ].map( ( xy ) => vecs.Vec2(...xy).sMul(0.1) )
+    }
+    _createConnectors() {
+        return [
+            new this.connSpecClass( dirconst.IN_PLACE, dirconst.N ),
+            new this.connSpecClass( dirconst.IN_PLACE, dirconst.S )
+        ]
+    }
+}
+
+class _ElectricCableTurn extends _GenericCableTurn {
+    get debugName() { return "ElectricCable" }
+}
+class _ElectricCableStraight extends _GenericCableStraight {
     get debugName() { return "ElectricCable" }
 }
 
@@ -275,6 +322,7 @@ export var FuelSource = new _FuelSource()
 
 export var LaserGun = new _LaserGun()
 export var MissileGun = new _MissileGun()
-export var ElectricCable = new _ElectricCable()
+export var ElectricCableStraight = new _ElectricCableStraight()
+export var ElectricCableTurn = new _ElectricCableTurn()
 
 export var Battery = new _Battery()

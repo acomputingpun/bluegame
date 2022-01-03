@@ -10,6 +10,6 @@ export class GameRunner {
 
     main () {
         this.renderer.startDrawLoop()
-        console.log("amain", this)
+//        console.log("amain", this)
     }
 }
