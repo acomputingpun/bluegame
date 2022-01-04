@@ -73,7 +73,7 @@ AI b|0061:The ability to have state logic that advances by tick.
 AI b|0063:A UI window/panel that displays event reports created due to advancing time.
  I b|0064:UI controls with the ability to pause/continue/jumpahead the flow of ticks.
 RE b|0065:Split cspecs.es and components.es out into seperate files in a comps folder structure.
- E b|0066:Move functions for drawing from sources, sinks, etc out of individual interactors and into more general interactor classes.
+RE b|0066:Move functions for drawing from sources, sinks, etc out of individual interactors and into more general interactor classes.
  I b|0067:Replace the stub default Directive with actual situation-dependant directives that control the automated behaviour of components.
 RI b|0068:Decide on "complex" facings vs. simple facings splitting complex-faced components into multiple types of component.
 RE b|0069:Remove deprecated facing-related code.
@@ -90,11 +90,11 @@ RI b|0079:Connector instances should be added to grid.occupants for instance gri
 RI b|0080:Reserving and consuming resources as part of resource pools.
 RI b|0081:Attempting to reserve resources for components and handling failure/success.
  E b|0082:Implement "argument checking" via hacks.argPanic() for most (all?) functions
- I b|0083:Second-order and n-order recursive draws for consuming/reserving resources.
+RI b|0083:Second-order and n-order recursive draws for consuming/reserving resources.
 RI b|0084:Comparison and value-editing semantics for resources.
 RI b|0085:UI for ship display has simple grid showing component layout.
  I b|0086:Unified code for drawing / reserving / consuming resources.
- I b|0087:Adding components to tiles sorts them into categories as per 0076, for any occupant-grid subclass.
+RI b|0087:Adding components to tiles sorts them into categories as per 0076, for any occupant-grid subclass.
  E b|0088:Remove references to frameweight by 'weight' and replace with 'spec'.
 RI b|0089:Consolidate UI grid display panel functions into a general UI grid panel class that can be partially overridden.
 RI b|0090:Seperate the ui_grids GridPanel definitions and the ui_grids grid-editing code.
@@ -110,7 +110,7 @@ RI b|0098:Basic UI display of Connectors as part of TilePanels.
 RE b|0100:Deprecate the setTile() and clearTile() functions of Occupants - replace with setAnchorTile()
 RI b|0101:Fix connector instances incorrectly not being added as occupants to thier tiles when reified.
 RI b|0102:Dictionary-based reify() implementation that preserves relative connectivity property.
- E b|0103:Rewrite reify() semantics to use iGrid.reify(occ) rather than occ.reify(iGrid)
+RE b|0103:Rewrite reify() semantics to use iGrid.reify(occ) rather than occ.reify(iGrid)
 RI b|0104:Code to attach connector designs to other connector designs, setting the _fusedConn property.
 RI b|0105:Reserved resource bids not properly cleared from connectors
 RI b|0106:Ability to draw from components with resource states (as sources).
@@ -140,9 +140,10 @@ RI b|0128:UI display of components as seperate UI-objects rather than phantoms.
  I b|0130:Implement error handling for less serious internal state errors so they don't need to result in a panic.
  I b|0131:Partial resource-drawing.
  M b|0132:System for damage to components/frames in ships.
-AI b|0133:Generator components that consume one resource to produce another.
+RI b|0133:Generator components that consume one resource to produce another.
 RI b|0134:Rotated component/connector facing not being handled correctly.
 RI b|0135:Eliminate the './es/comps' folder and move contents back into base ./es
 RI b|0136:General class for resource-source components such as tanks and batteries.
 RI b|0137:General class for cable components.
 AI b|0138:Unidirectional connectors that automatically refuse reserve attempts from the wrong direction.
+RI b|0139:A function, called after an Instance is created and recursively linked, that can assign names and attach data to linked occupants (connectors, etc).

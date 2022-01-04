@@ -111,15 +111,9 @@ export class ConnectorInstance extends occupants.GeneralInstance {
     constructor(design, iGrid) {
         super(design, iGrid)
     }
-    linkOtherInstances(iGrid) {
-        this.comp = this.design.comp.reify(iGrid)
-        this.fusedConn = iGrid.lookupOrReify(this.design.fusedConn)
-        if (this.design.fusedConn != null) {
-            this.fusedConn = this.design.fusedConn.reify(iGrid)
-        } else {
-            this.fusedConn = null
-        }
-        //TODO: Fix this to use new reify() semantics as per 0103
+    recursiveReify() {
+        this.comp = this.iGrid.lookupOrReify(this.design.comp)
+        this.fusedConn = this.iGrid.lookupOrReify(this.design.fusedConn)
     }
 
     get isFused() { return this.fusedConn != null }

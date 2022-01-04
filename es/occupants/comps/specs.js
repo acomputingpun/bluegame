@@ -24,7 +24,6 @@ export class _ResourceCompInstance extends base.ComponentInstance {
 
     drawReserve(resSource, res) {
         console.log(`COMP ${this} calling drawReserve ${resSource} of ${res}`)
-
         if (resSource.foreignReserve(this, res)) {
             this._resourceBids.push ( [resSource, res] )
             return true
@@ -166,17 +165,22 @@ class _MissileGun extends base.ComponentSpec {
 }
 
 class _GenInstance extends _ResourceCompInstance {
+    setInternalReferences() {
+        this.__inConn = this.facingConnectors(dirconst.S)[0]
+        this.__outConns = this.connectors.filter( (conn) => conn != this.__inConn )
+    }
+
     foreignReserve(bidder = hacks.argPanic(), res = hacks.argPanic()) {
-        if (this.connectors.includes(bidder)) {
-            return this.electricPool.foreignReserve(this, res)
+        console.log("tis", this)
+        if (this.__outConns.includes(bidder)) {
+            return this.__inConn.foreignReserve(this, new resources.Fuel(5) )
         } else {
             throw new errs.Panic("invalid call of foreignReserve()!")
         }
     }
     foreignConsume(consumer = hacks.argPanic(), res = hacks.argPanic()) {
-        if (this.connectors.includes(consumer)) {
-            console.log(`Consuming from Battery - power left, ${this.electricPool.quantity}`)
-            return this.electricPool.foreignConsume(this, res)
+        if (this.__outConns.includes(consumer)) {
+            return this.__inConn.foreignConsume(this, new resources.Fuel(5) )
         } else {
             throw ("PANIC: invalid call of foreignConsume()!")
         }

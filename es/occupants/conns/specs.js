@@ -1,4 +1,5 @@
 import * as hacks from '/es/hacks.js'
+import * as errs from '/es/errs.js'
 import * as dirconst from '/es/dirconst.js'
 import * as resources from '/es/resources.js'
 import * as base from './base.js'
@@ -52,7 +53,7 @@ class _ResourceConnectorInstance extends base.ConnectorInstance {
 }
 
 class ResourceConnector extends base.ConnectorSpec {
-    get debugName() {return "rescon"}
+    get debugName() { return this.resClass }
 
     constructor(pos = hacks.argPanic(), facing = hacks.argPanic(), resClass = hacks.argPanic(), capacity) {
         super(pos, facing)

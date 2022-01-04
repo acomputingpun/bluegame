@@ -48,18 +48,6 @@ export class GeneralDesign {
         throw ("PANIC: Deprecated function get tile() called!")
     }
   
-    reify(iGrid = hacks.argPanic(), ...args) {
-        if (!this.locked) {
-            throw `Panic - occupant ${this} not locked to grid, can't reify!`
-        }
-        if (!iGrid.reifyDict.has(this)) {
-            let instance = new this.instanceClass(this, iGrid, ...args)
-            iGrid.reifyDict.set(this, instance)
-            instance.linkOtherInstances(iGrid)
-        }
-        return iGrid.reifyDict.get(this)
-    }
-
     lockToGrid() {
         this.checkLock()
         this.__locked = true
@@ -141,10 +129,9 @@ export class GeneralInstance {
         this.iGrid.addOccupant(this)
     }
     
-    linkOtherInstances(iGrid) {
-    }
     recursiveReify() {
-        this.linkOtherInstances(this.iGrid)
+    }
+    setInternalReferences() {
     }
     
     toString() { return `i${this.design}` }

@@ -5,11 +5,22 @@ class Resource {
     constructor(quantity) {
         this.quantity = quantity
     }
-
-    get resName() { return "unknown resource" }
     get resClass() { return this.constructor }
 
+    static get resName() { return "?resource?" }
+    get resName() { return this.resClass.resName }
+
     toString() { return `[rs ${this.resName} ${this.quantity}]` }
+    static toString() { return `[RC ${this.resName}]` }
+
+    static toConnector(...args) {
+        return new this.connSpecClass(...args)
+    }
+    toConnector(...args) {
+        return this.resClass.connSpecClass(...args)
+    }
+    static get connSpecClass() { throw new errs.Panic(`Tried to get connSpecClass() of resource ${this} without equivalent Connector`) }
+    get connSpecClass() { return this.resClass.connSpecClass }
 
     eq(other) { return this.resClass == other.resClass && this.quantity == other.quantity }
     add(other) {
@@ -36,27 +47,18 @@ class Resource {
         if (this.resClass != other.resClass) { throw new errs.Panic(`Tried to perform arithmetic operations on different resource types ${this} and ${other}`) }
         return this.quantity <= other.quantity
     }
-
-    static toConnector(...args) {
-        return new this.connSpecClass(...args)
-    }
-    toConnector(...args) {
-        return this.constructor.connSpecClass(...args)
-    }
-    static get connSpecClass() { throw new errs.Panic(`Tried to get connSpecClass() of resource ${this} without equivalent Connector`) }
-    get connSpecClass() { return this.constructor.connSpecClass }
 }
 
 export class Electric extends Resource {
-    get resName() { return "electricity" }
+    static get resName() { return "electricity" }
     static get connSpecClass() { return connspecs.ElectricConnector }
 }
 export class Ammunition extends Resource {    
-    get resName() { return "ammunition" }
+    static get resName() { return "ammunition" }
 }
 export class Fuel extends Resource {    
-    get resName() { return "fuel" }
-    static get connSpecClass() { return connspecs.ElectricConnector }
+    static get resName() { return "fuel" }
+    static get connSpecClass() { return connspecs.FuelConnector }
 }
 
 export class ResourcePool {

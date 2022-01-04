@@ -1,3 +1,4 @@
+import * as hacks from '/es/hacks.js'
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
 import * as dirconst from '/es/dirconst.js'
@@ -108,14 +109,13 @@ class ComponentDesign extends occupants.GeneralDesign {
 }
 
 export class ComponentInstance extends occupants.GeneralInstance {
-    constructor(design, iGrid) {
+    constructor(design = hacks.argPanic(), iGrid = hacks.argPanic()) {
         super(design, iGrid)
-
         this._resourcePools = this.design.resourcePools.map( (resourcePool) => resourcePool.copy() ) 
     }
 
-    linkOtherInstances(iGrid) {
-        this._connectors = this.design.connectors.map( (conn) => conn.reify(iGrid) )
+    recursiveReify() {
+        this._connectors = this.design.connectors.map( (conn) => this.iGrid.lookupOrReify(conn) )
     }
 
     preAdvanceTick(directive) {

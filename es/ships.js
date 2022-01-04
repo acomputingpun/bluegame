@@ -28,15 +28,16 @@ export class ShipGrid extends ogrids.OccGrid {
 
         for (let occupant of blueprintGrid.occupants) {
 //            console.log("bgocc", `${occupant}`)
-            occupant.reify(this)
+            this.lookupOrReify(occupant)
         }
     }
-    
+
     lookupOrReify(design) {
         if (!this.reifyDict.has(design)) {
             let inst = new design.instanceClass(design, this)
             this.reifyDict.set(design, inst)
             inst.recursiveReify()
+            inst.setInternalReferences()
         }
         return this.reifyDict.get(design)
     }
