@@ -11,11 +11,11 @@ class BlueprintTile extends ogrids.OccGridTile {
     }
 
     addOccupant(occ) {
-        if(!occ.locked) { throw `PANIC: Tried to add unlocked occupant ${occ} to Grid ${this}` }
+        if(!occ.locked) { throw new errs.Panic(`Tried to add unlocked occupant ${occ} to Grid ${this}`) }
         super.addOccupant(occ)
     }
     removeOccupant(occ) {
-        if (!occ.locked) { throw `PANIC: Tried to remove unlocked occupant ${occ} from Grid ${this}` }
+        if (!occ.locked) { throw new errs.Panic(`Tried to remove unlocked occupant ${occ} from Grid ${this}`) }
         super.removeOccupant(occ)
     }
 }
@@ -26,11 +26,11 @@ export class BlueprintGrid extends ogrids.OccGrid {
     }
 
     addOccupant(occ) {
-        if(!occ.locked) { throw `PANIC: Tried to add unlocked occupant ${occ} to Grid ${this}` }
+        if(!occ.locked) { throw new errs.Panic(`Tried to add unlocked occupant ${occ} to Grid ${this}`) }
         super.addOccupant(occ)
     }
     removeOccupant(occ) {
-        if (!occ.locked) { throw `PANIC: Tried to remove unlocked occupant ${occ} from Grid ${this}` }
+        if (!occ.locked) { throw new errs.Panic(`Tried to remove unlocked occupant ${occ} from Grid ${this}`) }
         super.removeOccupant(occ)
     }
 

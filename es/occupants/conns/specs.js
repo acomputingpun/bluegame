@@ -1,6 +1,6 @@
 import * as hacks from '/es/hacks.js'
 import * as dirconst from '/es/dirconst.js'
-import * as resources from '/es/comps/resources.js'
+import * as resources from '/es/resources.js'
 import * as base from './base.js'
 
 class _ResourceConnectorInstance extends base.ConnectorInstance {
@@ -10,11 +10,11 @@ class _ResourceConnectorInstance extends base.ConnectorInstance {
 
     foreignReserve(bidder = hacks.argPanic(), res = hacks.argPanic() ) {
         console.log(`Conn ${this} | Foreign bidder ${bidder} trying to reserve resource ${res}`)
-        if (res.resClass != this.resClass) { throw `PANIC: Tried to reserve invalid resource type ${res} from conn ${this}` }
+        if (res.resClass != this.resClass) { throw new errs.Panic(`Tried to reserve invalid resource type ${res} from conn ${this}`) }
 
         if (bidder === this.comp) {
 //            console.log(`-- Bidder is own parent (of ${this}!`)
-            if (this.fusedConn == null) {
+            if (this.fusedConn == null) {   
 //                console.log(`-- No link - reserve definitionally fails!`)
                 return false
             } else {
@@ -24,19 +24,19 @@ class _ResourceConnectorInstance extends base.ConnectorInstance {
 //            console.log(`-- Bidder is fused connector (of ${this}!`)
             return this.comp.foreignReserve(this, res)
         } else {
-            throw `PANIC: Call to foreignReserve() of connector ${this} from non-adjanent foreign bidder ${this}!`
+            throw new errs.Panic(`Call to foreignReserve() of connector ${this} from non-adjanent foreign bidder ${this}!`)
         }
     }
     
     foreignConsume(consumer = hacks.argPanic(), res = hacks.argPanic()) {
-        if (res.resClass != this.resClass) { throw `PANIC: Tried to reserve invalid resource type ${res} from conn ${this}` }
+        if (res.resClass != this.resClass) { throw new errs.Panic(`Tried to reserve invalid resource type ${res} from conn ${this}`) }
         console.log(`Conn ${this} | Foreign consumer ${consumer} trying to consume resource ${res}`)
 
         if (consumer === this.comp) {
 //            console.log(`-- Consumer is own parent (of ${this}!`)
             if (this.fusedConn == null) {
                 console.log(`-- No link - consume definitionally fails (and... how did we even get here?`)
-                throw `PANIC: Call to foreignConsume() of connector ${this} with no valid link - should not have passed foreignReserve() stage!`
+                throw new errs.Panic(`Call to foreignConsume() of connector ${this} with no valid link - should not have passed foreignReserve() stage!`)
             } else {
                 return this.fusedConn.foreignConsume(this, res)
             }
@@ -44,7 +44,7 @@ class _ResourceConnectorInstance extends base.ConnectorInstance {
 //            console.log(`-- Consumer is fused connector (of ${this}!`)
             return this.comp.foreignConsume(this, res)
         } else {
-            throw `PANIC: Call to foreignReserve() of connector ${this} from non-adjanent foreign consumer ${this}!`
+            throw new errs.Panic(`Call to foreignReserve() of connector ${this} from non-adjanent foreign consumer ${this}!`)
         }
     }
 
@@ -66,6 +66,11 @@ class ResourceConnector extends base.ConnectorSpec {
 export class ElectricConnector extends ResourceConnector {   
     constructor(pos, facing) {
         super(pos, facing, resources.Electric, 1)
+    }
+}
+export class FuelConnector extends ResourceConnector {   
+    constructor(pos, facing) {
+        super(pos, facing, resources.Fuel, 1)
     }
 }
 

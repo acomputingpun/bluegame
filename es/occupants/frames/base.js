@@ -1,6 +1,7 @@
 import * as occupants from '../occupants.js'
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
+import * as errs from '/es/errs.js'
 
 export class FrameSpec extends occupants.GeneralSpec {
     constructor() {
@@ -12,7 +13,6 @@ export class FrameSpec extends occupants.GeneralSpec {
 
     get isFrame() { return true }
 
-    get xySize() { throw "Not implemented!" }
     get placeVecs() { return this._placeVecs }
     get debugName () { return "unnamedFrameSpec" }
 

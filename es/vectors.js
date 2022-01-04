@@ -24,10 +24,10 @@ export class Vector2 {
     }
 
     rotCW() {
-        return new Vector2(this.y, -this.x)
+        return new Vector2(-this.y, this.x)
     }
     rotCCW() {
-        return new Vector2(-this.y, this.x)
+        return new Vector2(this.y, -this.x)
     }
     reverse() {
         return new Vector2(-this.x, -this.y)

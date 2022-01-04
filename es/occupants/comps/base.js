@@ -27,7 +27,6 @@ export class ComponentSpec extends occupants.GeneralSpec {
     get connectors() { return this._connectors }
     facingConnectors(vec) { return this._connectors.filter( (conn) => (conn.facing.eq(vec)) ) }
 
-    get xySize() { throw "Not implemented!" }
     get placeVecs() { return this._placeVecs }
     get resourcePools() { return [...this._resourcePools] }
 
@@ -68,7 +67,7 @@ class ComponentDesign extends occupants.GeneralDesign {
         } else if (this.facing.eq(dirconst.W)) {
             return xyInner.rotCCW()
         } else {
-            throw `PANIC: invalid (non-cardinal) facing of comp ${this} is ${this.facing}`
+            throw new errs.Panic(`invalid (non-cardinal) facing of comp ${this} is ${this.facing}`)
         }
     }
 

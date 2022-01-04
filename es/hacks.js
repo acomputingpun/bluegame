@@ -1,7 +1,7 @@
+import * as errs from '/es/errs.js'
+
 export function argPanic () {
-    console.log("Argument error - panicking!")
-    console.trace()
-    throw `PANIC: Argument error!`
+    throw new errs.Panic(`Argument error!`)
 }
 
 export function dlog(flag, ...args) {

@@ -96,8 +96,8 @@ RI b|0085:UI for ship display has simple grid showing component layout.
  I b|0086:Unified code for drawing / reserving / consuming resources.
  I b|0087:Adding components to tiles sorts them into categories as per 0076, for any occupant-grid subclass.
  E b|0088:Remove references to frameweight by 'weight' and replace with 'spec'.
-AI b|0089:Consolidate UI grid display panel functions into a general UI grid panel class that can be partially overridden.
-AI b|0090:Seperate the ui_grids GridPanel definitions and the ui_grids grid-editing code.
+RI b|0089:Consolidate UI grid display panel functions into a general UI grid panel class that can be partially overridden.
+RI b|0090:Seperate the ui_grids GridPanel definitions and the ui_grids grid-editing code.
  I b|0091:Basic message display ticker in ui_sbattles for output of advancing ship ticks.
  M b|0092:Code for handling and resolving ship-to-ship battles of 2 ships.
  M b|0093:Code for handling and resolving ship-to-ship battles of N ships.
@@ -116,8 +116,8 @@ RI b|0105:Reserved resource bids not properly cleared from connectors
 RI b|0106:Ability to draw from components with resource states (as sources).
 RI b|0107:UI display of Connectors being linked or not linked to one another.
  I b|0108:Ability to manually link or unlink Connectors via UI commands.
- I b|0109:Split comps/specs.js into seperate files for different types of component (cable, weapon, etc)
-AI b|0110:Implement position/facing validity checking for connector linking and unlinking.
+AI b|0109:Split comps/specs.js into seperate files for different types of component (cable, weapon, etc)
+RI b|0110:Implement position/facing validity checking for connector fusing and unfusing.
 RK b|0111:Implement flag-specific console debug printing for ease of testing.
  E b|0112:Replace debug printing calls to console.log() with hacks.dlog() throughout code.
 RE b|0113:Rename use of 'link' in connectors with 'fuse' for greater nomenclature clarity.
@@ -132,4 +132,17 @@ RI b|0119:Grid UI display keeps track of reflection objects and links them to th
  I b|0122:Graceful UI display of multiple connectors in single square/facing.
  I b|0123:Limited throughput capacity for cable components
 RI b|0124:Sanity checks for connector.fuseTo() and component.unfuse()
-RI b|0125:seperate connector fusing and unfusing into fuse-to and (internal) fuse-from functions.
+RI b|0125:Seperate connector fusing and unfusing into fuse-to and (internal) fuse-from functions.
+ M b|0126:A functional set of default components as a minimum viable feature for gameplay testing.
+ I b|0127:Define a (stub, nonworking) set of default components for 0126
+RI b|0128:UI display of components as seperate UI-objects rather than phantoms.
+ E b|0129:Make various throw-exception statements throw errs.Panic()
+ I b|0130:Implement error handling for less serious internal state errors so they don't need to result in a panic.
+ I b|0131:Partial resource-drawing.
+ M b|0132:System for damage to components/frames in ships.
+AI b|0133:Generator components that consume one resource to produce another.
+RI b|0134:Rotated component/connector facing not being handled correctly.
+RI b|0135:Eliminate the './es/comps' folder and move contents back into base ./es
+RI b|0136:General class for resource-source components such as tanks and batteries.
+RI b|0137:General class for cable components.
+AI b|0138:Unidirectional connectors that automatically refuse reserve attempts from the wrong direction.

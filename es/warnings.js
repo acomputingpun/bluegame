@@ -1,4 +1,6 @@
-class BlueprintWarning {
+import * as errs from '/es/errs.js'
+
+class BlueprintWarning extends errs.CustomException {
     constructor(grid) {
         this.grid = grid
     }

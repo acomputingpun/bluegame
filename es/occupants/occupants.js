@@ -1,3 +1,4 @@
+import * as errs from '/es/errs.js'
 import * as hacks from '/es/hacks.js'
 import * as dirconst from '/es/dirconst.js'
 
@@ -5,13 +6,14 @@ export class GeneralSpec {
     designify(...args) {
         return new this.designClass(this, ...args)
     }
-    get designClass() { throw `PANIC: Call to to-be-overridden method get designClass() of base GeneralSpec item ${this}!` }
-    get instanceClass() { throw `PANIC: Call to to-be-overridden method get instanceClass() of base GeneralDesign item ${this}!` }
+    get designClass() { throw new errs.Panic(`Call to to-be-overridden method get designClass() of base GeneralSpec item ${this}!`) }
+    get instanceClass() { throw new errs.Panic(`Call to to-be-overridden method get instanceClass() of base GeneralDesign item ${this}!`) }
 
     get isComponent() { return false }
     get isFrame() { return false }
     get isConnector() { return false }
 
+    get xySize() { throw new errs.ToBeOverridden() }
     get placeVecs() { return [dirconst.IN_PLACE] }
 }
 
@@ -69,7 +71,7 @@ export class GeneralDesign {
     }
     unlock() {
         if (!this.__locked) {
-            throw `PANIC: ${this} not locked to grid, can't unlock!`
+            throw new errs.Panic(`${this} not locked to grid, can't unlock!`)
         }
         this.grid.removeOccupant(this)
         for (let tile of this.tiles) {
@@ -88,15 +90,15 @@ export class GeneralDesign {
     }
     checkLock() {
         if (this.__locked) {
-            throw `PANIC: ${this} already locked to grid, can't lock!`
+            throw new errs.Panic(`${this} already locked to grid, can't lock!`)
         }
         if (this.anchorTile == null) {
-            throw `PANIC: ${this} has no anchorTile, can't lock!`
+            throw new errs.Panic(`${this} has no anchorTile, can't lock!`)
         }
     }
 
     setAnchorTile(tile) {
-        if (this.__locked) { throw `PANIC: can't adjust tile of locked component ${this}` }
+        if (this.__locked) { throw new errs.Panic(`can't adjust tile of locked component ${this}`) }
         this._anchorTile = tile
         if (tile == null) {
             this._tiles = []
@@ -125,8 +127,8 @@ export class GeneralInstance {
         this.design = design
         this.iGrid = iGrid
 
-        console.log("design", design)
-        console.log("despec", design.spec)
+//        console.log("design", design)
+//        console.log("despec", design.spec)
 //        console.log("igridR", iGrid)
         
         this.anchorPos = this.design.anchorPos

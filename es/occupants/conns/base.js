@@ -44,7 +44,7 @@ class ConnectorDesign extends occupants.GeneralDesign {
 
     fuseTo (other) {
         if (!this.locked) {
-            throw `PANIC: ${this} not locked to grid, can't fuse to another!`
+            throw new errs.Panic(`${this} not locked to grid, can't fuse to another!`)
         }
 
         if (this.isFused) {
@@ -61,20 +61,20 @@ class ConnectorDesign extends occupants.GeneralDesign {
     }
     _fuseFrom (other) {
         if (!this.locked) {
-            throw `PANIC: ${this} not locked to grid, can't fuse!`
+            throw new errs.Panic(`${this} not locked to grid, can't fuse!`)
         }
         if (this.isFused) {
-            throw `PANIC: ${this} already fused, can't fuse again!`
+            throw new errs.Panic(`${this} already fused, can't fuse again!`)
         }
         if (!this.destConns.includes(other)) {
-            throw `PANIC: ${this} can't fuse from ${other}, they're not facing!`
+            throw new errs.Panic(`${this} can't fuse from ${other}, they're not facing!`)
         }
         this._fusedConn = other
     }
     
     unfuse () {
         if (!this.locked) {
-            throw `PANIC: ${this} not locked to grid, can't unfuse!`
+            throw new errs.Panic(`${this} not locked to grid, can't unfuse!`)
         }
         if (this.isFused) {
             this.fusedConn._unfuseFrom()
@@ -83,18 +83,21 @@ class ConnectorDesign extends occupants.GeneralDesign {
     }
     _unfuseFrom() {
         if (!this.locked) {
-            throw `PANIC: ${this} not locked to grid, can't unfuse!`
+            throw new errs.Panic(`${this} not locked to grid, can't unfuse!`)
         }
         this._fusedConn = null
     }
 
     setAnchorTile(tile) {
-        throw `PANIC: Call to setAnchorTile() function of connector ${this}!`
+        throw new errs.Panic(`Call to setAnchorTile() function of connector ${this}!`)
     }
 
     get tiles() { return this.placeVecs.map( (placeVec) => this.anchorTile.relTile(placeVec) ) }
     get anchorTile() { return this.comp.innerToTile(this.spec.pos) }
-    get facing() { return this.comp.innerVecToGridVec(this.spec.facing) }
+    get facing() { return this.gridFacing }
+
+    get compFacing() { return this.spec.facing }
+    get gridFacing() { return this.comp.innerVecToGridVec(this.compFacing) }
 
     get destTile() { return this.anchorTile.relTile(this.facing) }
     get destConns() { return this.destTile.facingConnectors(this.facing.sMul(-1)) }
