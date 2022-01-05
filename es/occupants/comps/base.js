@@ -94,7 +94,7 @@ class ComponentDesign extends occupants.GeneralDesign {
     }
 
     setFacing(data) {
-        if (this.__locked) { throw `Panic - can't adjust facing of locked component ${this}` }
+        if (this.__locked) { throw new errs.Panic(`can't adjust facing of locked component ${this}`) }
         this._facing = data
     }
     rotFacing(cw = true) {

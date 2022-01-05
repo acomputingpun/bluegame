@@ -1,7 +1,8 @@
+import * as hacks from '/es/hacks.js'
+import * as errs from '/es/errs.js'
 import * as occupants from '../occupants.js'
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
-import * as errs from '/es/errs.js'
 
 export class FrameSpec extends occupants.GeneralSpec {
     constructor() {
@@ -16,12 +17,12 @@ export class FrameSpec extends occupants.GeneralSpec {
     get placeVecs() { return this._placeVecs }
     get debugName () { return "unnamedFrameSpec" }
 
-    valueOf() { throw "PANIC: to be overridden!" }
+    valueOf() { throw new errs.ToBeOverridden() }
     toString() { return `w${this.debugName}` }
 }
 
 export class FrameDesign extends occupants.GeneralDesign {
-    constructor (spec) {
+    constructor (spec = hacks.argPanic()) {
         super(spec)
     }
 
@@ -31,36 +32,24 @@ export class FrameDesign extends occupants.GeneralDesign {
         if (tile !== undefined) {
             this.setAnchorTile(tile)
         }
-
-        if (!this.canLock()) { throw `Panic - can't lock frame ${this}!` }
-
-        this.__locked = true
-        this.grid.addOccupant(this)
-        for (let tile of this._tiles) {
+        super.lockToGrid()
+        for (let tile of this.tiles) {
             tile.frame = this
         }
     }
     unlock() {
-        if (!this.__locked) {
-            throw `Panic - frame ${this} not locked to grid, can't unlock!`
-        }
-
-        this.grid.removeOccupant(this)
+        super.unlock()
         for (let tile of this._tiles) {
             tile.frame = null
         }
-        this.__locked = false
     }
-
-    canLock() {
-        if (this.locked) { return false } 
-        if (this.anchorTile == null) { return false }
+    checkLock() {
+        super.checkLock()
         for (let placeTile of this.tiles) {
             if (placeTile.frame !== null) {
-                return false
+                throw occupants.InvalidLock(`tile ${placeTile} already contains frame, can't lock ${this} here!`)
             }
         }
-        return true
     }
 
     toString() { return `FR ${this.spec} at ${this._anchorTile}` }

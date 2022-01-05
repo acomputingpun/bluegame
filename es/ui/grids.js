@@ -1,3 +1,4 @@
+import * as errs from '/es/errs.js'
 import * as vecs from '/es/vectors.js'
 import * as panels from '/es/ui/panels.js'
 import * as discs from '/es/ui/discs.js'
@@ -101,7 +102,7 @@ export class GridPanel extends panels.Panel {
         if (this._reflectionDict.has(reflection.reflector)) {
             console.log("reflection is", reflection)
             console.log("old reflection is", this._reflectionDict.get(reflection.reflector))
-            throw ("PANIC: Tried to add duplicate reflection of item!")
+            throw new errs.Panic("Tried to add duplicate reflection of item!")
         } else {
             this._reflectionDict.set(reflection.reflector, reflection)
         }
@@ -194,7 +195,7 @@ export class TilePanel extends panels.Panel {
         } else if (vec.eq(dirconst.IN_PLACE)) {
             return this.panelCenter
         } else {
-            throw `PANIC - tried to get localFacingMidpoint of invalid vec ${vec}`
+            throw new errs.Panic(`tried to get localFacingMidpoint of invalid vec ${vec}`)
         }
     }
     absFacingMidpoint(vec) {

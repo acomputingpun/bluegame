@@ -182,7 +182,7 @@ class _GenInstance extends _ResourceCompInstance {
         if (this.__outConns.includes(consumer)) {
             return this.__inConn.foreignConsume(this, new resources.Fuel(5) )
         } else {
-            throw ("PANIC: invalid call of foreignConsume()!")
+            throw new errs.Panic("invalid call of foreignConsume()!")
         }
     }
 }

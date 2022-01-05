@@ -122,7 +122,7 @@ RK b|0111:Implement flag-specific console debug printing for ease of testing.
  E b|0112:Replace debug printing calls to console.log() with hacks.dlog() throughout code.
 RE b|0113:Rename use of 'link' in connectors with 'fuse' for greater nomenclature clarity.
 RI b|0114:Move duplicate code for lockToGrid() and unlock() functions to Occupant superclasses.
- I b|0115:Replace sanity checks at the beginning of lockToGrid() with call to canLock() / checkLock() functions.
+RI b|0115:Replace sanity checks at the beginning of lockToGrid() with call to canLock() / checkLock() functions.
  I b|0116:Improve error-checking in component.checkLock()
  I b|0117:Occupant.canLock() should check for specific exception types thrown by checkLock()
 RI b|0118:UI display of connectors as seperate UI-objects rather than phantoms.
@@ -147,3 +147,5 @@ RI b|0136:General class for resource-source components such as tanks and batteri
 RI b|0137:General class for cable components.
 AI b|0138:Unidirectional connectors that automatically refuse reserve attempts from the wrong direction.
 RI b|0139:A function, called after an Instance is created and recursively linked, that can assign names and attach data to linked occupants (connectors, etc).
+ I b|0140:Rework frames.js to use general Occupant lock() / unlock() functions.
+RI b|0141:Fusing connectors performs sanity-checks of resource type / connector direction / etc.

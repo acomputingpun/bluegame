@@ -1,3 +1,4 @@
+import * as errs from '/es/errs.js'
 import * as utils from '/es/utils.js'
 import * as grids from '/es/grids.js'
 
@@ -22,7 +23,7 @@ export class OccGridTile extends grids.GridTile {
         } else if (occ.isConnector) {
             this.connectors.push(occ)
         } else {
-            throw (`PANIC: Can't add occupant ${occ} to BlueprintGrid ${this} - occupant can't be accurately categorised!`)
+            throw new errs.Panic(`Can't add occupant ${occ} to BlueprintGrid ${this} - occupant can't be accurately categorised!`)
         }
 
         this.markDirty()
@@ -37,7 +38,7 @@ export class OccGridTile extends grids.GridTile {
         } else if (occ.isConnector) {
             utils.aRemove(this.connectors, occ)
         } else {
-            throw (`PANIC: Can't remove occupant ${occ} from BlueprintGrid ${this} - occupant can't be accurately categorised!`)
+            throw new errs.Panic(`Can't remove occupant ${occ} from BlueprintGrid ${this} - occupant can't be accurately categorised!`)
         }
         this.markDirty()
     }
@@ -72,7 +73,7 @@ export class OccGrid extends grids.Grid {
         } else if (occ.isConnector) {
             this.connectors.push(occ)
         } else {
-            throw (`PANIC: Can't add occupant ${occ} to BlueprintGrid ${this} - occupant can't be accurately categorised!`)
+            throw new errs.Panic(`Can't add occupant ${occ} to BlueprintGrid ${this} - occupant can't be accurately categorised!`)
         }
         this.markDirty()
     }
@@ -89,7 +90,7 @@ export class OccGrid extends grids.Grid {
         } else if (occ.isConnector) {
             utils.aRemove(this.connectors, occ)
         } else {
-            throw (`PANIC: Can't remove occupant ${occ} from BlueprintGrid ${this} - occupant can't be accurately categorised!`)
+            throw new errs.Panic(`Can't remove occupant ${occ} from BlueprintGrid ${this} - occupant can't be accurately categorised!`)
         }
         this.markDirty()
     }

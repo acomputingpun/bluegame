@@ -2,6 +2,9 @@ import * as errs from '/es/errs.js'
 import * as hacks from '/es/hacks.js'
 import * as dirconst from '/es/dirconst.js'
 
+export class InvalidLock extends errs.CustomException {
+}
+
 export class GeneralSpec {
     designify(...args) {
         return new this.designClass(this, ...args)
@@ -18,7 +21,7 @@ export class GeneralSpec {
 }
 
 export class GeneralDesign {
-    constructor(spec) {
+    constructor(spec = hacks.argPanic()) {
         this.spec = spec
 
         this.__locked = false
@@ -43,9 +46,7 @@ export class GeneralDesign {
     }
 
     get tile () {
-        console.log("Deprecated function get tile() called!")
-        console.trace()
-        throw ("PANIC: Deprecated function get tile() called!")
+        throw new errs.Panic("Deprecated function get tile() called!")
     }
   
     lockToGrid() {
@@ -72,16 +73,20 @@ export class GeneralDesign {
         try {
             this.checkLock()
         } catch (lockErr) {
-            return false
+            if (lockErr instanceof InvalidLock) {
+                return false
+            } else {
+                throw lockErr
+            }
         }
         return true
     }
     checkLock() {
         if (this.__locked) {
-            throw new errs.Panic(`${this} already locked to grid, can't lock!`)
+            throw new InvalidLock(`${this} already locked to grid, can't lock!`)
         }
         if (this.anchorTile == null) {
-            throw new errs.Panic(`${this} has no anchorTile, can't lock!`)
+            throw new InvalidLock(`${this} has no anchorTile, can't lock!`)
         }
     }
 
@@ -111,7 +116,7 @@ export class GeneralDesign {
 }
 
 export class GeneralInstance {
-    constructor(design, iGrid) {
+    constructor(design = hacks.argPanic(), iGrid = hacks.argPanic()) {
         this.design = design
         this.iGrid = iGrid
 

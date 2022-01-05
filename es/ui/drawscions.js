@@ -1,3 +1,5 @@
+import * as errs from '/es/errs.js'
+
 export class DrawScion {
     constructor(parent) {
         this.parent = parent
@@ -50,7 +52,7 @@ export class DrawScion {
     }
 
     get originShift() {
-        throw "ERR: Tried to call get originShift() of base DrawScion!"
+        throw new errs.ToBeOverridden()
     }
     get absOrigin() {
         return this.parent.absOrigin.add(this.originShift)
@@ -58,7 +60,7 @@ export class DrawScion {
 
 
     localWithin(local) {
-        throw "ERR: Tried to call localWithin() of base DrawScion!"
+        throw new errs.ToBeOverridden()
     }
     absWithin(local) {
         return this.localWithin(local.sub(this.absOrigin))

@@ -5,6 +5,7 @@ class Resource {
     constructor(quantity) {
         this.quantity = quantity
     }
+    static get resClass() { return this }
     get resClass() { return this.constructor }
 
     static get resName() { return "?resource?" }
@@ -47,6 +48,13 @@ class Resource {
         if (this.resClass != other.resClass) { throw new errs.Panic(`Tried to perform arithmetic operations on different resource types ${this} and ${other}`) }
         return this.quantity <= other.quantity
     }
+
+    compatibleTo(other) {
+        return this.resClass.compatibleTo(other.resClass)
+    }
+    static compatibleTo(other) {
+        return this == other.resClass
+    } 
 }
 
 export class Electric extends Resource {

@@ -1,5 +1,10 @@
+import * as errs from '/es/errs.js'
+import * as hacks from '/es/hacks.js'
 import * as occupants from '../occupants.js'
 import * as dirconst from '/es/dirconst.js'
+
+export class InvalidFuse extends errs.CustomException {
+}
 
 export class ConnectorSpec extends occupants.GeneralSpec {
     get debugName() {return "unnamed connector"}
@@ -19,8 +24,8 @@ export class ConnectorSpec extends occupants.GeneralSpec {
     toString() { return `[CONN ${this.debugName}]` }
 }
 
-class ConnectorDesign extends occupants.GeneralDesign {
-    constructor(spec, comp) {
+export class ConnectorDesign extends occupants.GeneralDesign {
+    constructor(spec = hacks.argPanic(), comp = hacks.argPanic()) {
         super(spec)
         console.log("Just called new ConnectorDesign with args spec:", spec, "and comp", comp, "got this", this)
 
@@ -31,26 +36,51 @@ class ConnectorDesign extends occupants.GeneralDesign {
 
     unlock() {
         if (this.fused) {
-            throw `PANIC connector ${this} is fused to another connector, can't unlock!`
+            throw new errs.Panic(`connector ${this} is fused to another connector, can't unlock!`)
         }
         return super.unlock()
     }
     checkLock() {
         super.checkLock()
         if (!this.comp.locked) {
-            throw `Panic - tried to lock connector ${this} but parental component ${this.comp} is unlocked!`
+            throw new occupants.InvalidLock(`tried to lock connector ${this} but parental component ${this.comp} is unlocked!`)
+        }
+    }
+
+    canFuseTo(other) {
+        return this._canFuseFrom(other) && other._canFuseFrom(this)
+    }
+    checkFuseTo(other) {
+        this._checkFuseFrom(other)
+        other._checkFuseFrom(this)
+    }
+    _canFuseFrom(other) {
+        try {
+            this._checkFuseFrom(other)
+        } catch (fuseErr) {
+            if (fuseErr instanceof InvalidFuse) {
+                return false
+            } else {
+                throw fuseErr
+            }
+        }
+    }
+    _checkFuseFrom(other) {
+        if (!this.locked) {
+            throw new InvalidFuse(`${this} not locked to grid, can't fuse!`)
+        }
+        if (this.isFused) {
+            throw new InvalidFuse(`${this} already fused, can't fuse again!`)
+        }
+        if (!this.destConns.includes(other)) {
+            throw new InvalidFuse(`${this} can't fuse from ${other}, they're not facing!`)
         }
     }
 
     fuseTo (other) {
-        if (!this.locked) {
-            throw new errs.Panic(`${this} not locked to grid, can't fuse to another!`)
-        }
-
         if (this.isFused) {
             this.unfuse()
         }
-
         if (other != null) {
             if (other.isFused) {
                 other.unfuse()
@@ -60,15 +90,7 @@ class ConnectorDesign extends occupants.GeneralDesign {
         }
     }
     _fuseFrom (other) {
-        if (!this.locked) {
-            throw new errs.Panic(`${this} not locked to grid, can't fuse!`)
-        }
-        if (this.isFused) {
-            throw new errs.Panic(`${this} already fused, can't fuse again!`)
-        }
-        if (!this.destConns.includes(other)) {
-            throw new errs.Panic(`${this} can't fuse from ${other}, they're not facing!`)
-        }
+        this._checkFuseFrom(other)
         this._fusedConn = other
     }
     

@@ -1,11 +1,14 @@
 export class CustomException extends Error {
+    constructor(msg) {
+        super()
+        this.message = msg
+    }
 }
 
 export class Panic extends CustomException {
     constructor(msg) {
-        super()
+        super(`PANIC: ${msg}`)
         console.trace()
-        this.message = `PANIC: ${msg}`
     }
 }
 

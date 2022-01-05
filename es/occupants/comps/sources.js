@@ -37,7 +37,7 @@ class _LPSInstance extends specs._ResourceCompInstance {
             console.log(`Consuming from ${this} - res left, ${this.resPool.quantity}`)
             return this.resPool.foreignConsume(this, res)
         } else {
-            throw ("PANIC: invalid call of foreignConsume()!")
+            throw new errs.Panic("invalid call of foreignConsume()!")
         }
     }
 }

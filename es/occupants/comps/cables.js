@@ -12,14 +12,14 @@ class _CableInstance extends specs._ResourceCompInstance {
         if (this.connectors.includes(bidder)) {
             return this.otherConnector(bidder).foreignReserve(this, res)
         } else {
-            throw ("PANIC: invalid call of foreignReserve()!")
+            throw new errs.Panic("invalid call of foreignReserve()!")
         }
     }
     foreignConsume(consumer = hacks.argPanic(), res = hacks.argPanic()) {
         if (this.connectors.includes(consumer)) {
             return this.otherConnector(consumer).foreignConsume(this, res)
         } else {
-            throw ("PANIC: invalid call of foreignConsume()!")
+            throw new errs.Panic("invalid call of foreignConsume()!")
         }
     }
     otherConnector(conn) {

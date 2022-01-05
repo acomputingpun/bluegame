@@ -91,14 +91,14 @@ export class ShipBattlePanel extends panels.Panel {
     warpTileMouseMove(gridPanel, xyLocal) {
         if (gridPanel == this.gridPanel) {
         } else {
-            throw "PANIC"
+            throw new errs.Panic()
         }
     }
     warpTileMouseDown(gridPanel, xyLocal) {
         if (gridPanel == this.gridPanel) {
             console.log("xyl is", xyLocal, "tilePanel", this.gridPanel.localLookupPanel(xyLocal.xy) )
         } else {
-            throw "PANIC"
+            throw new errs.Panic()
         }
     }
 }

@@ -3,8 +3,9 @@ import * as errs from '/es/errs.js'
 import * as dirconst from '/es/dirconst.js'
 import * as resources from '/es/resources.js'
 import * as base from './base.js'
+import * as flows from './flows.js'
 
-class _ResourceConnectorInstance extends base.ConnectorInstance {
+class _RCInstance extends base.ConnectorInstance {
     constructor(...args) {
         super(...args)
     }
@@ -49,6 +50,16 @@ class _ResourceConnectorInstance extends base.ConnectorInstance {
         }
     }
 
+    get resClass() { return this.design.resClass }
+}
+
+class _RCDesign extends base.ConnectorDesign {
+    _checkFuseFrom(other) {
+        super._checkFuseFrom(other)
+        if (!this.resClass.compatibleTo(other.resClass)) {
+            throw new base.InvalidFuse(`${this} can't fuse from ${other}, they have incompatible resource types: ${this.resClass} and ${other.resClass}!`)
+        }
+    }
     get resClass() { return this.spec.resClass }
 }
 
@@ -60,8 +71,22 @@ class ResourceConnector extends base.ConnectorSpec {
         this.resClass = resClass
         this.capacity = capacity
     }
-    
-    get instanceClass() { return _ResourceConnectorInstance }
+    get designClass() { return _RCDesign }    
+    get instanceClass() { return _RCInstance }
+    get flowRestriction() { return flows.Any }
+}
+
+export class ElectricOutflow extends ResourceConnector {
+    constructor(pos, facing) {
+        super(pos, facing, resources.Electric, 1)
+    }
+    get flowRestriction() { return flows.Outflow }
+}
+export class ElectricInflow extends ResourceConnector {
+    constructor(pos, facing) {
+        super(pos, facing, resources.Electric, 1)
+    }
+    get flowRestriction() { return flows.Inflow }
 }
 
 export class ElectricConnector extends ResourceConnector {   

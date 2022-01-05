@@ -1,3 +1,4 @@
+import * as errs from '/es/errs.js'
 import * as vecs from '/es/vectors.js'
 import * as panels from '/es/ui/panels.js'
 
@@ -112,7 +113,7 @@ export class RemoveComponentTool extends Tool {
                 tilePanel.tile.components[0].unlock()
             }
         } else {
-            throw "PANIC"
+            throw new errs.Panic()
         }
     }
 }
@@ -146,7 +147,7 @@ export class PlaceComponentTool extends Tool {
                 this.setHoverTilePanel(tilePanel)
             }
         } else {
-            throw "PANIC"
+            throw new errs.Panic()
         }
     }
     warpTileMouseDown(xyLocal) {
@@ -161,7 +162,7 @@ export class PlaceComponentTool extends Tool {
                 }
             }
         } else {
-            throw "PANIC"
+            throw new errs.Panic()
         }
     }
 
@@ -178,7 +179,7 @@ export class RemoveFrameTool extends Tool {
                 tilePanel.tile.frame.unlock()   
             }
         } else {
-            throw "PANIC"
+            throw new errs.Panic()
         }
     }
 }
@@ -203,7 +204,7 @@ export class PlaceFrameTool extends Tool {
                 }
             }
         } else {
-            throw "PANIC"
+            throw new errs.Panic()
         }
     }
 
@@ -227,7 +228,7 @@ export class PlaceFrameTool extends Tool {
                 this.setHoverTilePanel(tilePanel)
             }
         } else {
-            throw "PANIC"
+            throw new errs.Panic()
         }
     }
 
@@ -308,7 +309,7 @@ export class EditGridPanel extends panels.Panel {
         if (gridPanel == this.gridPanel) {
             this.editingTool.warpTileMouseMove(xyLocal)
         } else {
-            throw "PANIC"
+            throw new errs.Panic()
         }
     }
 
@@ -316,7 +317,7 @@ export class EditGridPanel extends panels.Panel {
         if (gridPanel == this.gridPanel) {
             this.editingTool.warpTileMouseDown(xyLocal)
         } else {
-            throw "PANIC"
+            throw new errs.Panic()
         }
     }
 
