@@ -47,7 +47,7 @@ export class FrameDesign extends occupants.GeneralDesign {
         super.checkLock()
         for (let placeTile of this.tiles) {
             if (placeTile.frame !== null) {
-                throw occupants.InvalidLock(`tile ${placeTile} already contains frame, can't lock ${this} here!`)
+                throw new occupants.InvalidLock(`tile ${placeTile} already contains frame, can't lock ${this} here!`)
             }
         }
     }

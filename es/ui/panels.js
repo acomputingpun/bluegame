@@ -113,9 +113,9 @@ export class ReflectorPanel extends Panel {
         }
     }
     getInvariant() {
-        throw "Call of base ReflectorPanel.getInvariant() - should be overridden!"
+        throw new errs.ToBeOverridden()
     }
     refresh() {
-        throw "Call of base ReflectorPanel.refresh() - should be overridden!"
+        throw new errs.ToBeOverridden()
     }
 }

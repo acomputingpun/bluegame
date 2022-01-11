@@ -1,4 +1,6 @@
 import * as errs from '/es/errs.js'
+import * as utils from '/es/utils.js'
+import * as uiconst from './uiconst.js'
 
 export class DrawScion {
     constructor(parent) {
@@ -17,7 +19,7 @@ export class DrawScion {
         return []
     }
     warpMouseMove(clickLocal) {
-        for (let child of this.children) { 
+        for (let child of utils.aReverse(this.children)) { 
             let childLocal = clickLocal.sub(child.originShift)
             if (child.localWithin(childLocal)) {
                 if (child.warpMouseMove(childLocal)) {
@@ -27,10 +29,9 @@ export class DrawScion {
         }
         return false
     }
-    warpMouseDown(clickLocal) {
-        for (let child of this.children) {
+    warpMouseDown(clickLocal, mouseButton = uiconst.LMOUSE) {
+        for (let child of utils.aReverse(this.children)) {
             let childLocal = clickLocal.sub(child.originShift)
-//            console.log("childL", childLocal, "chi", child)
             if (child.localWithin(childLocal)) {
                 if (child.warpMouseDown(childLocal)) {
                     return true
@@ -40,7 +41,7 @@ export class DrawScion {
         return false
     }
     warpMouseUp(clickLocal) {
-        for (let child of this.children) {
+        for (let child of utils.aReverse(this.children)) {
             let childLocal = clickLocal.sub(child.originShift)
             if (child.localWithin(childLocal)) {
                 if (child.warpMouseUp(childLocal)) {

@@ -6,6 +6,8 @@ import * as ui_grids from './grids.js'
 import * as framespecs from '/es/occupants/frames/specs.js'
 import * as compspecs from '/es/occupants/comps/specs.js'
 
+import * as comp_sources from '/es/occupants/comps/sources.js'
+
 export class MenuButton extends panels.Button {
     constructor(parent, panelStart, text, data) {
         super(parent)
@@ -64,7 +66,7 @@ export class ComponentMenuPanel extends panels.Panel {
         this.noComponentButton = new MenuButton( this, vecs.Vec2(5, 55), "none", null )
 
         this.laserGunButton = new MenuButton( this, vecs.Vec2(5, 105), "lgun", compspecs.LaserGun )
-        this.electricSourceButton = new MenuButton( this, vecs.Vec2(5, 155), "esource", compspecs.ElectricSource )
+        this.electricSourceButton = new MenuButton( this, vecs.Vec2(5, 155), "esource", comp_sources.Battery )
 
         this.cwRotButton = new MenuButton( this, vecs.Vec2(5, 205), "rotCW", "rotCW" )
         this.ccwRotButton = new MenuButton( this, vecs.Vec2(5, 255), "rotCCW", "rotCCW" )
@@ -100,6 +102,10 @@ export class Tool {
         this.parent = parent
     }    
     get gridPanel() { return this.parent.gridPanel }
+
+    warpReflMouseDown(refl) {
+        this.warpTileMouseDown(refl.parent.xyLocal)
+    }
 }
 
 
@@ -111,6 +117,7 @@ export class RemoveComponentTool extends Tool {
         if (tilePanel != null) {
             if (tilePanel.tile.components.length > 0) {
                 tilePanel.tile.components[0].unlock()
+                tilePanel.updateReflections()
             }
         } else {
             throw new errs.Panic()
@@ -157,6 +164,7 @@ export class PlaceComponentTool extends Tool {
                 if (this.hoveringComp.canLock()) {
                     this.hoveringComp.lockToGrid(tilePanel.tile)
                     this.createHoveringComponent(this.hoveringComp.spec)
+                    tilePanel.updateReflections()
                 } else {
                     console.log("Can't place!")
                 }
@@ -165,7 +173,6 @@ export class PlaceComponentTool extends Tool {
             throw new errs.Panic()
         }
     }
-
 
 }
 
@@ -176,7 +183,7 @@ export class RemoveFrameTool extends Tool {
         let tilePanel = this.gridPanel.localLookupPanel( xyLocal.xy )
         if (tilePanel != null) {
             if (tilePanel.tile.frame != null) {
-                tilePanel.tile.frame.unlock()   
+                tilePanel.tile.frame.unlock()
             }
         } else {
             throw new errs.Panic()
@@ -230,6 +237,10 @@ export class PlaceFrameTool extends Tool {
         } else {
             throw new errs.Panic()
         }
+    }
+
+    warpReflMouseDown(refl) {
+        this.warpTileMouseDown(refl.parent.xyLocal)
     }
 
     drawContents() {
@@ -287,22 +298,29 @@ export class EditGridPanel extends panels.Panel {
         this.editingSideMenu = this.frameMenuPanel
     }
 
-    drawWarnings() {
+    drawWarnings(xyDraw = this.absStart.xy) {
         this.ctx.font = "11px Courier"
         this.ctx.textAlign = "left"
         this.ctx.textBaseline = "top"
         this.ctx.fillStyle=this.borderColour
 
-        let [xDraw, yDraw] = this.absStart.xy
+        let [xDraw, yDraw] = xyDraw
 
         for (let warning of this.gridPanel.grid.getWarnings()) {
             this.ctx.fillText( warning.text, xDraw, yDraw )
             yDraw += 12
         }
+        return [xDraw, yDraw]
     }
 
     drawContents() {
-        this.drawWarnings()
+        let xyDraw = this.drawWarnings()
+        this.debugDrawDirtyState( xyDraw )
+    }
+    debugDrawDirtyState(xyDraw = this.absStart.xy) {
+        if (this.gridPanel.isReflectionDirty()) {
+            this.ctx.fillText( `refl dirty w/ dirtyID ${this.gridPanel._dirtyID} while grid has ${this.gridPanel.grid._dirtyID}`, ...xyDraw )        
+        }
     }
 
     warpTileMouseMove(gridPanel, xyLocal) {
@@ -319,6 +337,12 @@ export class EditGridPanel extends panels.Panel {
         } else {
             throw new errs.Panic()
         }
+    }
+
+    warpReflMouseDown(refl) {
+        this.editingTool.warpReflMouseDown(refl)
+    }
+    warpReflMouseOver(refl) {
     }
 
 }

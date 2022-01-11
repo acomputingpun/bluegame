@@ -44,6 +44,12 @@ export function aWithout(arr, item) {
     aRemove(k, item)
     return k
 }
+export function* aReverse(arr) {
+    for (let k = arr.length-1; k>=0; k--) {
+        yield arr[k];
+    }
+    
+}
 
 export function* span2(s, e) {
     let [xs, ys] = s

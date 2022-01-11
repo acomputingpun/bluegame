@@ -7,6 +7,7 @@ import * as colours from '/es/ui/colours.js'
 import * as ui_debug from '/es/ui/debug.js'
 import * as ui_editors from '/es/ui/editors.js'
 import * as ui_sbattles from '/es/ui/sbattles.js'
+import * as uiconst from '/es/ui/uiconst.js'
 
 class Cursor {
     constructor() {
@@ -22,8 +23,9 @@ class Cursor {
 export class Renderer {
     constructor(runner) {
         this.canvas = document.createElement("canvas")
+        this.canvas.oncontextmenu = function(e) { e.preventDefault(); }
         this.ctx = this.canvas.getContext("2d");  // If this semicolon is removed, the next line doesn't get executed properly.  Why?  Who knows, it's Javascript!
-
+    
         [this.canvas.width, this.canvas.height] = genconst.mainCanvasSize
         document.body.appendChild(this.canvas)
 
@@ -138,8 +140,8 @@ class TopLevelPanel extends panels.Panel {
 
 //        console.log("this", this)
 //        console.log("tgrid,", renderer.runner.state.debugGrid)
-//        this.mainPanel = new ui_editors.EditGridPanel(this, this._renderer.runner.state.debugGrid)
-        this.mainPanel = new ui_sbattles.ShipBattlePanel(this, this._renderer.runner.state.debugShip)
+        this.mainPanel = new ui_editors.EditGridPanel(this, this._renderer.runner.state.debugGrid)
+//        this.mainPanel = new ui_sbattles.ShipBattlePanel(this, this._renderer.runner.state.debugShip)
     }
 
     draw() {

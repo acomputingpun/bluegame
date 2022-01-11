@@ -2,6 +2,7 @@ import * as errs from '/es/errs.js'
 
 class BlueprintWarning extends errs.CustomException {
     constructor(grid) {
+        super()
         this.grid = grid
     }
 

@@ -34,7 +34,7 @@ export class OccGridTile extends grids.GridTile {
         if (occ.isComponent) {
             utils.aRemove(this.components, occ)
         } else if (occ.isFrame) {
-            utils.aRemove(this.frames, occ)
+            this.frame = null
         } else if (occ.isConnector) {
             utils.aRemove(this.connectors, occ)
         } else {

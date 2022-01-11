@@ -1,4 +1,5 @@
 import * as errs from '/es/errs.js'
+import * as hacks from '/es/hacks.js'
 import * as vecs from '/es/vectors.js'
 import * as panels from '/es/ui/panels.js'
 import * as discs from '/es/ui/discs.js'
@@ -10,6 +11,7 @@ export class GridPanel extends panels.Panel {
         this.panelStart = vecs.Vec2(20, 20)
         this.panelSize = vecs.Vec2(600, 500)
 
+        this._dirtyID = -1
         this._reflectionDict = new Map()
 
         this.grid = grid
@@ -29,6 +31,8 @@ export class GridPanel extends panels.Panel {
         this.xyViewportAnchor = vecs.Vec2(0, 0)
         this.reflectTilePanels()
     }
+
+    isReflectionDirty() { return this._dirtyID != this.grid._dirtyID }
 
     get tilePanelClass() { return TilePanel }
     get xySize() { return vecs.Vec2(9, 9) }
@@ -97,6 +101,13 @@ export class GridPanel extends panels.Panel {
     warpTileMouseMove(xyLocal) {
         this.parent.warpTileMouseMove(this, xyLocal)
     }
+
+    warpReflMouseOver(refl) {
+        this.parent.warpReflMouseOver(refl)
+    }
+    warpReflMouseDown(refl) {
+        this.parent.warpReflMouseDown(refl)
+    }
     
     addReflection(reflection) {
         if (this._reflectionDict.has(reflection.reflector)) {
@@ -115,6 +126,11 @@ export class GridPanel extends panels.Panel {
             return null
         }
     }
+    clearReflection(reflection) {
+        if (this._reflectionDict.has(reflection.reflector)) {
+            this._reflectionDict.delete(reflection.reflector)
+        }
+    }
 }
 
 let TILE_EMPTY_BG = "#EEE"
@@ -127,7 +143,8 @@ export class TilePanel extends panels.Panel {
         this.panelSize = vecs.Vec2(50, 50)
 
         this.tile = null
-        this.connectorIcons = []
+        this.componentReflections= []
+        this.connectorReflections = []
     }
 
     get bgFillColour() {
@@ -211,21 +228,43 @@ export class TilePanel extends panels.Panel {
         }
     }
     warpMouseMove(mousePos) {
+        if (super.warpMouseMove(mousePos)) {
+        }
         this.parent.warpTileMouseMove(this.xyLocal)
     }
-
-    reflectTile(tile) {
-        this.tile = tile
-
-        this.componentReflections = []
-        for (let comp of tile.components) {
-            this.componentReflections.push( this.parent.addReflection(new ComponentReflection(this, comp)) )
-        }
-
-        this.connectorIcons = this.tile.connectors.map( (conn) => this.parent.addReflection(new ConnectorReflection(this, conn)) )
+    warpReflMouseOver(refl) {
+        this.parent.warpReflMouseOver(refl)
+    }
+    warpReflMouseDown(refl) {
+        this.parent.warpReflMouseDown(refl)
     }
 
-    get children() { return [...this.componentReflections, ...this.connectorIcons] }
+    reflectTile(tile = hacks.argPanic()) {
+        if (tile != null) {
+            this.tile = tile
+            this.componentReflections = this.tile.components.map( (comp) => this.parent.addReflection(new ComponentReflection(this, comp)) )
+            this.connectorReflections = this.tile.connectors.map( (conn) => this.parent.addReflection(new ConnectorReflection(this, conn)) )
+        }
+    }
+    updateReflections() {
+        console.log("YAFFAR", this)
+        this._clearReflections()
+        this.reflectTile(this.tile)
+    }
+    _clearReflections() {
+        console.log("Clearing refls of", this)
+        for (let compRefl of this.componentReflections) {
+            this.parent.clearReflection(compRefl)
+        }
+        for (let connRefl of this.connectorReflections) {
+            this.parent.clearReflection(connRefl)
+        }
+        this.componentReflections = []
+        this.connectorReflections = []
+        console.log("CLEARED refls of", this)
+    }
+
+    get children() { return [...this.componentReflections, ...this.connectorReflections] }
 
     toString() {
         return `TPanel ${this.xyLocal} ${this.tile}`
@@ -245,13 +284,21 @@ export class ComponentReflection extends discs.Disc {
     get bgFillColour() {
         if (this.comp == null) {
             return "#BBB"
-        } else {    
+        } else {
             return "#DD0"
         }
     }
 
+    warpMouseMove(mousePos) {
+//        console.log(`Comp ${this} mouseover!, comp`, this)
+//        this.parent.setMouseoverRefl(this)
+        this.parent.warpReflMouseOver(this)
+        return true
+   }
     warpMouseDown(mousePos) {
-        console.log(`Comp ${this} mouse down!, conn`, this)
+        console.log(`Comp ${this} mouse down!, comp`, this)
+        this.parent.warpReflMouseDown(this)
+        return true
     }
 
     drawContents() {
@@ -283,7 +330,10 @@ export class ComponentReflection extends discs.Disc {
             }
             this.ctx.stroke()
         }
+    }
 
+    toString() {
+        return `refl{${this.comp}}`
     }
 }
 
@@ -292,7 +342,7 @@ export class ConnectorReflection extends discs.Disc {
         super(parent)
         
         this.conn = conn
-        this.discCenter = this.parent.localFacingMidpoint(this.conn.facing).interp(0.2, this.parent.localCenter) 
+        this.discCenter = this.parent.localFacingMidpoint(this.conn.facing).interp(0.2, this.parent.localCenter)
         this.discRadius = 4
     }
 
@@ -305,8 +355,15 @@ export class ConnectorReflection extends discs.Disc {
         }
     }
 
+    warpMouseMove(mousePos) {
+        this.parent.warpReflMouseOver(this)
+        console.log(`Conn ${this} mouseover!, conn`, this)
+        return true
+    }
     warpMouseDown(mousePos) {
         console.log(`Conn ${this} mouse down!, conn`, this)
+        this.parent.warpReflMouseDown(this)
+        return true
     }
 
     drawContents() {
@@ -322,5 +379,9 @@ export class ConnectorReflection extends discs.Disc {
                 this.ctx.stroke()
             }
         }
+    }
+
+    toString() {
+        return `refl{${this.conn}}`
     }
 }

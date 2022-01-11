@@ -127,8 +127,8 @@ RI b|0115:Replace sanity checks at the beginning of lockToGrid() with call to ca
  I b|0117:Occupant.canLock() should check for specific exception types thrown by checkLock()
 RI b|0118:UI display of connectors as seperate UI-objects rather than phantoms.
 RI b|0119:Grid UI display keeps track of reflection objects and links them to the reflectors.
- I b|0120:Reflection objects should be correctly removed from existence when leaving scope (deleted, etc)
- I b|0121:Reflection objects for connectors should be added to scope in UI when tiles are modified.
+RI b|0120:Reflection objects should be correctly removed from existence when leaving scope (deleted, etc)
+RI b|0121:Reflection objects for connectors should be added to scope in UI when tiles are modified.
  I b|0122:Graceful UI display of multiple connectors in single square/facing.
  I b|0123:Limited throughput capacity for cable components
 RI b|0124:Sanity checks for connector.fuseTo() and component.unfuse()
@@ -136,7 +136,7 @@ RI b|0125:Seperate connector fusing and unfusing into fuse-to and (internal) fus
  M b|0126:A functional set of default components as a minimum viable feature for gameplay testing.
  I b|0127:Define a (stub, nonworking) set of default components for 0126
 RI b|0128:UI display of components as seperate UI-objects rather than phantoms.
- E b|0129:Make various throw-exception statements throw errs.Panic()
+RE b|0129:Make various throw-exception statements throw errs.Panic()
  I b|0130:Implement error handling for less serious internal state errors so they don't need to result in a panic.
  I b|0131:Partial resource-drawing.
  M b|0132:System for damage to components/frames in ships.
@@ -145,7 +145,12 @@ RI b|0134:Rotated component/connector facing not being handled correctly.
 RI b|0135:Eliminate the './es/comps' folder and move contents back into base ./es
 RI b|0136:General class for resource-source components such as tanks and batteries.
 RI b|0137:General class for cable components.
-AI b|0138:Unidirectional connectors that automatically refuse reserve attempts from the wrong direction.
+RI b|0138:Unidirectional connectors that automatically refuse reserve attempts from the wrong direction.
 RI b|0139:A function, called after an Instance is created and recursively linked, that can assign names and attach data to linked occupants (connectors, etc).
  I b|0140:Rework frames.js to use general Occupant lock() / unlock() functions.
 RI b|0141:Fusing connectors performs sanity-checks of resource type / connector direction / etc.
+RI b|0142:Disable right-click context menu for global canvas element.
+ I b|0143:Differentiate left and right clicks.
+ I b|0144:Highlight mouseover UI items (connectors, tiles, etc) in grid displays.
+RI b|0145:Pretty debug printing functions for UI reflection objects (tilePanels, component reflections, etc)
+ I b|0146:Cables that propogate component directionality.

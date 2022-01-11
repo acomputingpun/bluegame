@@ -56,11 +56,15 @@ class _RCInstance extends base.ConnectorInstance {
 class _RCDesign extends base.ConnectorDesign {
     _checkFuseFrom(other) {
         super._checkFuseFrom(other)
+        if (!this.flowRestriction.compatibleTo(other.flowRestriction)) {
+            throw new base.InvalidFuse(`${this} can't fuse from ${other}, they have incompatible flow types: ${this.flowRestriction} and ${other.flowRestriction}!`)
+        }
         if (!this.resClass.compatibleTo(other.resClass)) {
             throw new base.InvalidFuse(`${this} can't fuse from ${other}, they have incompatible resource types: ${this.resClass} and ${other.resClass}!`)
         }
     }
     get resClass() { return this.spec.resClass }
+    get flowRestriction() { return this.spec.flowRestriction }
 }
 
 class ResourceConnector extends base.ConnectorSpec {
@@ -73,7 +77,8 @@ class ResourceConnector extends base.ConnectorSpec {
     }
     get designClass() { return _RCDesign }    
     get instanceClass() { return _RCInstance }
-    get flowRestriction() { return flows.Any }
+    get flowRestriction() { return flows.Anyflow }
+
 }
 
 export class ElectricOutflow extends ResourceConnector {

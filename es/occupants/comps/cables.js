@@ -51,6 +51,7 @@ class _Cable extends base.ComponentSpec {
     get debugDrawPoints() {
         return this._debugDrawPoints
     }
+    get debugName() { return `${this.resClass}Cable` }
 
     get xySize() { return vecs.Vec2(1,1) }
     get instanceClass() { return _CableInstance }
