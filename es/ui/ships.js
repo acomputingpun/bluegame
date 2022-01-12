@@ -51,7 +51,7 @@ export class ShipBattlePanel extends panels.Panel {
     get children() {
         return [this.gridPanel, this.advanceTickButton]
     }
-    
+        
     drawShipOccupants() {
         this.ctx.font = "11px Courier"
         this.ctx.textAlign = "left"

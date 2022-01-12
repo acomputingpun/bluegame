@@ -164,6 +164,7 @@ AI b|0153:Logic and mechanics for positioning of ships in a given space.
 RE b|0154:Re-order calls to panel constructors so that 'parent' is the last argument.
  M b|0155:Servicable UI display of ship battles.
 RI b|0156:UI Display of grids for multiple ships in battle reports.
-AI b|0157:UI Display of ship-related battle report such as facing, position, etc.
-AI b|0158:UI display of ship locations on a linear chart in battle UI.
+RI b|0157:UI Display of ship-related battle report data such as facing, position, etc.
+RI b|0158:UI display of ship locations on a linear chart in battle UI.
  I b|0159:Move warpTileMouseMove() and similar functions of GridPanel parents out of the parent class and into the grid class.
+RI b|0160:Replace calls to warpReflMouseMove() with warpReflMouseMove() for better nomenclature consistency.

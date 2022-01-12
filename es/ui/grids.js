@@ -102,8 +102,8 @@ export class GridPanel extends panels.Panel {
         this.parent.warpTileMouseMove(this, xyLocal)
     }
 
-    warpReflMouseOver(refl) {
-        this.parent.warpReflMouseOver(refl)
+    warpReflMouseMove(refl) {
+        this.parent.warpReflMouseMove(refl)
     }
     warpReflMouseDown(refl) {
         this.parent.warpReflMouseDown(refl)
@@ -232,8 +232,8 @@ export class TilePanel extends panels.Panel {
         }
         this.parent.warpTileMouseMove(this.xyLocal)
     }
-    warpReflMouseOver(refl) {
-        this.parent.warpReflMouseOver(refl)
+    warpReflMouseMove(refl) {
+        this.parent.warpReflMouseMove(refl)
     }
     warpReflMouseDown(refl) {
         this.parent.warpReflMouseDown(refl)
@@ -292,7 +292,7 @@ export class ComponentReflection extends discs.Disc {
     warpMouseMove(mousePos) {
 //        console.log(`Comp ${this} mouseover!, comp`, this)
 //        this.parent.setMouseoverRefl(this)
-        this.parent.warpReflMouseOver(this)
+        this.parent.warpReflMouseMove(this)
         return true
    }
     warpMouseDown(mousePos) {
@@ -356,7 +356,7 @@ export class ConnectorReflection extends discs.Disc {
     }
 
     warpMouseMove(mousePos) {
-        this.parent.warpReflMouseOver(this)
+        this.parent.warpReflMouseMove(this)
         console.log(`Conn ${this} mouseover!, conn`, this)
         return true
     }

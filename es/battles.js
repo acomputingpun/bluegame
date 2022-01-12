@@ -18,4 +18,10 @@ export class Battle {
     }
     get f0() { return this.fleets[0] }
     get f1() { return this.fleets[1] }
+    
+    advanceTick() {
+        for (let ship of this.allShips()) {
+            ship.advanceTick(this)
+        }
+    }
 }

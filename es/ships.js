@@ -12,6 +12,8 @@ export class ShipDesign {
     reify() {
         return new Ship(this)
     }
+    
+    get debugName() { return "???ship design???" }
 }
 
 export class ShipTile extends ogrids.OccGridTile {
@@ -53,6 +55,7 @@ export class SpaceMoveData {
         this.pos = 0
         this.speed = 0
     }
+    get motionCoeff() { return this.orient.motionCoeff }
 }
 
 export class Ship {
@@ -62,6 +65,11 @@ export class Ship {
 
         this.moveData = new SpaceMoveData()
     }
+    
+    get pos() { return this.moveData.pos }
+    get orient() { return this.moveData.orient }
+    get speed() { return this.moveData.speed }
+    get motionCoeff() { return this.moveData.motionCoeff }
 
     advanceTick(directive) {
         console.log("Advacing tick of ship", this, "directive", directive)
@@ -74,6 +82,8 @@ export class Ship {
             activeComponent.advanceTick(directive)
         }
     }
+    
+    get debugName() { return this._design.debugName }
 }
 
 export class OperatingDirective {

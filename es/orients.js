@@ -8,7 +8,7 @@ export class Orient {
     }
     
     get motionCoeff() {
-        return math.sin(this.pos)
+        return math.sin(this.facing)
     }
     
     get portFacing() {
@@ -23,4 +23,6 @@ export class Orient {
     get facingVec() {
         throw errs.Panic("Not currently implemented!")
     }
+    
+    toString() { return `${this.facing}` }
 }

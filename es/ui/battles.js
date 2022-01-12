@@ -30,14 +30,44 @@ export class AdvanceTickButton extends panels.Button {
         this.panelSize = vecs.Vec2(50, 20)
     }
     onSelect() {
-        this.parent.ship.advanceTick(this.parent.directive)
+        this.parent.battle.advanceTick()
     }
 }
 
-export class ShipPanel extends panels.Panel {
-    constructor(pStart, ship, ...args) {
+export class LinearDisplayPanel extends panels.Panel {
+    constructor(...args) {
         super(...args)
-        this.panelStart = pStart
+        this.panelStart = vecs.Vec2(10, 10)
+        this.panelSize = vecs.Vec2(500, 50)
+    }
+
+    drawContents() {
+        let orderedShips = [...this.ships].sort( (a, b) => (a.pos - b.pos) )
+        let lPos = orderedShips[0].pos - 5
+        let rPos = orderedShips[orderedShips.length-1].pos + 5
+
+//        console.log("oShips is", orderedShips, "lPos", lPos, "rPos", rPos)
+
+        for (let ship of orderedShips) {
+            let relPos = (ship.pos - lPos) / (rPos - lPos)
+            let relDraw = this.panelSize.x * relPos
+
+//            console.log("relDraw", relDraw)
+
+            this.ctx.beginPath()
+            this.ctx.arc( this.absStart.x + relDraw, this.absStart.y + 25, 5, 0, 2*Math.PI )
+            this.ctx.stroke()
+        }
+    }
+    
+    get ships() { return this.parent.battle.allShips() }
+}
+
+export class ShipPanel extends panels.Panel {
+    constructor(shipIndex, ship, ...args) {
+        super(...args)
+        this.shipIndex = shipIndex
+        this.panelStart = vecs.Vec2(5+ 240 * shipIndex, 200)
         this.panelSize = vecs.Vec2(235, 280)
         this.ship = ship
         this.gridPanel = new SBGridPanel(this.ship.grid, this)
@@ -49,14 +79,32 @@ export class ShipPanel extends panels.Panel {
         this.drawLocationData()
     }
     
-    drawLocationData() {
+    drawLocationData(xyDraw = this.absStart.xy) {
+        this.ctx.font = "11px Courier"
+        this.ctx.textAlign = "left"
+        this.ctx.textBaseline = "top"
+        this.ctx.fillStyle=this.borderColour
         
+        let [xDraw, yDraw] = xyDraw
+
+        this.ctx.fillText( `Ship ${this.shipIndex} : ${this.ship.debugName}`, xDraw, yDraw )
+        yDraw += 12
+        this.ctx.fillText( `facing: ${this.ship.moveData.orient}`, xDraw, yDraw )
+        yDraw += 12
+        this.ctx.fillText( `pos: ${this.ship.moveData.pos}`, xDraw, yDraw )
+        yDraw += 12
+        
+        return [xDraw, yDraw]
     }
 
 // TODO: Move these out and into the grid class!    
     warpTileMouseMove(gridPanel, xyLocal) {
     }
     warpTileMouseDown(gridPanel, xyLocal) {
+    }
+    warpReflMouseMove(gridPanel, xyLocal) {
+    }
+    warpReflMouseDown(gridPanel, xyLocal) {
     }
 }
 
@@ -71,14 +119,15 @@ export class BattlePanel extends panels.Panel {
         this.messageLog = []
 
         this.advanceTickButton = new AdvanceTickButton(this)
+        this.lDisplayPanel = new LinearDisplayPanel(this)
         this.shipPanels = []
         for (let [index, ship] of this.battle.allShips().entries()) {
             console.log("ship, index, is", ship, index)
-            this.shipPanels.push( new ShipPanel(vecs.Vec2(5+ 240 * index, 200), ship, this) )
+            this.shipPanels.push( new ShipPanel(index, ship, this) )
         }
     }
     get children() {
-        return [...this.shipPanels, this.advanceTickButton]
+        return [...this.shipPanels, this.advanceTickButton, this.lDisplayPanel]
     }
     
     drawMessageLog() {

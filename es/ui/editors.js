@@ -342,7 +342,7 @@ export class EditGridPanel extends panels.Panel {
     warpReflMouseDown(refl) {
         this.editingTool.warpReflMouseDown(refl)
     }
-    warpReflMouseOver(refl) {
+    warpReflMouseMove(refl) {
     }
 
 }
