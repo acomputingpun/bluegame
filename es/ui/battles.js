@@ -6,8 +6,8 @@ import * as ui_grids from './grids.js'
 export class SBTilePanel extends ui_grids.TilePanel {
     constructor(...args) {
         super(...args)
-        this.panelStart = this.xyLocal.sMul(35)
-        this.panelSize = vecs.Vec2(30, 30)
+        this.panelStart = this.xyLocal.sMul(25)
+        this.panelSize = vecs.Vec2(25, 25)
     }
 }
 
@@ -17,8 +17,8 @@ export class SBGridPanel extends ui_grids.GridPanel {
 
     constructor(...args) {
         super(...args)
-        this.panelStart = vecs.Vec2(400, 200)
-        this.panelSize = vecs.Vec2(320, 320)
+        this.panelStart = vecs.Vec2(5, 50)
+        this.panelSize = vecs.Vec2(225, 225)
     }
 }
 
@@ -34,39 +34,53 @@ export class AdvanceTickButton extends panels.Button {
     }
 }
 
-export class ShipBattlePanel extends panels.Panel {
-    constructor(parent, ship) {
+export class ShipPanel extends panels.Panel {
+    constructor(pStart, ship, ...args) {
+        super(...args)
+        this.panelStart = pStart
+        this.panelSize = vecs.Vec2(235, 280)
+        this.ship = ship
+        this.gridPanel = new SBGridPanel(this.ship.grid, this)
+    }
+    
+    get children() { return [this.gridPanel] }
+
+    drawContents() {
+        this.drawLocationData()
+    }
+    
+    drawLocationData() {
+        
+    }
+
+// TODO: Move these out and into the grid class!    
+    warpTileMouseMove(gridPanel, xyLocal) {
+    }
+    warpTileMouseDown(gridPanel, xyLocal) {
+    }
+}
+
+export class BattlePanel extends panels.Panel {
+    constructor(battle=hacks.argPanic(), parent=hacks.argPanic()) {
         super(parent)
         this.panelStart = vecs.Vec2(0, 0)
         this.panelSize = vecs.Vec2(800, 600)
 
-        this.ship = ship
-        this.directive = null
+        this.battle = battle
 
         this.messageLog = []
 
         this.advanceTickButton = new AdvanceTickButton(this)
-        this.gridPanel = new SBGridPanel(this, this.ship.grid)
-    }
-    get children() {
-        return [this.gridPanel, this.advanceTickButton]
-    }
-    
-    drawShipOccupants() {
-        this.ctx.font = "11px Courier"
-        this.ctx.textAlign = "left"
-        this.ctx.textBaseline = "top"
-        this.ctx.fillStyle=this.borderColour
-
-        let [xDraw, yDraw] = this.absStart.xy
-        xDraw += 150
-
-        for (let occ of this.ship.grid.occupants) {
-            this.ctx.fillText( `${occ}`, xDraw, yDraw )
-            yDraw += 12
+        this.shipPanels = []
+        for (let [index, ship] of this.battle.allShips().entries()) {
+            console.log("ship, index, is", ship, index)
+            this.shipPanels.push( new ShipPanel(vecs.Vec2(5+ 240 * index, 200), ship, this) )
         }
     }
-
+    get children() {
+        return [...this.shipPanels, this.advanceTickButton]
+    }
+    
     drawMessageLog() {
         this.ctx.font = "11px Courier"
         this.ctx.textAlign = "left"
@@ -81,24 +95,7 @@ export class ShipBattlePanel extends panels.Panel {
         }
     }
 
-
     drawContents() {
         this.drawMessageLog()
-        this.drawShipOccupants()
-    }
-
-// TODO: Move these out and into the grid class!    
-    warpTileMouseMove(gridPanel, xyLocal) {
-        if (gridPanel == this.gridPanel) {
-        } else {
-            throw new errs.Panic()
-        }
-    }
-    warpTileMouseDown(gridPanel, xyLocal) {
-        if (gridPanel == this.gridPanel) {
-            console.log("xyl is", xyLocal, "tilePanel", this.gridPanel.localLookupPanel(xyLocal.xy) )
-        } else {
-            throw new errs.Panic()
-        }
     }
 }

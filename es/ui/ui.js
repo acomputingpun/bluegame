@@ -6,7 +6,8 @@ import * as colours from '/es/ui/colours.js'
 
 import * as ui_debug from '/es/ui/debug.js'
 import * as ui_editors from '/es/ui/editors.js'
-import * as ui_sbattles from '/es/ui/sbattles.js'
+import * as ui_ships from '/es/ui/ships.js'
+import * as ui_battles from '/es/ui/battles.js'
 import * as uiconst from '/es/ui/uiconst.js'
 
 class Cursor {
@@ -132,7 +133,7 @@ export class Renderer {
 
 class TopLevelPanel extends panels.Panel {
     constructor(renderer) {
-        super()
+        super(null)
         this.panelStart = vecs.Vec2(0, 0)
         this.panelSize = vecs.Vec2(800, 600)
 
@@ -140,8 +141,9 @@ class TopLevelPanel extends panels.Panel {
 
 //        console.log("this", this)
 //        console.log("tgrid,", renderer.runner.state.debugGrid)
-        this.mainPanel = new ui_editors.EditGridPanel(this, this._renderer.runner.state.debugGrid)
-//        this.mainPanel = new ui_sbattles.ShipBattlePanel(this, this._renderer.runner.state.debugShip)
+//        this.mainPanel = new ui_editors.EditGridPanel(this._renderer.runner.state.debugGrid, this)
+//        this.mainPanel = new ui_ships.ShipBattlePanel(this._renderer.runner.state.debugShip, this)
+        this.mainPanel = new ui_battles.BattlePanel(this._renderer.runner.state.debugBattle, this)
     }
 
     draw() {

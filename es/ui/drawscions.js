@@ -1,9 +1,10 @@
 import * as errs from '/es/errs.js'
+import * as hacks from '/es/hacks.js'
 import * as utils from '/es/utils.js'
 import * as uiconst from './uiconst.js'
 
 export class DrawScion {
-    constructor(parent) {
+    constructor(parent=hacks.argPanic()) {
         this.parent = parent
     }
 

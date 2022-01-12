@@ -2,6 +2,7 @@ import * as dirconst from '/es/dirconst.js'
 
 import * as blueprints from '/es/blueprints.js'
 import * as ships from '/es/ships.js'
+import * as battles from '/es/battles.js'
 
 import * as framespecs from '/es/occupants/frames/specs.js'
 import * as compspecs from '/es/occupants/comps/specs.js'
@@ -15,6 +16,14 @@ export class State {
         this.debugGrid = new blueprints.BlueprintGrid()
         this.debugSetupGrid()
         this.debugSetupShip()
+        this.debugSetupBattle()
+    }
+
+    debugSetupBattle() {
+        this.debugShip2 = this.debugShipDesign.reify()
+        let flt0 = new battles.Fleet([this.debugShip])
+        let flt1 = new battles.Fleet([this.debugShip2])
+        this.debugBattle = new battles.Battle( flt0, flt1 )
     }
 
     debugSetupShip() {
@@ -22,7 +31,7 @@ export class State {
         this.debugShip = this.debugShipDesign.reify()
         console.log("dbship", this.debugShip)
     }
-
+    
     debugSetupGrid() {
 //        framespecs.Medium.designify().lockToGrid( this.debugGrid.lookup( 3,3 ) )
 //        framespecs.Medium.designify().lockToGrid( this.debugGrid.lookup( 5,3 ) )

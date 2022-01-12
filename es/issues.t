@@ -154,3 +154,16 @@ RI b|0142:Disable right-click context menu for global canvas element.
  I b|0144:Highlight mouseover UI items (connectors, tiles, etc) in grid displays.
 RI b|0145:Pretty debug printing functions for UI reflection objects (tilePanels, component reflections, etc)
  I b|0146:Cables that propogate component directionality.
+ M b|0147:Generation of hull profiles around ships.
+ I b|0148:State logic for recognising when a given ship is effectively 'dead'.
+ I b|0149:Computer components that control ship activity in battle.
+ I b|0150:Data cables/connectors for propagating input/output of commands from computer comps.
+ I b|0151:Rewrite the component-specific advance() to use a centralised, ship-based advance().
+RI b|0152:Create a general design for the mechanics of space battle resolution.
+AI b|0153:Logic and mechanics for positioning of ships in a given space.
+RE b|0154:Re-order calls to panel constructors so that 'parent' is the last argument.
+ M b|0155:Servicable UI display of ship battles.
+RI b|0156:UI Display of grids for multiple ships in battle reports.
+AI b|0157:UI Display of ship-related battle report such as facing, position, etc.
+AI b|0158:UI display of ship locations on a linear chart in battle UI.
+ I b|0159:Move warpTileMouseMove() and similar functions of GridPanel parents out of the parent class and into the grid class.

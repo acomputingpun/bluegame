@@ -2,6 +2,7 @@ import * as blueprints from '/es/blueprints.js'
 import * as ogrids from '/es/occupants/ogrids.js'
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
+import * as orients from '/es/orients.js'
 
 export class ShipDesign {
     constructor(blueprintGrid) {
@@ -46,10 +47,20 @@ export class ShipGrid extends ogrids.OccGrid {
 export class PresetDesign extends ShipDesign {
 }
 
+export class SpaceMoveData {
+    constructor(pos = 0, orient = new orients.Orient(0)) {
+        this.orient = new orients.Orient()
+        this.pos = 0
+        this.speed = 0
+    }
+}
+
 export class Ship {
     constructor (design) {
         this._design = design
         this.grid = new ShipGrid(design.grid)
+
+        this.moveData = new SpaceMoveData()
     }
 
     advanceTick(directive) {

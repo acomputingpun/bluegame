@@ -6,7 +6,7 @@ import * as discs from '/es/ui/discs.js'
 import * as dirconst from '/es/dirconst.js'
 
 export class GridPanel extends panels.Panel {
-    constructor(parent, grid) {
+    constructor(grid, parent) {
         super(parent)
         this.panelStart = vecs.Vec2(20, 20)
         this.panelSize = vecs.Vec2(600, 500)
@@ -21,7 +21,7 @@ export class GridPanel extends panels.Panel {
         for (let y = 0; y < this.xySize.y; y++) {
             this.tilePanelMatrix.push([])
             for (let x = 0; x < this.xySize.x; x++) {
-                let tilePanel = new this.tilePanelClass(this, vecs.Vec2(x, y))
+                let tilePanel = new this.tilePanelClass(vecs.Vec2(x, y), this)
                 this.tilePanels.push(tilePanel)
                 this.tilePanelMatrix[y].push(tilePanel)
             }            
@@ -136,7 +136,7 @@ export class GridPanel extends panels.Panel {
 let TILE_EMPTY_BG = "#EEE"
 
 export class TilePanel extends panels.Panel {
-    constructor(parent, xyLocal) {
+    constructor(xyLocal, parent) {
         super(parent)
         this.xyLocal = xyLocal
         this.panelStart = this.xyLocal.sMul(55)
@@ -242,8 +242,8 @@ export class TilePanel extends panels.Panel {
     reflectTile(tile = hacks.argPanic()) {
         if (tile != null) {
             this.tile = tile
-            this.componentReflections = this.tile.components.map( (comp) => this.parent.addReflection(new ComponentReflection(this, comp)) )
-            this.connectorReflections = this.tile.connectors.map( (conn) => this.parent.addReflection(new ConnectorReflection(this, conn)) )
+            this.componentReflections = this.tile.components.map( (comp) => this.parent.addReflection(new ComponentReflection(comp, this)) )
+            this.connectorReflections = this.tile.connectors.map( (conn) => this.parent.addReflection(new ConnectorReflection(conn, this)) )
         }
     }
     updateReflections() {
@@ -272,7 +272,7 @@ export class TilePanel extends panels.Panel {
 }
 
 export class ComponentReflection extends discs.Disc {
-    constructor(parent, comp) {
+    constructor(comp, parent) {
         super(parent)
         
         this.comp = comp
@@ -338,7 +338,7 @@ export class ComponentReflection extends discs.Disc {
 }
 
 export class ConnectorReflection extends discs.Disc {
-    constructor(parent, conn) {
+    constructor(conn, parent) {
         super(parent)
         
         this.conn = conn
