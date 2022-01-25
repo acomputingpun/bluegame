@@ -1,28 +1,39 @@
 import * as errs from '/es/errs.js'
 import * as hacks from '/es/hacks.js'
+import * as vecs from '/es/vectors.js'
+
+const PI = Math.PI
+const TAU = Math.PI*2
 
 export class Orient {
     constructor(facing = 0) {
-        this.facing = facing
-        this.roll = 1
+        if (facing > PI) {
+            this.facing = (facing % (TAU)) - (TAU)
+        } else if (facing < -PI) {
+            this.facing = (facing % (TAU)) + (TAU)
+        } else {
+            this.facing = facing
+        }
     }
     
-    get motionCoeff() {
-        return math.sin(this.facing)
-    }
-    
-    get portFacing() {
-        return (this.facing - (PI/2))
-    }
-    get starboardFacing() {
-        return (this.facing + (PI/2))
-    }
-    get sternFacing() {
-        return (this.facing + PI) % PI/2
-    }
+    get linearCoeff() { return Math.cos(this.facing) }
+    get angularCoeff() { return Math.sin(this.facing) }
+
+    get portFacing() { return (this.facing - ( PI/2 )) }
+    get starboardFacing() { return this.rotCW( PI ).facing }
+    get sternFacing() { return this.rotCW( PI ).facing }
     get facingVec() {
-        throw errs.Panic("Not currently implemented!")
+//        if (this.facing % TAU) {
+//        } else {
+//        }
+        return vecs.Vec2(Math.cos(this.facing), Math.sin(this.facing))
     }
+
+    rotCW(ang) { return new Orient (this.facing + ang) }
+    rotCCW(ang) { return new Orient (this.facing - ang) }
+    hInvert() { return new Orient( -(this.facing + Math.PI) ) }
+
+    get deg() { return (this.facing / TAU) * 360 }
     
     toString() { return `${this.facing}` }
 }

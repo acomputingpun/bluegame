@@ -1,6 +1,8 @@
-import * as ogrids from '/es/occupants/ogrids.js'
+import * as hacks from '/es/hacks.js'
 import * as utils from '/es/utils.js'
 import * as vecs from '/es/vectors.js'
+
+import * as ogrids from '/es/occupants/ogrids.js'
 import * as framespecs from '/es/occupants/frames/specs.js'
 
 import * as warnings from '/es/warnings.js'
@@ -10,11 +12,11 @@ class BlueprintTile extends ogrids.OccGridTile {
         super(...args)
     }
 
-    addOccupant(occ) {
+    addOccupant(occ=hacks.argPanic()) {
         if(!occ.locked) { throw new errs.Panic(`Tried to add unlocked occupant ${occ} to Grid ${this}`) }
         super.addOccupant(occ)
     }
-    removeOccupant(occ) {
+    removeOccupant(occ=hacks.argPanic()) {
         if (!occ.locked) { throw new errs.Panic(`Tried to remove unlocked occupant ${occ} from Grid ${this}`) }
         super.removeOccupant(occ)
     }
@@ -25,11 +27,11 @@ export class BlueprintGrid extends ogrids.OccGrid {
         super(BlueprintTile)
     }
 
-    addOccupant(occ) {
+    addOccupant(occ=hacks.argPanic()) {
         if(!occ.locked) { throw new errs.Panic(`Tried to add unlocked occupant ${occ} to Grid ${this}`) }
         super.addOccupant(occ)
     }
-    removeOccupant(occ) {
+    removeOccupant(occ=hacks.argPanic()) {
         if (!occ.locked) { throw new errs.Panic(`Tried to remove unlocked occupant ${occ} from Grid ${this}`) }
         super.removeOccupant(occ)
     }
@@ -84,21 +86,14 @@ export class BlueprintGrid extends ogrids.OccGrid {
         errs = warns.filter( (warn) => (warn.isFatal) )
         return errors.length == 0
     }
-    getWarnings() {
-        if (this.getWarnings.__dirtyID !== this._dirtyID) {
-            this.getWarnings.__dirtyID = this._dirtyID
-
-            let errs = []
-            if (!this.checkHillProperty()) {
-                errs.push( new warnings.HillPropertyError(this) )
-            }
-
-            for (let comp of this.components) {
-
-            }
-
-            this.getWarnings.__cachedValue = errs
+    getWarnings = hacks.cachedLookup(this, () => {
+        let errs = []
+        if (!this.checkHillProperty()) {
+            errs.push( new warnings.HillPropertyError(this) )
         }
-        return this.getWarnings.__cachedValue
-    }
+        for (let comp of this.components) {
+
+        }
+        return errs
+    })
 }

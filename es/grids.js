@@ -3,7 +3,7 @@ import * as vecs from '/es/vectors.js'
 import * as dirconst from '/es/dirconst.js'
 
 export class Grid {
-    constructor (tileClass) {
+    constructor (tileClass=hacks.argPanic()) {
         this._dirtyID = 0
 
         this._tileClass = tileClass
@@ -36,7 +36,7 @@ export class Grid {
 }
 
 export class GridTile {
-    constructor (x, y, parent) {
+    constructor (x=hacks.argPanic(), y=hacks.argPanic(), parent=hacks.argPanic()) {
         this._dirtyID = 0
 
         this.xyPos = vecs.Vec2(x, y)

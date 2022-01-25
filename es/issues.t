@@ -168,3 +168,13 @@ RI b|0157:UI Display of ship-related battle report data such as facing, position
 RI b|0158:UI display of ship locations on a linear chart in battle UI.
  I b|0159:Move warpTileMouseMove() and similar functions of GridPanel parents out of the parent class and into the grid class.
 RI b|0160:Replace calls to warpReflMouseMove() with warpReflMouseMove() for better nomenclature consistency.
+AM b|0161:Servicable ship control AI brain.
+RI b|0162:Recalibrate ship orientation so that angle 0 is always subjectively facing towards the enemy.
+RI b|0163:Implement orients.facingVec()
+RI b|0164:Make fleets the primary subcomponents of battles, and ships the primary subcomponents of fleets.
+RI b|0165:Ability of ships to reference other ships in a battle via relative position/facing.
+RI b|0166:Automatic repositioning/reorientation of ships as they pass one another to maintain the distance invariant.
+ M b|0167:Caching of calculated results based on state for all functions where this is reasonably practicable.
+RB b|0168:Fix subtle caching bug caused by instances sharing function objects.
+RI b|0169:Implement a hack for making a function automatically cache based on caller._dirtyID
+ E b|0170:Rewrite code to make use of ES6's new private field / private method syntax.

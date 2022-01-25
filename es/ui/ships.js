@@ -35,13 +35,12 @@ export class AdvanceTickButton extends panels.Button {
 }
 
 export class ShipBattlePanel extends panels.Panel {
-    constructor(ship, parent) {
+    constructor(ship = hacks.argPanic(), parent) {
         super(parent)
         this.panelStart = vecs.Vec2(0, 0)
         this.panelSize = vecs.Vec2(800, 600)
 
         this.ship = ship
-        this.directive = null
 
         this.messageLog = []
 

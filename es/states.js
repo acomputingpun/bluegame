@@ -21,9 +21,7 @@ export class State {
 
     debugSetupBattle() {
         this.debugShip2 = this.debugShipDesign.reify()
-        let flt0 = new battles.Fleet([this.debugShip])
-        let flt1 = new battles.Fleet([this.debugShip2])
-        this.debugBattle = new battles.Battle( flt0, flt1 )
+        this.debugBattle = battles.Battle.fromShips( [this.debugShip], [this.debugShip2] )
     }
 
     debugSetupShip() {

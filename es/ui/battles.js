@@ -14,10 +14,10 @@ export class SBTilePanel extends ui_grids.TilePanel {
 export class SBGridPanel extends ui_grids.GridPanel {
     get xySize () { return vecs.Vec2(9, 9) }
     get tilePanelClass() { return SBTilePanel }
-
+    
     constructor(...args) {
         super(...args)
-        this.panelStart = vecs.Vec2(5, 50)
+        this.panelStart = vecs.Vec2(5, 90)
         this.panelSize = vecs.Vec2(225, 225)
     }
 }
@@ -51,11 +51,14 @@ export class LinearDisplayPanel extends panels.Panel {
         for (let ship of orderedShips) {
             let relPos = (ship.pos - lPos) / (rPos - lPos)
             let relDraw = this.panelSize.x * relPos
-
-//            console.log("relDraw", relDraw)
+            let absDraw = vecs.Vec2(this.absStart.x + relDraw, this.absStart.y+25)
 
             this.ctx.beginPath()
-            this.ctx.arc( this.absStart.x + relDraw, this.absStart.y + 25, 5, 0, 2*Math.PI )
+            this.ctx.arc( ...absDraw.xy, 5, 0, 2*Math.PI )
+            this.ctx.stroke()
+            this.ctx.beginPath()
+            this.ctx.moveTo( ...absDraw.xy )
+            this.ctx.lineTo( ...absDraw.add( ship.facingVec.sMul(20) ).xy )
             this.ctx.stroke()
         }
     }
@@ -89,9 +92,15 @@ export class ShipPanel extends panels.Panel {
 
         this.ctx.fillText( `Ship ${this.shipIndex} : ${this.ship.debugName}`, xDraw, yDraw )
         yDraw += 12
-        this.ctx.fillText( `facing: ${this.ship.moveData.orient}`, xDraw, yDraw )
+        this.ctx.fillText( `facing: ${this.ship.orient.deg.toFixed(2)} | coeff ${this.ship.linearCoeff.toFixed(2)}`, xDraw, yDraw )
         yDraw += 12
-        this.ctx.fillText( `pos: ${this.ship.moveData.pos}`, xDraw, yDraw )
+        this.ctx.fillText( `facingVec ${this.ship.facingVec}`, xDraw, yDraw )
+        yDraw += 12
+        this.ctx.fillText( `pos: ${this.ship.pos.toFixed(2)}, spd: ${this.ship.speed.toFixed(2)}`, xDraw, yDraw )
+        yDraw += 12
+        this.ctx.fillText( `subjpos: ${this.ship.subjPos.toFixed(2)}, sofd: ${this.ship.sEnemyDist.toFixed(2)}`, xDraw, yDraw )
+        yDraw += 12
+        this.ctx.fillText( `linear ${this.ship.linearMotion.toFixed(2)} | angular ${this.ship.angularMotion.toFixed(2)}`, xDraw, yDraw )
         yDraw += 12
         
         return [xDraw, yDraw]
