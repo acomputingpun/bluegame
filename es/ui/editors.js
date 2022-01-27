@@ -24,8 +24,8 @@ export class MenuButton extends panels.Button {
 }
 
 export class FrameMenuPanel extends panels.Panel {
-    constructor(grid, parent) {
-        super(parent)
+    constructor(...args) {
+        super(...args)
         this.panelStart = vecs.Vec2(700, 0)
         this.panelSize = vecs.Vec2(100, 600)
 
@@ -262,13 +262,21 @@ export class RotateViewportButton extends panels.Button {
     }
 }
 
+export class EDGridPanel extends ui_grids.GridPanel {
+    constructor(...args) {
+        super(...args)
+        this.panelStart = vecs.Vec2(5, 80)
+    }
+}
+
+
 export class EditGridPanel extends panels.Panel {
-    constructor(grid, parent) {
-        super(parent)
+    constructor(grid, ...args) {
+        super(...args)
         this.panelStart = vecs.Vec2(0, 0)
         this.panelSize = vecs.Vec2(800, 600)
 
-        this.gridPanel = new ui_grids.GridPanel(this, grid)
+        this.gridPanel = new EDGridPanel(grid, this)
 
         this.frameMenuPanel = new FrameMenuPanel(this)
         this.removeFrameTool = new RemoveFrameTool(this)

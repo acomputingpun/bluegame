@@ -87,13 +87,15 @@ export class BlueprintGrid extends ogrids.OccGrid {
         return errors.length == 0
     }
     getWarnings = hacks.cachedLookup(this, () => {
+        console.log("Call to getWarnings()")
         let errs = []
         if (!this.checkHillProperty()) {
             errs.push( new warnings.HillPropertyError(this) )
         }
         for (let comp of this.components) {
-
+            errs = [...errs, ...comp.genBlueprintWarnings()]
         }
+        console.log("final errs is", errs)
         return errs
     })
 }

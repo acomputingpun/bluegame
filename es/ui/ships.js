@@ -1,3 +1,4 @@
+import * as hacks from '/es/hacks.js'
 import * as vecs from '/es/vectors.js'
 import * as panels from '/es/ui/panels.js'
 
@@ -45,7 +46,7 @@ export class ShipBattlePanel extends panels.Panel {
         this.messageLog = []
 
         this.advanceTickButton = new AdvanceTickButton(this)
-        this.gridPanel = new SBGridPanel(this, this.ship.grid)
+        this.gridPanel = new SBGridPanel(this.ship.grid, this)
     }
     get children() {
         return [this.gridPanel, this.advanceTickButton]

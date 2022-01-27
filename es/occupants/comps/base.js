@@ -44,6 +44,7 @@ class ComponentDesign extends occupants.GeneralDesign {
 
     get facing() { return this._facing }
     get connectors() { return this._connectors }
+    get requiredConnectors() {return this._connectors }
     facingConnectors(vec) { return this._connectors.filter( (conn) => (conn.facing.eq(vec)) ) }
 
     get isComponent() { return true }
@@ -106,6 +107,11 @@ class ComponentDesign extends occupants.GeneralDesign {
     }
 
     toString() { return `<CMP ${this.spec} at ${this._anchorTile})>` }
+    *genBlueprintWarnings() {
+        for (let conn of this.requiredConnectors) {
+            yield* conn.genBlueprintWarnings()
+        }
+    }
 }
 
 export class ComponentInstance extends occupants.GeneralInstance {

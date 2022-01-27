@@ -10,6 +10,10 @@ export function rand(seed) {
     }
 }
 
+export function uniform(seed, smallest, largest) {
+    return smallest + (rand(seed) * (largest-smallest))
+}
+
 export function randint(seed, smallest, largest) {
     return smallest + Math.floor(rand(seed) * (largest-smallest))
 }
@@ -41,6 +45,9 @@ export class Roller {
     }
     randint(smallest, largest) {
         return randint(this.seed++, smallest, largest)
+    }
+    uniform(smallest, largest) {
+        return uniform(this.seed++, smallest, largest)
     }
     choice(items) {
         return choice(this.seed++, items)

@@ -101,12 +101,6 @@ export class Renderer {
         this.cursor.setPos( vecs.Vec2(-100, -100) )
     }
 
-    swapPanels() {
-        this.offPanels.push(this.panel)
-        this.panel = this.offPanels[0]
-        this.offPanels = this.offPanels.slice(1)
-    }
-
 // Drawing convenience functions
     wrapText(text, xDraw, yDraw, xWidth, yLineHeight) {
         let words = text.split(' ')
@@ -141,9 +135,11 @@ class TopLevelPanel extends panels.Panel {
 
 //        console.log("this", this)
 //        console.log("tgrid,", renderer.runner.state.debugGrid)
-//        this.mainPanel = new ui_editors.EditGridPanel(this._renderer.runner.state.debugGrid, this)
+        this.dmp = new ui_debug.DebugMenuPanel(this)
+        this.mainPanel = new ui_editors.EditGridPanel(this._renderer.runner.state.debugGrid, this)
 //        this.mainPanel = new ui_ships.ShipBattlePanel(this._renderer.runner.state.debugShip, this)
-        this.mainPanel = new ui_battles.BattlePanel(this._renderer.runner.state.debugBattle, this)
+//        this.mainPanel = new ui_battles.BattlePanel(this._renderer.runner.state.debugBattle, this)
+        this.offPanels = null
     }
 
     draw() {
@@ -157,9 +153,22 @@ class TopLevelPanel extends panels.Panel {
         }
     }
 
+    swapPanels() {
+        if (this.offPanels == null) {
+            this.offPanels = [
+                new ui_ships.ShipBattlePanel(this.renderer.runner.state.debugShip, this),
+                new ui_battles.BattlePanel(this.renderer.runner.state.debugBattle, this)
+            ]
+        }
+
+        this.offPanels.push(this.mainPanel)
+        this.mainPanel = this.offPanels[0]
+        this.offPanels = this.offPanels.slice(1)
+    }
+
     get absOrigin() { return vecs.Vec2(0, 0) }
     get children() {
-        return [this.mainPanel]
+        return [this.mainPanel, this.dmp]
 //        return [this.mainPanel, this.debugMenuPanel]
     }
     get renderer() { return this._renderer }

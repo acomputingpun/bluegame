@@ -78,33 +78,42 @@ export class Ship {
     setFleet(fleet) { this._fleet = fleet }
     get battle() { return this.fleet.battle } 
     get subjectiveFacingCoeff() { return this.fleet.subjectiveFacingCoeff }
-    
+    get sCoeff() { return this.fleet.subjectiveFacingCoeff }
+
     get pos() { return this._pos }
-    get orient() { return this._orient }
+    get orient() { throw new errs.Panic("Call to deprecated function get orient()") }
     get speed() { return this._speed }
 
-    get subjPos() { return this.pos * this.subjectiveFacingCoeff }
-    get opposingForward() { return this.fleet.other.forwardShip() }
+    get oPos() { return this._pos }
+    oRelPosOf(otherShip) { return (otherShip.pos-this.pos) }
+    oDistTo(otherShip) { return Math.abs(this.oRelPosOf(otherShip)) }
+
+    get sPos() { return this.oPos * this.sCoeff }
+    sRelPosOf(otherShip) { return this.oRelPosOf(otherShip) * this.sCoeff }
+    sDistTo(otherShip) { return Math.abs(this.oRelPosOf(otherShip)) }
 
     get oEnemyDist() { return this.oRelPosOf(this.opposingForward) }
-    get sEnemyDist() { return this.oEnemyDist * this.subjectiveFacingCoeff }
+    get sEnemyDist() { return this.oEnemyDist * this.sCoeff }
 
-    oRelPosOf(otherShip) {
-        return (otherShip.pos-this.pos) 
-    }
-    sRelPosOf(otherShip) {
-        return this.oRelPosOf(otherShip) * this.subjectiveFacingCoeff
-    }
+    get oOrient() { return this._orient }
+    get oFacing() { return this.oOrient.facing }
+    get oDeg() { return this.oOrient.deg }
+    get oLinearCoeff() { return this.oOrient.linearCoeff }
+    get oAngularCoeff() { return this.oOrient.angularCoeff }
+    get oLinearMotion() { return this.oLinearCoeff * this.speed }
+    get oAngularMotion() { return this.oAngularCoeff * this.speed }
+    get oFacingVec() { return vecs.Vec2(this.oLinearCoeff, this.oAngularCoeff) }
 
-    get linearCoeff() { return this.orient.linearCoeff }
-    get angularCoeff() { return this.orient.angularCoeff }
+    get sOrient() { return this._orient.rotCCW( Math.PI/2 * this.sCoeff ) }
+    get sFacing() { return this.sOrient.facing }
+    get sDeg() { return this.sOrient.deg }
+    get sLinearCoeff() { return this.sOrient.linearCoeff }
+    get sAngularCoeff() { return this.sOrient.angularCoeff }
+    get sLinearMotion() { return this.sLinearCoeff * this.speed }
+    get sAngularMotion() { return this.sAngularCoeff * this.speed }
+    get sFacingVec() { return vecs.Vec2(this.sLinearCoeff, this.sAngularCoeff) }
 
-    get linearMotion() { return this.linearCoeff * this.speed }
-    get angularMotion() { return this.angularCoeff * this.speed }
-
-    get oLinearMotion() { return this.linearMotion * this.subjectiveFacingCoeff }
-
-    get facingVec() { return vecs.Vec2(this.linearCoeff * this.subjectiveFacingCoeff, this.angularCoeff) }
+    get opposingForward() { return this.fleet.other.forwardShip() }
 
     setPos(pos) {
         this._pos = pos
@@ -128,11 +137,11 @@ export class Ship {
         if (true || "Check to see if the turning delta is within our turning capability!") {
         }
 
-        this.setOrient(this.orient.rotCW(turningDelta))
+        this.setOrient(this.oOrient.rotCW(turningDelta))
         this.setPos(this.pos + this.oLinearMotion)
         if (this.sEnemyDist < 0) {
             this.setPos( this.pos + (this.oEnemyDist * 2) )
-            this.setOrient(this.orient.hInvert())
+            this.setOrient(this.oOrient.hInvert())
         }
     }
 

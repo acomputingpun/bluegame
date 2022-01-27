@@ -58,7 +58,7 @@ export class LinearDisplayPanel extends panels.Panel {
             this.ctx.stroke()
             this.ctx.beginPath()
             this.ctx.moveTo( ...absDraw.xy )
-            this.ctx.lineTo( ...absDraw.add( ship.facingVec.sMul(20) ).xy )
+            this.ctx.lineTo( ...absDraw.add( ship.oFacingVec.sMul(20) ).xy )
             this.ctx.stroke()
         }
     }
@@ -92,15 +92,15 @@ export class ShipPanel extends panels.Panel {
 
         this.ctx.fillText( `Ship ${this.shipIndex} : ${this.ship.debugName}`, xDraw, yDraw )
         yDraw += 12
-        this.ctx.fillText( `facing: ${this.ship.orient.deg.toFixed(2)} | coeff ${this.ship.linearCoeff.toFixed(2)}`, xDraw, yDraw )
+        this.ctx.fillText( `oFacing: ${this.ship.oDeg.toFixed(2)} | coeff ${this.ship.oLinearCoeff.toFixed(2)}`, xDraw, yDraw )
         yDraw += 12
-        this.ctx.fillText( `facingVec ${this.ship.facingVec}`, xDraw, yDraw )
+        this.ctx.fillText( `sFacingVec ${this.ship.sFacingVec}`, xDraw, yDraw )
         yDraw += 12
         this.ctx.fillText( `pos: ${this.ship.pos.toFixed(2)}, spd: ${this.ship.speed.toFixed(2)}`, xDraw, yDraw )
         yDraw += 12
-        this.ctx.fillText( `subjpos: ${this.ship.subjPos.toFixed(2)}, sofd: ${this.ship.sEnemyDist.toFixed(2)}`, xDraw, yDraw )
+        this.ctx.fillText( `spos: ${this.ship.sPos.toFixed(2)}, sofd: ${this.ship.sEnemyDist.toFixed(2)}`, xDraw, yDraw )
         yDraw += 12
-        this.ctx.fillText( `linear ${this.ship.linearMotion.toFixed(2)} | angular ${this.ship.angularMotion.toFixed(2)}`, xDraw, yDraw )
+        this.ctx.fillText( `linear ${this.ship.oLinearMotion.toFixed(2)} | angular ${this.ship.oAngularMotion.toFixed(2)}`, xDraw, yDraw )
         yDraw += 12
         
         return [xDraw, yDraw]

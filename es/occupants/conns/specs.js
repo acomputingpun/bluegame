@@ -5,6 +5,8 @@ import * as resources from '/es/resources.js'
 import * as base from './base.js'
 import * as flows from './flows.js'
 
+import * as warnings from '/es/warnings.js'
+
 class _RCInstance extends base.ConnectorInstance {
     constructor(...args) {
         super(...args)
@@ -65,6 +67,11 @@ class _RCDesign extends base.ConnectorDesign {
     }
     get resClass() { return this.spec.resClass }
     get flowRestriction() { return this.spec.flowRestriction }
+    *genBlueprintWarnings() {
+        if (!this.isFused) {
+            yield new warnings.OpenConnectorWarning(this)
+        }
+    }
 }
 
 class ResourceConnector extends base.ConnectorSpec {
@@ -102,7 +109,10 @@ export class ElectricConnector extends ResourceConnector {
 export class FuelConnector extends ResourceConnector {   
     constructor(pos, facing) {
         super(pos, facing, resources.Fuel, 1)
+    }    *genBlueprintWarnings() {
+        // to be overridden!
     }
+
 }
 
 class EmptyTileConnector extends base.ConnectorSpec {

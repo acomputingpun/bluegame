@@ -5,8 +5,8 @@ import * as panels from '/es/ui/panels.js'
 export class DebugMenuPanel extends panels.Panel {
     constructor(parent) {
         super(parent)
-        this.panelStart = vecs.Vec2(1180, 640)
-        this.panelSize = vecs.Vec2(100, 160)
+        this.panelStart = vecs.Vec2(700, 490)
+        this.panelSize = vecs.Vec2(100, 110)
 
         this.swapPanelsButton = new SwapPanelsButton(this)
         this.killTimeButton = new KillTimeButton(this)
@@ -33,7 +33,7 @@ class KillTimeButton extends panels.Button {
     get text() { return "die" }
     constructor(parent) {
         super(parent)
-        this.panelStart = vecs.Vec2(10, 110)
+        this.panelStart = vecs.Vec2(10, 60)
         this.panelSize = vecs.Vec2(80, 40)
     }
 

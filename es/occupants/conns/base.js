@@ -126,6 +126,10 @@ export class ConnectorDesign extends occupants.GeneralDesign {
     get fusedConn() { return this._fusedConn }
     get isFused() { return this.fusedConn != null }
 
+    *genBlueprintWarnings() {
+        // to be overridden!
+    }
+
     toString() { return `[d${this.spec} of ${this.anchorTile}]` }
 }
 

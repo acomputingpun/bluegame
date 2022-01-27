@@ -6,8 +6,8 @@ import * as discs from '/es/ui/discs.js'
 import * as dirconst from '/es/dirconst.js'
 
 export class GridPanel extends panels.Panel {
-    constructor(grid, parent) {
-        super(parent)
+    constructor(grid, ...args) {
+        super(...args)
         this.panelStart = vecs.Vec2(20, 20)
         this.panelSize = vecs.Vec2(600, 500)
 

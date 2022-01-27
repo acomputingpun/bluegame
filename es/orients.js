@@ -16,8 +16,8 @@ export class Orient {
         }
     }
     
-    get linearCoeff() { return Math.cos(this.facing) }
-    get angularCoeff() { return Math.sin(this.facing) }
+    get linearCoeff() { return Math.sin(this.facing) }
+    get angularCoeff() { return Math.cos(this.facing) }
 
     get portFacing() { return (this.facing - ( PI/2 )) }
     get starboardFacing() { return this.rotCW( PI ).facing }
@@ -31,7 +31,7 @@ export class Orient {
 
     rotCW(ang) { return new Orient (this.facing + ang) }
     rotCCW(ang) { return new Orient (this.facing - ang) }
-    hInvert() { return new Orient( -(this.facing + Math.PI) ) }
+    hInvert() { return new Orient( -this.facing ) }
 
     get deg() { return (this.facing / TAU) * 360 }
     

@@ -22,7 +22,7 @@ class Fleet {
     forwardShip = hacks.cachedLookup(this, () => {
         let best = this.ships[0]
         for (let ship of this.ships) {
-            if (ship.subjPos > best.subjPos) {
+            if (ship.sPos > best.sPos) {
                 best = ship
             }
         }

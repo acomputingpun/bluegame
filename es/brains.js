@@ -18,11 +18,11 @@ export class SimpleBrain extends Brain {
     get enemyShips() { return this.ship.battle.enemyShips(this) }
 
     getTurningDelta() {
-        if (Math.abs(this.ship.orient.facing) < 0.05) {
-            return -this.ship.orient.facing
-        } else if (this.ship.orient < 0) {
+        if (Math.abs(this.ship.sFacing) < 0.05) {
+            return -this.ship.sFacing
+        } else if (this.ship.sFacing < 0) {
             return 0.05
-        } else if (this.ship.orient > 0) {
+        } else if (this.ship.sFacing > 0) {
             return -0.05
         } else {
             return 0

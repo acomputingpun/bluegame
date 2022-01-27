@@ -53,7 +53,7 @@ RI b|0042:Blueprints keep track of connectors.
 RE b|0043:Make the tile-occupancy logic of frames and components inherit from a common class?
 RE b|0044:Replace the inbuild ES6 setter of this.tile with explict function setTile() for frames and components
 RI b|0045:Functions for connectors to access the tiles they link to and those tiles' other connectors via position.
- I b|0046:Blueprint-level error checking of connectors being immediately linked correctly.
+RI b|0046:Blueprint-level error checking of connectors being immediately linked correctly.
  M b|0047:General state-level logic for resource movement, allocation, sources and sinks, etc.
 RI b|0048:Components with internal resource state.
 RI b|0049:Active logic for sources / sinks to output or draw resources.
@@ -178,3 +178,16 @@ RI b|0166:Automatic repositioning/reorientation of ships as they pass one anothe
 RB b|0168:Fix subtle caching bug caused by instances sharing function objects.
 RI b|0169:Implement a hack for making a function automatically cache based on caller._dirtyID
  E b|0170:Rewrite code to make use of ES6's new private field / private method syntax.
+RI b|0171:Basic ability to switch between UI display panels for development purposes.
+RE b|0172:Simplify and rationalise the nomenclature of ship subjective/objective position/facing functions.
+AI b|0173:Brains that are capable of firing weapon components.
+ I b|0174:Reconfigure brains.getEnemyShip and similar lookups to use fleet-based categories.
+ I b|0175:Ability for brains to identify and reference grid components at all.
+ I b|0176:Ship components that store specific state/instructions.
+AM b|0177:State-level semantic definitions for ship-to-ship attacks.
+ I b|0178:State-logic for resolving single individual attacks.
+ I b|0179:Attack logic able to calculate target-data modifiers.
+ I b|0180:Attack logic able to calculate range modifiers.
+ I b|0181:Attack logic able to calculate evasion modifiers.
+ I b|0182:Attack logic able to calculate target profiles and target profile modifiers.
+ I b|0183:Attack logic able to calculate exposed component strike points.
